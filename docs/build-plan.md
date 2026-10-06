@@ -53,10 +53,14 @@ Proof-strip stats stay inline homepage data, not a third collection — they hav
 **Phase 0 — Setup**
 - Download and self-host font files (Inter Tight 300/400/500, Inter 400/500, Cascadia Code 400) into `public/fonts`.
 
-**Phase 1 — Theme foundation**
-- `@theme` block in `global.css`: color tokens for baseline, core, ink-2, ink-3, rule, vector, substation (flux excluded from utility-generating tokens since it's gradient-image-only, never a flat color or utility class), font tokens, radius tokens, the 8 named type styles (mobile-first, desktop override under one `min-width` block — verify this responsive-token technique works as expected in Tailwind 4 before committing the whole scale to it; fallback is explicit responsive class pairs).
-- Bare `Layout.astro`.
-- One shared `prefers-reduced-motion`-gated fade-in utility.
+**Phase 1 — Theme foundation (done)**
+- `@theme` block in `global.css`: color tokens for baseline, core, ink-2, ink-3, rule, vector, substation (flux excluded from utility-generating tokens since it's gradient-image-only, never a flat color or utility class), font tokens (`font-sans`/`font-display`/`font-mono`), radius tokens.
+- The 8 named type styles (`text-hero-h1`, `text-h1`, `text-h2`, `text-h3`, `text-body`, `text-small`, `text-label`, `text-big-number`) plus `container-content` and `section-y`, each a self-contained `@utility` with the desktop breakpoint (`min-width: 64rem`) nested inside.
+  - **Found and fixed a real bug**: the originally planned technique — a `--text-*` theme token redeclared under a plain `@media { :root { ... } } `block — was verified broken in a real `astro build`: Tailwind/Lightning CSS silently dropped the mobile value, leaving only the desktop size active at every width. Confirmed with an isolated build probe before writing the real theme. Switched to the nested-`@media`-inside-`@utility` pattern instead and re-verified every one of the 10 utilities carries both its mobile and desktop values correctly in the compiled CSS.
+  - Font family isn't part of a type style's own class — Tailwind 4 has no `--text-*--font-family` companion (also verified empirically) — so components pair e.g. `font-display text-hero-h1`.
+- Self-hosted font files (Inter Tight 300/400/500, Inter 400/500, Cascadia Code 400) downloaded into `public/fonts/`, wired up via `@font-face` in `global.css`.
+- Bare `Layout.astro` in `src/components/`: head, self-hosted font preloads, `<meta name="robots" content="noindex">`, `<slot/>`. Not yet used anywhere — `index.astro` (the holding page) is untouched until Phase 5.
+- One shared `prefers-reduced-motion` kill-switch (covers every current and future animation/transition sitewide) plus a `fade-in` utility for the hero's one page-load moment.
 
 **Phase 2 — `/styleguide` page (checkpoint — stop and show before continuing)**
 - Build `Button.astro`, `Label.astro`, `Card.astro` (needed to populate the page).

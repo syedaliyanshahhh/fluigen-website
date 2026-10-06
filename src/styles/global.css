@@ -1,1 +1,237 @@
 @import "tailwindcss";
+
+/*
+ * Self-hosted brand fonts (design/brand.md). Self-hosted rather than loaded
+ * from the Google Fonts CDN so EU visitors' IPs are never sent to Google.
+ */
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/inter-tight-300.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-tight-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter-tight-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Code";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/cascadia-code-400.woff2") format("woff2");
+}
+
+@theme {
+  /* Colors — design/brand.md. `flux` (#97C1C5) is deliberately not a token
+     here: brand.md says it is gradient-image-only and must never be a flat
+     color or text color, so it gets no bg-/text- utility to misuse. */
+  --color-baseline: #f7f7f7;
+  --color-core: #000000;
+  --color-ink-2: #3a3a3a;
+  --color-ink-3: #6b6b6b;
+  --color-rule: #dcdcdc;
+  --color-vector: #267b85;
+  --color-substation: #02525e;
+
+  /* Fonts */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display:
+    "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+
+  /* Radius — pills use the built-in rounded-full utility */
+  --radius-card: 1.25rem; /* 20px */
+  --radius-panel: 1.75rem; /* 28px */
+}
+
+/*
+ * Type scale — design/brand.md's 8 named styles, and the two layout
+ * primitives below, are each a self-contained @utility with the desktop
+ * breakpoint nested inside, rather than a --theme-token redeclared under a
+ * plain `@media { :root { ... } }` block.
+ *
+ * That theme-token-redeclaration approach was tried first and verified
+ * broken: in the production build, Tailwind/Lightning CSS silently dropped
+ * the mobile value of every redeclared --text-* custom property, leaving
+ * only the desktop value active at every width. Plain custom properties
+ * outside Tailwind's recognized namespaces (e.g. a hand-rolled --layout-*)
+ * didn't show the same loss in testing, but since the exact cause wasn't
+ * fully isolated, every responsive style here uses the one pattern that was
+ * directly confirmed correct in a real `astro build` output: mobile values
+ * as the utility's own properties, desktop values in one nested @media
+ * block inside the same @utility rule.
+ */
+@utility text-hero-h1 {
+  font-size: 2.75rem; /* 44px */
+  line-height: 1.0454545; /* 46/44 */
+  letter-spacing: -0.045em;
+  font-weight: 300;
+
+  @media (min-width: 64rem) {
+    font-size: 6.5rem; /* 104px */
+    line-height: 0.9615385; /* 100/104 */
+  }
+}
+
+@utility text-h1 {
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.05; /* 42/40 */
+  letter-spacing: -0.03em;
+  font-weight: 400;
+
+  @media (min-width: 64rem) {
+    font-size: 4.5rem; /* 72px */
+    line-height: 1; /* 72/72 */
+  }
+}
+
+@utility text-h2 {
+  font-size: 2.125rem; /* 34px */
+  line-height: 1.0588235; /* 36/34 */
+  letter-spacing: -0.03em;
+  font-weight: 400;
+
+  @media (min-width: 64rem) {
+    font-size: 3.5rem; /* 56px */
+    line-height: 1.0357143; /* 58/56 */
+  }
+}
+
+@utility text-h3 {
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.2727273; /* 28/22 */
+  letter-spacing: -0.015em;
+  font-weight: 400;
+
+  @media (min-width: 64rem) {
+    font-size: 1.75rem; /* 28px */
+    line-height: 1.2142857; /* 34/28 */
+  }
+}
+
+@utility text-body {
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.5882353; /* 27/17 */
+  letter-spacing: 0em;
+  font-weight: 400;
+
+  @media (min-width: 64rem) {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.6111111; /* 29/18 */
+  }
+}
+
+@utility text-small {
+  /* Same 15px/22 at every width per design/brand.md — no desktop override */
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.4666667; /* 22/15 */
+  letter-spacing: 0em;
+  font-weight: 400;
+}
+
+@utility text-label {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.3333333; /* 16/12 */
+  letter-spacing: 0.04em;
+  font-weight: 400;
+
+  @media (min-width: 64rem) {
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.3846154; /* 18/13 */
+  }
+}
+
+@utility text-big-number {
+  font-size: 3rem; /* 48px */
+  line-height: 1; /* 48/48 */
+  letter-spacing: -0.05em;
+  font-weight: 300;
+
+  @media (min-width: 64rem) {
+    font-size: 4.5rem; /* 72px */
+    line-height: 1; /* 72/72 */
+  }
+}
+
+/* Container/section primitives (Phase 3 components wrap these) */
+@utility container-content {
+  max-width: 77.5rem; /* 1240px */
+  margin-inline: auto;
+  padding-inline: 1.25rem; /* 20px, mobile */
+
+  @media (min-width: 64rem) {
+    padding-inline: 4.5rem; /* 72px */
+  }
+}
+
+@utility section-y {
+  padding-block: 5rem; /* 80px, mobile */
+
+  @media (min-width: 64rem) {
+    padding-block: 9.375rem; /* 150px */
+  }
+}
+
+/*
+ * Motion — design/brand.md: "subtle fades only, one page-load moment in
+ * the hero at most, respect prefers-reduced-motion." One fade-in utility
+ * for that hero moment, plus a single sitewide kill-switch so every
+ * current and future animation/transition is neutralized together rather
+ * than gated per component.
+ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility fade-in {
+  animation: fade-in 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
