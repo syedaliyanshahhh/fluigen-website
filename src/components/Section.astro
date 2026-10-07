@@ -1,0 +1,16 @@
+---
+// Section spacing (150/80px) primitive — design/brand.md "Layout". Wraps
+// the `section-y` utility from global.css. Pair with <Container> for the
+// max-width + side padding.
+interface Props {
+	as?: string;
+	id?: string;
+	class?: string;
+}
+
+const { as: Tag = "section", id, class: className } = Astro.props;
+---
+
+<Tag id={id} class:list={["section-y", className]}>
+	<slot />
+</Tag>

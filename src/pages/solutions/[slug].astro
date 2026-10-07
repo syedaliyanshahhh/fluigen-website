@@ -1,0 +1,42 @@
+---
+// Functional shell only (docs/build-plan.md Phase 8 does the real design).
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Layout from "../../components/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Container from "../../components/Container.astro";
+import Section from "../../components/Section.astro";
+import InlineCTA from "../../components/InlineCTA.astro";
+
+export async function getStaticPaths() {
+	const solutions = await getCollection("solutions", ({ data }) => !data.draft);
+	return solutions.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
+}
+
+interface Props {
+	entry: CollectionEntry<"solutions">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout title={`${entry.data.title}, Fluigen`}>
+	<Nav />
+	<main>
+		<Section>
+			<Container class="max-w-[70ch] space-y-6">
+				<h1 class="font-display text-h1 text-core">{entry.data.title}</h1>
+				<p class="text-body text-ink-2">{entry.data.summary}</p>
+				<div class="text-body text-ink-2">
+					<Content />
+				</div>
+				<InlineCTA class="pt-6" />
+			</Container>
+		</Section>
+	</main>
+	<Footer />
+</Layout>

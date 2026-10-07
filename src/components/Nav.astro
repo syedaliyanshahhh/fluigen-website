@@ -1,0 +1,98 @@
+---
+// Sticky header: logo left, primary links, "Book a free audit" button
+// (CLAUDE.md: sticky on every page, desktop and mobile, exact wording),
+// plus a hamburger menu below the lg breakpoint (1024px / 390px check).
+import logo from "../../design/logos/fluigen-horizontal-black.svg";
+import Icon from "./Icon.astro";
+
+const navLinks = [
+	{ href: "/solutions", label: "Solutions" },
+	{ href: "/case-studies", label: "Case studies" },
+	{ href: "/how-we-work", label: "How we work" },
+	{ href: "/about", label: "About" },
+];
+
+const linkClass =
+	"text-body text-core underline-offset-[5px] decoration-1 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+
+const bookButtonClass =
+	"inline-flex shrink-0 items-center justify-center rounded-full bg-core px-4 py-2.5 font-display font-medium text-small text-null outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:px-[26px] lg:py-[15px] lg:text-[17px]";
+---
+
+<header class="sticky top-0 z-50 border-b border-rule bg-baseline/95 backdrop-blur">
+	<div class="container-content flex items-center justify-between gap-4 py-4">
+		<a href="/" aria-label="Fluigen home" class="shrink-0">
+			<img src={logo.src} alt="Fluigen" class="h-[30px] w-auto" />
+		</a>
+
+		<nav aria-label="Primary" class="hidden lg:block">
+			<ul class="flex items-center gap-8">
+				{
+					navLinks.map((link) => (
+						<li>
+							<a href={link.href} class={linkClass}>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="flex items-center gap-3">
+			<a href="/book" class={bookButtonClass}>Book a free audit</a>
+
+			<button
+				id="nav-toggle"
+				type="button"
+				class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-rule outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:hidden"
+				aria-expanded="false"
+				aria-controls="nav-mobile-menu"
+				aria-label="Open menu"
+			>
+				<Icon name="menu" id="nav-icon-menu" class="h-6 w-6 text-core" />
+				<Icon name="x" id="nav-icon-close" class="hidden h-6 w-6 text-core" />
+			</button>
+		</div>
+	</div>
+
+	<div id="nav-mobile-menu" class="hidden border-t border-rule bg-baseline lg:hidden">
+		<ul class="container-content flex flex-col gap-1 py-4">
+			{
+				navLinks.map((link) => (
+					<li>
+						<a href={link.href} class={`${linkClass} block py-2`}>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</header>
+
+<script>
+	const toggle = document.getElementById("nav-toggle");
+	const menu = document.getElementById("nav-mobile-menu");
+	const iconMenu = document.getElementById("nav-icon-menu");
+	const iconClose = document.getElementById("nav-icon-close");
+
+	function setOpen(open) {
+		menu?.classList.toggle("hidden", !open);
+		iconMenu?.classList.toggle("hidden", open);
+		iconClose?.classList.toggle("hidden", !open);
+		toggle?.setAttribute("aria-expanded", String(open));
+		toggle?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+	}
+
+	toggle?.addEventListener("click", () => {
+		setOpen(Boolean(menu?.classList.contains("hidden")));
+	});
+
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && !menu?.classList.contains("hidden")) {
+			setOpen(false);
+			toggle?.focus();
+		}
+	});
+</script>

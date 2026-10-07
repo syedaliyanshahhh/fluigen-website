@@ -1,0 +1,23 @@
+---
+// Native <details>/<summary>, no custom JS.
+import Icon from "./Icon.astro";
+
+interface Props {
+	question: string;
+	class?: string;
+}
+
+const { question, class: className } = Astro.props;
+---
+
+<details class:list={["group border-b border-rule py-6", className]}>
+	<summary
+		class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-h3 text-core marker:content-none outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector [&::-webkit-details-marker]:hidden"
+	>
+		{question}
+		<Icon name="chevron-down" class="h-5 w-5 shrink-0 text-ink-3 transition-transform duration-150 group-open:rotate-180" />
+	</summary>
+	<div class="max-w-[70ch] pt-4 text-body text-ink-2">
+		<slot />
+	</div>
+</details>

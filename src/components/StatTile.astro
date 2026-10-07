@@ -1,0 +1,15 @@
+---
+// Big-number + Label pair, for the proof strip and similar stat rows.
+interface Props {
+	value: string;
+	label: string;
+	class?: string;
+}
+
+const { value, label, class: className } = Astro.props;
+---
+
+<div class:list={["space-y-2", className]}>
+	<p class="font-display text-big-number text-core">{value}</p>
+	<p class="font-mono text-label uppercase text-ink-3">{label}</p>
+</div>

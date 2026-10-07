@@ -1,31 +1,12 @@
 ---
-import '../styles/global.css';
-import logo from '../../design/logos/fluigen-horizontal-black.svg';
+// Real layout shell (docs/build-plan.md Phase 5 fills in <main>).
+import Layout from "../components/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="robots" content="noindex" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Fluigen</title>
-
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-		<link rel="manifest" href="/site.webmanifest" />
-	</head>
-	<body class="min-h-screen bg-[#F7F7F7] flex flex-col items-center justify-center gap-6 px-5">
-		<img src={logo.src} alt="Fluigen" class="h-10 w-auto" />
-		<p class="text-black text-lg text-center">New website on the way.</p>
-		<a
-			href="mailto:aliyan@fluigen.com"
-			class="text-black underline underline-offset-[5px] decoration-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#267B85]"
-		>
-			aliyan@fluigen.com
-		</a>
-	</body>
-</html>
+<Layout title="Fluigen">
+	<Nav />
+	<main></main>
+	<Footer />
+</Layout>

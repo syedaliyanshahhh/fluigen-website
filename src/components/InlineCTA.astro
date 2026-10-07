@@ -1,0 +1,23 @@
+---
+// Repeated "button + short note" pattern (e.g. homepage sections 1, 3, 5, 7, 10).
+import Button from "./Button.astro";
+
+interface Props {
+	label?: string;
+	note?: string;
+	inverse?: boolean;
+	class?: string;
+}
+
+const {
+	label = "Book your free automation audit",
+	note,
+	inverse = false,
+	class: className,
+} = Astro.props;
+---
+
+<div class:list={["flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-5", className]}>
+	<Button href="/book" inverse={inverse}>{label}</Button>
+	{note && <p class:list={["text-small", inverse ? "text-null/80" : "text-ink-3"]}>{note}</p>}
+</div>

@@ -1,0 +1,20 @@
+---
+// Arch-gradient placeholder frame — design/brand.md designates `arch` for
+// "founder photo frame or empty states". Used wherever an asset hasn't
+// landed yet (founder photo, audio recording, and so on).
+import arch from "../../design/gradients/arch-1000x1250.jpg";
+
+interface Props {
+	label: string;
+	class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div class:list={["relative overflow-hidden rounded-panel bg-substation", className]}>
+	<img src={arch.src} alt="" aria-hidden="true" class="h-full w-full object-cover" />
+	<p class="absolute inset-x-0 bottom-0 p-6 font-mono text-label uppercase text-null">
+		{label}
+	</p>
+</div>

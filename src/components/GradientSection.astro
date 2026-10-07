@@ -1,0 +1,33 @@
+---
+// Wraps a gradient image file as a section background — design/brand.md:
+// "Always use the image files in design/gradients. Never recreate them
+// with CSS gradients." `substation` is the fallback background color
+// while the image loads.
+//
+// Callers are responsible for the brand rule this component can't enforce
+// on its own: white text only over the dark part of the image, black text
+// only over the light part. Where that boundary falls differs per
+// variant, so check it against the actual image before choosing text
+// color for content placed here.
+import horizon from "../../design/gradients/horizon-hero-2400x1400.jpg";
+import mist from "../../design/gradients/mist-cta-2400x1200.jpg";
+import edge from "../../design/gradients/edge-1800x1200.jpg";
+import arch from "../../design/gradients/arch-1000x1250.jpg";
+
+const images = { horizon, mist, edge, arch };
+
+interface Props {
+	variant: keyof typeof images;
+	class?: string;
+}
+
+const { variant, class: className } = Astro.props;
+const image = images[variant];
+---
+
+<section class:list={["relative overflow-hidden bg-substation", className]}>
+	<img src={image.src} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
+	<div class="relative z-10">
+		<slot />
+	</div>
+</section>

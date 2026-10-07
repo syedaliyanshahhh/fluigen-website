@@ -1,0 +1,42 @@
+---
+import logo from "../../design/logos/fluigen-horizontal-black.svg";
+
+const year = new Date().getFullYear();
+
+const links = [
+	{ href: "/solutions", label: "Solutions" },
+	{ href: "/case-studies", label: "Case studies" },
+	{ href: "/how-we-work", label: "How we work" },
+	{ href: "/about", label: "About" },
+	{ href: "/privacy", label: "Privacy" },
+	{ href: "/terms", label: "Terms" },
+];
+
+const linkClass =
+	"text-body text-core underline-offset-[5px] decoration-1 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+---
+
+<footer class="border-t border-rule">
+	<div class="container-content flex flex-col gap-10 py-16 lg:flex-row lg:items-start lg:justify-between">
+		<div class="space-y-4">
+			<a href="/" aria-label="Fluigen home">
+				<img src={logo.src} alt="Fluigen" class="h-7 w-auto" />
+			</a>
+			<p class="text-small text-ink-3">AI automation for growing businesses. &copy; {year} Fluigen</p>
+		</div>
+
+		<nav aria-label="Footer">
+			<ul class="grid grid-cols-2 gap-x-10 gap-y-4 sm:flex sm:flex-wrap sm:gap-x-8">
+				{
+					links.map((link) => (
+						<li>
+							<a href={link.href} class={linkClass}>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+	</div>
+</footer>
