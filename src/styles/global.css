@@ -6,6 +6,12 @@ body {
   overflow-x: hidden;
 }
 
+/* Smooth in-page scroll (e.g. hero's "See what we have built" link) — killed
+   below for prefers-reduced-motion along with every other animation. */
+html {
+  scroll-behavior: smooth;
+}
+
 /*
  * Self-hosted brand fonts (design/brand.md). Self-hosted rather than loaded
  * from the Google Fonts CDN so EU visitors' IPs are never sent to Google.
@@ -190,6 +196,22 @@ body {
 
 @utility section-y {
   padding-block: clamp(5rem, 3.4595rem + 6.5728vw, 9.375rem); /* 80px -> 150px */
+}
+
+/*
+ * Hero-only vertical padding, anchored the same way as section-y above
+ * (375px -> 1440px) but with its own asymmetric bottom value (140px ->
+ * 220px, vs. section-y's shared 80px -> 150px). The hero sits on the
+ * horizon gradient, whose dark part is concentrated in its top ~60%; the
+ * larger bottom value keeps the headline/subline/CTA inside that dark
+ * band while leaving extra room below them for the image to fade toward
+ * baseline before the next section starts, per design/brand.md's gradient
+ * contrast rule. Defined with its own padding-top (not combined with
+ * section-y) so the two can't fight over which sets padding-bottom.
+ */
+@utility hero-section-y {
+  padding-top: clamp(5rem, 3.4595rem + 6.5728vw, 9.375rem); /* 80px -> 150px */
+  padding-bottom: clamp(8.75rem, 6.9894rem + 7.5117vw, 13.75rem); /* 140px -> 220px */
 }
 
 /*

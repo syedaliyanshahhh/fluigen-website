@@ -15,12 +15,12 @@ const href = `/case-studies/${caseStudy.id}`;
 <a
 	href={href}
 	class:list={[
-		"group block rounded-card outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector",
+		"group block min-w-0 rounded-card outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector",
 		className,
 	]}
 >
-	<Card class="h-full space-y-4">
-		<p class="font-display text-big-number text-core">{stat}</p>
+	<Card class="h-full min-w-0 space-y-4">
+		<p class="font-display text-big-number text-core break-words">{stat}</p>
 		<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
 		<p class="text-body text-ink-2">{summary}</p>
 	</Card>

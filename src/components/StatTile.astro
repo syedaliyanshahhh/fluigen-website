@@ -9,7 +9,7 @@ interface Props {
 const { value, label, class: className } = Astro.props;
 ---
 
-<div class:list={["space-y-2", className]}>
-	<p class="font-display text-big-number text-core">{value}</p>
+<div class:list={["min-w-0 space-y-2", className]}>
+	<p class="font-display text-big-number text-core break-words">{value}</p>
 	<p class="font-mono text-label uppercase text-ink-3">{label}</p>
 </div>

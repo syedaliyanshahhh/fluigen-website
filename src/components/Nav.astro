@@ -16,13 +16,13 @@ const navLinks = [
 ];
 
 const linkClass =
-	"text-body text-core underline-offset-[5px] decoration-1 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+	"text-body text-core underline-offset-[5px] decoration-1 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
 
 const bookButtonSmallClass =
-	"inline-flex shrink-0 items-center justify-center rounded-full bg-core px-3.5 py-2.5 font-display font-medium text-[15px] leading-none text-null outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector sm:px-[18px]";
+	"inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-core px-3.5 font-display font-medium text-[15px] leading-none text-null outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector sm:px-[18px]";
 
 const mobileLinkClass =
-	"block border-b border-rule py-5 font-display text-h3 text-core outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+	"block border-b border-rule py-5 font-display text-h3 text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
 ---
 
 <header
@@ -54,7 +54,7 @@ const mobileLinkClass =
 			<button
 				id="nav-toggle"
 				type="button"
-				class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-rule outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:hidden"
+				class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-rule outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:hidden"
 				aria-expanded="false"
 				aria-controls="nav-mobile-menu"
 				aria-label="Open menu"

@@ -13,7 +13,10 @@ const { label, class: className } = Astro.props;
 ---
 
 <div class:list={["relative overflow-hidden rounded-panel bg-substation", className]}>
-	<img src={arch.src} alt="" aria-hidden="true" class="h-full w-full object-cover" />
+	<img src={arch.src} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
+	<div class="relative z-10 flex h-full items-center justify-center">
+		<slot />
+	</div>
 	<p class="absolute inset-x-0 bottom-0 p-6 font-mono text-label uppercase text-null">
 		{label}
 	</p>

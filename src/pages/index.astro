@@ -1,12 +1,158 @@
 ---
-// Real layout shell (docs/build-plan.md Phase 5 fills in <main>).
+// Homepage, sections 1-6 (docs/build-plan.md Phase 5). Sections 7-12 land
+// in a later task.
+import { getCollection } from "astro:content";
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import Container from "../components/Container.astro";
+import Section from "../components/Section.astro";
+import GradientSection from "../components/GradientSection.astro";
+import Button from "../components/Button.astro";
+import InlineCTA from "../components/InlineCTA.astro";
+import Label from "../components/Label.astro";
+import StatTile from "../components/StatTile.astro";
+import SolutionCard from "../components/SolutionCard.astro";
+import CaseStudyCard from "../components/CaseStudyCard.astro";
+import EmptyState from "../components/EmptyState.astro";
+import Icon from "../components/Icon.astro";
+
+const solutions = (await getCollection("solutions", ({ data }) => !data.draft)).sort(
+	(a, b) => a.data.order - b.data.order,
+);
+
+const caseStudies = (
+	await getCollection("case-studies", ({ data }) => !data.draft && data.featured)
+).sort((a, b) => a.data.order - b.data.order);
+
+const painPoints = [
+	{
+		title: "Calls go to voicemail",
+		description:
+			"Someone rings after hours or while the team is busy. Nobody picks up, and they book with whoever answers first.",
+	},
+	{
+		title: "Leads go cold",
+		description:
+			"Follow-ups slip because everyone has a full day. By the time someone replies, the lead has moved on.",
+	},
+	{
+		title: "You chase the team for updates",
+		description:
+			"The same details get copied between email, spreadsheets and chat, and you spend your evenings checking what got done.",
+	},
+];
+
+const proofStats = [
+	{ value: "12", label: "platforms connected by one employee onboarding workflow" },
+	{ value: "[PLACEHOLDER]", label: "[PLACEHOLDER: what it measures, voice agent projects]" },
+	{ value: "[PLACEHOLDER]", label: "[PLACEHOLDER: what it measures, recruiting engine]" },
+	{ value: "2 to 3", label: "weeks from kickoff to a live system, for most builds" },
+];
 ---
 
 <Layout title="Fluigen">
 	<Nav />
-	<main></main>
+	<main>
+		<!-- 1. Hero -->
+		<GradientSection variant="horizon" class="hero-section-y">
+			<Container>
+				<div class="fade-in space-y-6 sm:space-y-8">
+					<h1 class="font-display text-hero-h1 text-null">
+						We build AI that answers your calls, follows up your leads, and runs your back office.
+					</h1>
+					<p class="text-body text-null max-w-[46ch]">
+						Done for you, live in weeks, and you pay the second half only once it is running.
+					</p>
+					<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
+						<Button href="/book" inverse>Book your free automation audit</Button>
+						<Button href="#case-studies" variant="text" inverse>See what we have built</Button>
+					</div>
+					<p class="text-small text-null pt-2">
+						30 minutes. You leave with a written plan, even if you never hire us.
+					</p>
+				</div>
+			</Container>
+		</GradientSection>
+
+		<!-- 2. Proof strip -->
+		<Section>
+			<Container>
+				<div class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-12">
+					{proofStats.map((stat) => <StatTile value={stat.value} label={stat.label} />)}
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 3. The problem -->
+		<Section>
+			<Container>
+				<h2 class="font-display text-h2 text-core max-w-[18ch]">
+					What stops when one person is unavailable?
+				</h2>
+				<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-3 lg:mt-16">
+					{
+						painPoints.map((pain, index) => (
+							<div class="space-y-4">
+								<Label text={String(index + 1).padStart(2, "0")} />
+								<h3 class="font-display text-h3 text-core">{pain.title}</h3>
+								<p class="text-body text-ink-2 max-w-[42ch]">{pain.description}</p>
+							</div>
+						))
+					}
+				</div>
+				<InlineCTA class="mt-12 lg:mt-16" note="We will find the first thing worth fixing." />
+			</Container>
+		</Section>
+
+		<!-- 4. What we build -->
+		<Section>
+			<Container>
+				<div class="max-w-[640px] space-y-4">
+					<h2 class="font-display text-h2 text-core">What we build</h2>
+					<p class="text-body text-ink-2">
+						Each of these is backed by a system we have already built and run for a real business.
+					</p>
+				</div>
+				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-8">
+					{solutions.map((solution) => <SolutionCard solution={solution} />)}
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 5. See it work -->
+		<Section>
+			<Container>
+				<div class="max-w-[640px] space-y-4">
+					<h2 class="font-display text-h2 text-core">Hear an AI receptionist take a real call</h2>
+					<p class="text-body text-ink-2">
+						Sixty seconds. It answers, asks the right questions, and books the appointment.
+					</p>
+				</div>
+				<EmptyState
+					label="[PLACEHOLDER: 60-second recording]"
+					class="mt-10 aspect-[16/9] w-full lg:mt-12"
+				>
+					<span class="flex h-16 w-16 items-center justify-center rounded-full bg-null sm:h-20 sm:w-20">
+						<Icon name="play" class="h-6 w-6 translate-x-[2px] text-core sm:h-7 sm:w-7" />
+					</span>
+				</EmptyState>
+				<InlineCTA class="mt-10 lg:mt-12" />
+			</Container>
+		</Section>
+
+		<!-- 6. Case studies -->
+		<Section id="case-studies" class="scroll-mt-[var(--nav-h)]">
+			<Container>
+				<h2 class="font-display text-h2 text-core">Work that is already running</h2>
+				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:mt-16 lg:gap-8">
+					{caseStudies.map((caseStudy) => <CaseStudyCard caseStudy={caseStudy} />)}
+				</div>
+				<Button href="/case-studies" variant="text" class="mt-10 inline-block lg:mt-12">
+					See all case studies
+				</Button>
+			</Container>
+		</Section>
+	</main>
 	<Footer />
 </Layout>
