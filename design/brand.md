@@ -46,11 +46,15 @@ Load from Google Fonts: Inter Tight (300, 400, 500), Inter (400, 500), Cascadia 
 - Labels in Cascadia Code are optional texture, not a heading above every section.
 
 ## Layout
-- Container: max width 1280px, centered. Side padding 20px below 640px, 32px from 640px, 48px from 1024px, 64px from 1440px. Nav, page content and footer all use this same container, so the logo, every heading and the footer share one left edge, and the nav button and footer links share one right edge.
-- Section vertical spacing: 80px mobile, 112px tablet (768px+), 150px desktop (1024px+).
-- Inner-page text columns align to the container's left edge (never centered or offset), max width 720px.
-- Nav: height 64px mobile, 76px desktop. Logo 26px tall mobile, 30px desktop. Sticky, with a 1px rule border that only appears after scrolling.
-- Footer: padding 64px top / 32px bottom mobile, 96px top / 40px bottom desktop.
+
+Fluid, not stepped. Every value below scales continuously with the viewport between a 375px mobile anchor and a 1440px desktop anchor (1440 is the most common laptop logical width), then holds flat outside that range. Nothing snaps at a breakpoint — resize the window and sizes glide. The pixel values below are the two endpoints of that scale, not fixed sizes. Implementation is `clamp()` in `src/styles/global.css`, one per property, each following `clamp(mobile, intercept + slope·vw, desktop)` for the same two anchors. See CLAUDE.md's "Responsive system" rule before changing any of it.
+
+- Container: max width 1440px, centered. Side padding scales 20px (375px viewport) to 64px (1440px viewport). Nav, page content and footer all use this same container, so the logo, every heading and the footer share one left edge, and the nav button and footer links share one right edge. At the common laptop widths (1280, 1366, 1440), this leaves little to no dead space outside the container — it was previously capped at 1280px, which left a visible empty margin on anything wider.
+- Section vertical spacing: scales 80px (375px) to 150px (1440px).
+- Inner-page text columns align to the container's left edge (never centered or offset), max width 720px. This is independent of the container's own max-width.
+- Nav: height scales 64px (375px) to 76px (1440px). Logo height scales 26px to 30px. Sticky, with a 1px rule border that only appears after scrolling. The mobile menu panel reads the same `--nav-h` custom property as the header so its top offset always matches the header's real height, at any width.
+- Footer: padding scales 64px to 96px top, 32px to 40px bottom (375px to 1440px).
+- Type scale (hero H1, H1, H2, H3, body, label, big number): font-size and line-height both fluid between the mobile and desktop values in the table above. Letter-spacing and font-weight stay constant (brand.md gives one value, not a pair). Small text stays flat 15px/22px at every width, no fluid range.
 - Card radius 20px, large panel radius 28px, buttons fully rounded (pill)
 - No drop shadows. Separate things with space, white surfaces, and 1px rules.
 - No horizontal scrolling at any width. Tap targets at least 44px. Body text at least 16px on mobile.

@@ -86,84 +86,71 @@ body {
 }
 
 /*
- * Type scale — design/brand.md's 8 named styles, and the two layout
- * primitives below, are each a self-contained @utility with the desktop
- * breakpoint nested inside, rather than a --theme-token redeclared under a
- * plain `@media { :root { ... } }` block.
+ * Fluid responsive system — design/brand.md "Layout".
  *
- * That theme-token-redeclaration approach was tried first and verified
- * broken: in the production build, Tailwind/Lightning CSS silently dropped
- * the mobile value of every redeclared --text-* custom property, leaving
- * only the desktop value active at every width. Plain custom properties
- * outside Tailwind's recognized namespaces (e.g. a hand-rolled --layout-*)
- * didn't show the same loss in testing, but since the exact cause wasn't
- * fully isolated, every responsive style here uses the one pattern that was
- * directly confirmed correct in a real `astro build` output: mobile values
- * as the utility's own properties, desktop values in one nested @media
- * block inside the same @utility rule.
+ * Every spacing and type value below is a single `clamp()`, continuously
+ * interpolated between a mobile anchor at a 375px viewport and a desktop
+ * anchor at a 1440px viewport (1440 is the single most common laptop
+ * logical width), then held flat outside that range. Nothing here steps
+ * at a breakpoint — resize the window and every value glides. The two
+ * endpoints still land exactly on the mobile/desktop pixel pairs
+ * design/brand.md specifies, so this is a faithful interpolation of those
+ * values, not a reinvention of them.
+ *
+ * Don't reintroduce `@media`-stepped overrides for type or spacing — add
+ * a new fluid clamp() anchored the same way instead (see CLAUDE.md's
+ * "Responsive system" rule). Each clamp below follows the same formula:
+ *   slope      = (desktopPx - mobilePx) / (1440 - 375)
+ *   intercept  = mobilePx - 375 * slope      // px, then /16 for rem
+ *   clamp(mobileRem, interceptRem + (slope * 100)vw, desktopRem)
+ *
+ * This also sidesteps the Tailwind/Lightning CSS bug noted in git history:
+ * a single clamp() is one literal property value, not a custom property
+ * redeclared under `@media`, so that bug class can't occur here. (That
+ * bug: a --text-* theme token redeclared under a plain
+ * `@media { :root { ... } }` block was verified broken in a real
+ * `astro build` — Tailwind/Lightning CSS silently dropped the mobile
+ * value, leaving only the desktop size active at every width. The first
+ * fix used discrete mobile/desktop values switched at one `@media`
+ * breakpoint instead; this fluid system replaces that in turn.)
  */
 @utility text-hero-h1 {
-  font-size: 2.75rem; /* 44px */
-  line-height: 1.0454545; /* 46/44 */
+  font-size: clamp(2.75rem, 1.4296rem + 5.6338vw, 6.5rem); /* 44px -> 104px */
+  line-height: clamp(2.875rem, 1.6866rem + 5.0704vw, 6.25rem); /* 46px -> 100px */
   letter-spacing: -0.045em;
   font-weight: 300;
-
-  @media (min-width: 64rem) {
-    font-size: 6.5rem; /* 104px */
-    line-height: 0.9615385; /* 100/104 */
-  }
 }
 
 @utility text-h1 {
-  font-size: 2.5rem; /* 40px */
-  line-height: 1.05; /* 42/40 */
+  font-size: clamp(2.5rem, 1.7958rem + 3.0047vw, 4.5rem); /* 40px -> 72px */
+  line-height: clamp(2.625rem, 1.9648rem + 2.8169vw, 4.5rem); /* 42px -> 72px */
   letter-spacing: -0.03em;
   font-weight: 400;
-
-  @media (min-width: 64rem) {
-    font-size: 4.5rem; /* 72px */
-    line-height: 1; /* 72/72 */
-  }
 }
 
 @utility text-h2 {
-  font-size: 2.125rem; /* 34px */
-  line-height: 1.0588235; /* 36/34 */
+  font-size: clamp(2.125rem, 1.6408rem + 2.0657vw, 3.5rem); /* 34px -> 56px */
+  line-height: clamp(2.25rem, 1.7658rem + 2.0657vw, 3.625rem); /* 36px -> 58px */
   letter-spacing: -0.03em;
   font-weight: 400;
-
-  @media (min-width: 64rem) {
-    font-size: 3.5rem; /* 56px */
-    line-height: 1.0357143; /* 58/56 */
-  }
 }
 
 @utility text-h3 {
-  font-size: 1.375rem; /* 22px */
-  line-height: 1.2727273; /* 28/22 */
+  font-size: clamp(1.375rem, 1.243rem + 0.5634vw, 1.75rem); /* 22px -> 28px */
+  line-height: clamp(1.75rem, 1.618rem + 0.5634vw, 2.125rem); /* 28px -> 34px */
   letter-spacing: -0.015em;
   font-weight: 400;
-
-  @media (min-width: 64rem) {
-    font-size: 1.75rem; /* 28px */
-    line-height: 1.2142857; /* 34/28 */
-  }
 }
 
 @utility text-body {
-  font-size: 1.0625rem; /* 17px */
-  line-height: 1.5882353; /* 27/17 */
+  font-size: clamp(1.0625rem, 1.0405rem + 0.0939vw, 1.125rem); /* 17px -> 18px */
+  line-height: clamp(1.6875rem, 1.6435rem + 0.1878vw, 1.8125rem); /* 27px -> 29px */
   letter-spacing: 0em;
   font-weight: 400;
-
-  @media (min-width: 64rem) {
-    font-size: 1.125rem; /* 18px */
-    line-height: 1.6111111; /* 29/18 */
-  }
 }
 
 @utility text-small {
-  /* Same 15px/22 at every width per design/brand.md — no desktop override */
+  /* Same 15px/22 at every width per design/brand.md — no fluid range */
   font-size: 0.9375rem; /* 15px */
   line-height: 1.4666667; /* 22/15 */
   letter-spacing: 0em;
@@ -171,60 +158,55 @@ body {
 }
 
 @utility text-label {
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.3333333; /* 16/12 */
+  font-size: clamp(0.75rem, 0.728rem + 0.0939vw, 0.8125rem); /* 12px -> 13px */
+  line-height: clamp(1rem, 0.956rem + 0.1878vw, 1.125rem); /* 16px -> 18px */
   letter-spacing: 0.04em;
   font-weight: 400;
-
-  @media (min-width: 64rem) {
-    font-size: 0.8125rem; /* 13px */
-    line-height: 1.3846154; /* 18/13 */
-  }
 }
 
 @utility text-big-number {
-  font-size: 3rem; /* 48px */
-  line-height: 1; /* 48/48 */
+  font-size: clamp(3rem, 2.4718rem + 2.2535vw, 4.5rem); /* 48px -> 72px */
+  line-height: 1; /* 48/48 and 72/72 both reduce to 1 */
   letter-spacing: -0.05em;
   font-weight: 300;
-
-  @media (min-width: 64rem) {
-    font-size: 4.5rem; /* 72px */
-    line-height: 1; /* 72/72 */
-  }
 }
 
 /*
- * Container/section primitives (Phase 3 components wrap these) —
- * design/brand.md "Layout". Nav, page content and footer all use
- * container-content so the logo, every heading and the footer share one
- * left edge, and the nav button and footer links share one right edge.
+ * Container/section primitives (Phase 3 components wrap these). Nav, page
+ * content and footer all use container-content so the logo, every
+ * heading and the footer share one left edge, and the nav button and
+ * footer links share one right edge.
+ *
+ * Max-width raised from an earlier fixed 1280px to 1440px: 1440 is the
+ * single most common laptop logical width, so on that screen the
+ * container now reaches the viewport edges (padding only) instead of
+ * leaving a large empty margin either side of it.
  */
 @utility container-content {
-  max-width: 80rem; /* 1280px */
+  max-width: 90rem; /* 1440px */
   margin-inline: auto;
-  padding-inline: 1.25rem; /* 20px, below 640px */
-
-  @media (min-width: 40rem) {
-    padding-inline: 2rem; /* 32px, from 640px */
-  }
-  @media (min-width: 64rem) {
-    padding-inline: 3rem; /* 48px, from 1024px */
-  }
-  @media (min-width: 90rem) {
-    padding-inline: 4rem; /* 64px, from 1440px */
-  }
+  padding-inline: clamp(1.25rem, 0.2817rem + 4.1315vw, 4rem); /* 20px -> 64px */
 }
 
 @utility section-y {
-  padding-block: 5rem; /* 80px, mobile */
+  padding-block: clamp(5rem, 3.4595rem + 6.5728vw, 9.375rem); /* 80px -> 150px */
+}
 
-  @media (min-width: 48rem) {
-    padding-block: 7rem; /* 112px, tablet (768px+) */
-  }
-  @media (min-width: 64rem) {
-    padding-block: 9.375rem; /* 150px, desktop (1024px+) */
-  }
+/*
+ * Nav and footer fluid sizing. --nav-h is a plain custom property (not a
+ * Tailwind-namespaced token) so Nav.astro's sticky header and its mobile
+ * menu panel can both read the exact same value via `h-[var(--nav-h)]` /
+ * `top-[var(--nav-h)]` — the menu's top offset can never drift from the
+ * header's real height, at any viewport width.
+ */
+:root {
+  --nav-h: clamp(4rem, 3.7359rem + 1.1268vw, 4.75rem); /* 64px -> 76px */
+  --nav-logo-h: clamp(1.625rem, 1.537rem + 0.3756vw, 1.875rem); /* 26px -> 30px */
+}
+
+@utility footer-y {
+  padding-top: clamp(4rem, 3.2958rem + 3.0047vw, 6rem); /* 64px -> 96px */
+  padding-bottom: clamp(2rem, 1.8239rem + 0.7512vw, 2.5rem); /* 32px -> 40px */
 }
 
 /*

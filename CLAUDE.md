@@ -35,7 +35,8 @@ One goal: visitors book a free automation audit.
 - "We" for Fluigen, "I" only in the founder note
 
 ## Build rules
-- Mobile first. Check every section at 390px and 1440px.
+- Mobile first. Check every section across a full range of widths, not just 390px and 1440px — include common phones, tablets, and laptops (1280, 1366, 1440, 1512, 1728, 1920).
+- Responsive system: container width/padding, section spacing, nav/footer sizing and the type scale are all fluid `clamp()` values defined once in `src/styles/global.css` (see design/brand.md "Layout"), scaling continuously between a 375px and a 1440px anchor. Reuse those utilities (`container-content`, `section-y`, `text-*`, `footer-y`, `--nav-h`) for any new section. Don't add a fixed pixel value or a new `@media`-stepped override for spacing or type — if a value genuinely needs its own range, add another anchored `clamp()` the same way instead.
 - Semantic HTML, alt text on images, visible keyboard focus, readable contrast
 - Respect prefers-reduced-motion
 - One section per task. Stop and show me before moving on.
