@@ -2,11 +2,22 @@
 // /book — the only page with the calendar (CLAUDE.md "Booking"). Calendly
 // inline embed via their official widget.js pattern, with a fallback link
 // shown if the widget script fails to load or never initializes.
+//
+// Layout: details and calendar sit side by side from lg up, and the whole
+// block is centered within the viewport height below the nav, so the
+// calendar is visible without scrolling the page on laptop/desktop widths.
+// Below lg there isn't room for both side by side, so it stacks and
+// scrolls normally, same as every other two-column section on the site.
+//
+// The widget's height is NOT a guessed fixed value — Calendly posts its
+// real content height via `calendly.page_height` messages (their
+// documented inline-embed resize API), and the listener below applies
+// that directly, so the box always hugs the actual calendar instead of
+// leaving empty space around a shorter view.
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import Container from "../components/Container.astro";
-import Section from "../components/Section.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 
@@ -28,71 +39,72 @@ const onCallItems = [
 >
 	<Nav />
 	<main>
-		<Section>
+		<div class="flex flex-col justify-center py-10 lg:min-h-[calc(100svh-var(--nav-h))] lg:py-0">
 			<Container>
-				<div class="max-w-[640px] space-y-6">
-					<h1 class="font-display text-h1 text-core">Book your free automation audit</h1>
-					<p class="text-body text-ink-2">
-						A 30-minute call with Aliyan. Pick a time that suits you below.
-					</p>
-					<div class="space-y-3 pt-2">
-						<p class="font-mono text-label uppercase text-ink-3">On the call we will</p>
-						<ul class="space-y-3">
-							{
-								onCallItems.map((item) => (
-									<li class="flex gap-3 text-body text-ink-2">
-										<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
-										<span>{item}</span>
-									</li>
-								))
-							}
-						</ul>
-					</div>
-				</div>
-
-				<div class="mt-12 lg:mt-16">
-					<noscript>
-						<style>
-							#calendly-widget {
-								display: none;
-							}
-						</style>
-					</noscript>
-
-					<div
-						id="calendly-widget"
-						class="calendly-inline-widget h-[680px] w-full min-w-[320px] overflow-hidden rounded-card border border-rule bg-null sm:h-[720px] lg:h-[760px]"
-						data-url={calendlyEmbedUrl}
-					>
-					</div>
-
-					<div
-						id="calendly-fallback"
-						class="hidden flex-col items-start gap-5 rounded-card border border-rule bg-null p-8 sm:p-10"
-					>
+				<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-14">
+					<div class="max-w-[520px] space-y-6">
+						<h1 class="font-display text-h1 text-core">Book your free automation audit</h1>
 						<p class="text-body text-ink-2">
-							The calendar did not load. Open the booking page directly instead.
+							A 30-minute call with Aliyan. Pick a time that suits you below.
 						</p>
-						<Button href={CALENDLY_URL}>Open the booking page</Button>
+						<div class="space-y-3 pt-2">
+							<p class="font-mono text-label uppercase text-ink-3">On the call we will</p>
+							<ul class="space-y-3">
+								{
+									onCallItems.map((item) => (
+										<li class="flex gap-3 text-body text-ink-2">
+											<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
+											<span>{item}</span>
+										</li>
+									))
+								}
+							</ul>
+						</div>
+						<p class="text-small text-ink-3 pt-2">
+							Can’t find a time that works? Email <a
+								href="mailto:aliyan@fluigen.com"
+								class="text-core underline decoration-1 underline-offset-[5px] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
+								>aliyan@fluigen.com</a
+							>
+						</p>
 					</div>
 
-					<noscript>
-						<div class="flex flex-col items-start gap-5 rounded-card border border-rule bg-null p-8 sm:p-10">
-							<p class="text-body text-ink-2">Enable JavaScript to see the calendar, or book directly:</p>
+					<div>
+						<noscript>
+							<style>
+								#calendly-widget {
+									display: none;
+								}
+							</style>
+						</noscript>
+
+						<div
+							id="calendly-widget"
+							class="calendly-inline-widget h-[660px] w-full min-w-[320px] lg:max-h-[calc(100svh-var(--nav-h)-3rem)]"
+							data-url={calendlyEmbedUrl}
+						>
+						</div>
+
+						<div
+							id="calendly-fallback"
+							class="hidden flex-col items-start gap-5 rounded-card border border-rule bg-null p-8 sm:p-10"
+						>
+							<p class="text-body text-ink-2">
+								The calendar did not load. Open the booking page directly instead.
+							</p>
 							<Button href={CALENDLY_URL}>Open the booking page</Button>
 						</div>
-					</noscript>
-				</div>
 
-				<p class="mt-6 text-small text-ink-3">
-					Can’t find a time that works? Email <a
-						href="mailto:aliyan@fluigen.com"
-						class="text-core underline decoration-1 underline-offset-[5px] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
-						>aliyan@fluigen.com</a
-					>
-				</p>
+						<noscript>
+							<div class="flex flex-col items-start gap-5 rounded-card border border-rule bg-null p-8 sm:p-10">
+								<p class="text-body text-ink-2">Enable JavaScript to see the calendar, or book directly:</p>
+								<Button href={CALENDLY_URL}>Open the booking page</Button>
+							</div>
+						</noscript>
+					</div>
+				</div>
 			</Container>
-		</Section>
+		</div>
 	</main>
 	<Footer />
 
@@ -108,6 +120,18 @@ const onCallItems = [
 			fallback?.classList.remove("hidden");
 			fallback?.classList.add("flex");
 		}
+
+		// Calendly's documented inline-embed resize API: it posts the real
+		// content height any time the view changes (date picked, time slots
+		// shown, confirmation form, ...), so the widget always matches its
+		// actual content instead of a guessed fixed height.
+		window.addEventListener("message", (event) => {
+			if (event.origin !== "https://calendly.com") return;
+			if (event.data?.event !== "calendly.page_height") return;
+			const height = event.data.payload?.height;
+			if (!height || !widget) return;
+			widget.style.height = typeof height === "number" ? `${height}px` : height;
+		});
 
 		const script = document.createElement("script");
 		script.src = CALENDLY_SCRIPT_SRC;
