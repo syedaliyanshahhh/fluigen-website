@@ -1,0 +1,16 @@
+---
+// White surface card per design/brand.md: "Cards are white on Baseline, 20
+// px radius, no shadow." Large panel variant uses the 28px radius instead.
+interface Props {
+	variant?: "card" | "panel";
+	class?: string;
+}
+
+const { variant = "card", class: className } = Astro.props;
+
+const radiusClass = variant === "panel" ? "rounded-panel p-8" : "rounded-card p-6";
+---
+
+<div class:list={["bg-null border border-rule", radiusClass, className]}>
+	<slot />
+</div>

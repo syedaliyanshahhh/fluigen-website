@@ -1,0 +1,23 @@
+---
+// Cascadia Code uppercase eyebrow label (design/brand.md's "Label" type
+// style). Optional texture, used sparingly — not a heading above every
+// section.
+interface Props {
+	text: string;
+	color?: "ink-3" | "core" | "null";
+	brackets?: boolean;
+	class?: string;
+}
+
+const { text, color = "ink-3", brackets = true, class: className } = Astro.props;
+
+const colorClass = {
+	"ink-3": "text-ink-3",
+	core: "text-core",
+	null: "text-null",
+}[color];
+---
+
+<span class:list={["font-mono text-label uppercase", colorClass, className]}>
+	{brackets ? `[${text}]` : text}
+</span>

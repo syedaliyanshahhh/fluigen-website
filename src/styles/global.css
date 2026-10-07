@@ -50,8 +50,12 @@
 @theme {
   /* Colors — design/brand.md. `flux` (#97C1C5) is deliberately not a token
      here: brand.md says it is gradient-image-only and must never be a flat
-     color or text color, so it gets no bg-/text- utility to misuse. */
+     color or text color, so it gets no bg-/text- utility to misuse.
+     `null` is the brand guidelines' literal name for white (#FFFFFF, cards
+     and surfaces) — confirmed in design/fluigen-brand-guidelines.pdf's own
+     --null: #FFFFFF; web theme token, not a placeholder. */
   --color-baseline: #f7f7f7;
+  --color-null: #ffffff;
   --color-core: #000000;
   --color-ink-2: #3a3a3a;
   --color-ink-3: #6b6b6b;

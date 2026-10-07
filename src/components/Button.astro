@@ -1,0 +1,43 @@
+---
+// Button variants per design/brand.md "Buttons and links":
+// - primary: black pill, white text. On a gradient: white pill, black text (inverse).
+// - secondary: transparent, 1.5px black outline.
+// - text: black, underline with 5px offset, 1px thickness.
+// - hover: lift 1px. focus: 2px vector outline, 3px offset. No color changes to teal.
+interface Props {
+	href?: string;
+	variant?: "primary" | "secondary" | "text";
+	inverse?: boolean;
+	type?: "button" | "submit";
+	class?: string;
+}
+
+const {
+	href,
+	variant = "primary",
+	inverse = false,
+	type = "button",
+	class: className,
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+const shared =
+	"inline-flex items-center justify-center font-display font-medium text-[17px] leading-none transition-transform duration-150 ease-out hover:-translate-y-px outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+
+const variantClass = {
+	primary: inverse
+		? "rounded-full px-[26px] py-[15px] bg-null text-core"
+		: "rounded-full px-[26px] py-[15px] bg-core text-null",
+	secondary: "rounded-full px-[26px] py-[15px] bg-transparent text-core border-[1.5px] border-core",
+	text: "bg-transparent text-core underline underline-offset-[5px] decoration-1",
+}[variant];
+---
+
+<Tag
+	href={href}
+	type={!href ? type : undefined}
+	class:list={[shared, variantClass, className]}
+>
+	<slot />
+</Tag>
