@@ -13,7 +13,7 @@ Decisions already made for this plan: icons are hand-copied inline SVGs (no new 
 Confirmed by `content/brief.md`.
 
 - `/` — homepage (built first)
-- `/book` — Cal.com inline embed
+- `/book` — Calendly inline embed
 - `/solutions` — index + `/solutions/[slug]` — 5 detail pages: AI Receptionist and Voice Agents, Sales Follow-Up and Call Analysis, Client and Operations Portals, Hiring Automation, Content and Knowledge Systems
 - `/case-studies` — index + `/case-studies/[slug]` — one page per project
 - `/how-we-work`
@@ -79,8 +79,8 @@ Proof-strip stats stay inline homepage data, not a third collection — they hav
 Hero → Proof strip → Problem → What we build → See it work → Case studies → How it works → Guarantees → Who it's for → Founder note → FAQ → Final CTA.
 
 **Phase 6 — `/book`**
-- book.md copy, Cal.com embed pointed at the `[CAL_LINK]` placeholder until the real link lands.
-- Per brief.md's booking flow: the Cal.com event needs four fields (name, email, company website, "What would you automate first?") and an instant confirmation email — this is Cal.com event-type configuration, not Astro code, but note it as an action item so the real embed matches the brief once `[CAL_LINK]` lands.
+- book.md copy, Calendly embed pointed at https://calendly.com/aliyannshahh/30min.
+- Per brief.md's booking flow: the Calendly event needs four fields (name, email, company website, "What would you automate first?") and an instant confirmation email — this is Calendly event-type configuration, not Astro code, but note it as an action item so the real embed matches the brief.
 
 **Phase 7 — Case studies**
 - `/case-studies` index (CaseStudyCard grid) + `/case-studies/[slug].astro` detail template via `getStaticPaths`/`getCollection`, one page per project per brief.md. Every detail page ends with a CTA.
@@ -94,7 +94,7 @@ Hero → Proof strip → Problem → What we build → See it work → Case stud
 **Phase 10 — Privacy, Terms**
 - `[PLACEHOLDER]` legal text, noindexed, linked from Footer.
 
-**Final polish pass** — swap in real assets as they land (Cal.com link, proof-strip/case-study numbers, founder photo, recording, legal copy, `content/brief.md` itself), check every section at 390px and 1440px, accessibility pass (focus rings, alt text, contrast), commit and push `dev` per section per CLAUDE.md.
+**Final polish pass** — swap in real assets as they land (proof-strip/case-study numbers, founder photo, recording, legal copy, `content/brief.md` itself), check every section at 390px and 1440px, accessibility pass (focus rings, alt text, contrast), commit and push `dev` per section per CLAUDE.md.
 
 **Phase 11 — SEO and launch**
 - Title and meta description on every page.
@@ -108,7 +108,6 @@ Hero → Proof strip → Problem → What we build → See it work → Case stud
 
 1. **`content/brief.md` cuts off after the homepage section** — sitemap, homepage, and booking-flow detail are confirmed, but Solutions-page, Case-study-page, How We Work, About, and Privacy/Terms structure are not in the file. Phase 9 and the detail-page structure in Phases 7–8 are best-effort until the rest of the brief lands.
 2. **`design/mockups/` (desktop/mobile) and `design/components.png`** — empty/missing. Phase 2's styleguide covers token-level fidelity; section-level composition in Phases 5, 7–10 is best-effort against brand.md + the non-final reference draft until real mockups arrive.
-3. **Cal.com link (`[CAL_LINK]`)** — blocks a functional embed in Phase 6; page ships with a clearly marked placeholder.
 4. **Two proof-strip numbers + two case-study numbers** — blocks final copy in Phases 5 and 7; kept as literal `[PLACEHOLDER]`.
 5. **Founder photo** — blocks the Phase 5 founder-note image; uses the `arch`-gradient EmptyState instead.
 6. **60-second voice recording** — blocks the Phase 5 "see it work" audio; placeholder/disabled player.

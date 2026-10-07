@@ -8,5 +8,5 @@ On the call we will:
 - Pick the one or two processes worth automating first
 - Send you a written plan with a fixed price within 48 hours
 
-Calendar: Cal.com inline embed, [CAL_LINK]
+Calendar: Calendly inline embed, https://calendly.com/aliyannshahh/30min
 Below calendar, small text: Can’t find a time that works? Email aliyan@fluigen.com

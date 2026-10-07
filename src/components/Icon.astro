@@ -10,7 +10,8 @@ export type IconName =
 	| "menu"
 	| "x"
 	| "chevron-down"
-	| "play";
+	| "play"
+	| "check";
 
 interface Props {
 	name: IconName;
@@ -30,6 +31,7 @@ const paths: Record<IconName, string> = {
 	x: `<path d="M18 6 6 18" /><path d="m6 6 12 12" />`,
 	"chevron-down": `<path d="m6 9 6 6 6-6" />`,
 	play: `<polygon points="6 3 20 12 6 21 6 3" />`,
+	check: `<path d="M20 6 9 17l-5-5" />`,
 };
 ---
 

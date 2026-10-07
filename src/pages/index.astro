@@ -1,6 +1,5 @@
 ---
-// Homepage, sections 1-6 (docs/build-plan.md Phase 5). Sections 7-12 land
-// in a later task.
+// Homepage, sections 1-12 (docs/build-plan.md Phase 5).
 import { getCollection } from "astro:content";
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
@@ -11,10 +10,12 @@ import GradientSection from "../components/GradientSection.astro";
 import Button from "../components/Button.astro";
 import InlineCTA from "../components/InlineCTA.astro";
 import Label from "../components/Label.astro";
+import Card from "../components/Card.astro";
 import StatTile from "../components/StatTile.astro";
 import SolutionCard from "../components/SolutionCard.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
 import EmptyState from "../components/EmptyState.astro";
+import FAQItem from "../components/FAQItem.astro";
 import Icon from "../components/Icon.astro";
 
 const solutions = (await getCollection("solutions", ({ data }) => !data.draft)).sort(
@@ -48,6 +49,91 @@ const proofStats = [
 	{ value: "[PLACEHOLDER]", label: "[PLACEHOLDER: what it measures, voice agent projects]" },
 	{ value: "[PLACEHOLDER]", label: "[PLACEHOLDER: what it measures, recruiting engine]" },
 	{ value: "2 to 3", label: "weeks from kickoff to a live system, for most builds" },
+];
+
+const steps = [
+	{
+		title: "Audit",
+		description:
+			"A 30-minute call. Within 48 hours you get a written plan with what to automate, the hours it saves, and a fixed price.",
+	},
+	{
+		title: "Build",
+		description:
+			"We build one process end to end in your own accounts. You give us about two hours of your time in total.",
+	},
+	{
+		title: "Go live",
+		description:
+			"We test it with real work, hand it over with written docs and a short video, and you pay the second half.",
+	},
+	{
+		title: "Care",
+		description:
+			"Optional monthly plan: we watch it, fix it when your tools change, and keep improving it.",
+	},
+];
+
+const guarantees = [
+	{
+		title: "Pay the second half when it is live",
+		description: "50% to start. The rest only once the system is running in your business. Not before.",
+	},
+	{
+		title: "You own everything",
+		description:
+			"Your accounts, your data, your workflows. Full handover with written documentation and a video walkthrough.",
+	},
+	{
+		title: "30 days of free fixes",
+		description: "If something needs adjusting after launch, we fix it at no cost.",
+	},
+];
+
+const goodFit = [
+	"Owner-led businesses with roughly 10 to 200 people",
+	"The same tasks happen every day or every week",
+	"You know where the hours go, but nobody has time to fix it",
+	"You want it done for you, not another tool to learn",
+];
+
+const notFit = [
+	"One-off experiments with no process behind them",
+	"Businesses still working out how they run",
+	"Anyone looking for the cheapest option or hourly billing",
+];
+
+const faqs = [
+	{
+		question: "Who owns what you build?",
+		answer:
+			"You do. We build inside your accounts wherever possible, and at handover you get every login, the workflows, written documentation and a video walkthrough.",
+	},
+	{
+		question: "Is my data safe?",
+		answer:
+			"Your data stays in the tools you already use. We only ask for the access a build needs, and you can remove it the day we hand over.",
+	},
+	{
+		question: "What if it breaks?",
+		answer:
+			"You get 30 days of free fixes after launch. After that, the Care Plan covers monitoring and fixes, or you can call us when you need us.",
+	},
+	{
+		question: "How long does it take?",
+		answer:
+			"Most builds are live in 2 to 3 weeks. Your audit plan gives you a fixed price and a finish date before anything starts.",
+	},
+	{
+		question: "Do I need to learn anything?",
+		answer:
+			"No. It runs in the background of tools your team already uses. We show your team the few things they need to know.",
+	},
+	{
+		question: "What time zone do you work in?",
+		answer:
+			"We are based in Pakistan and work your business hours, including US, UK and Australian time zones.",
+	},
 ];
 ---
 
@@ -153,6 +239,125 @@ const proofStats = [
 				</Button>
 			</Container>
 		</Section>
+
+		<!-- 7. How it works -->
+		<Section>
+			<Container>
+				<h2 class="font-display text-h2 text-core">How it works</h2>
+				<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
+					{
+						steps.map((step, index) => (
+							<div class="space-y-4">
+								<Label text={String(index + 1).padStart(2, "0")} />
+								<h3 class="font-display text-h3 text-core">{step.title}</h3>
+								<p class="text-body text-ink-2">{step.description}</p>
+							</div>
+						))
+					}
+				</div>
+				<InlineCTA class="mt-12 lg:mt-16" note="Step 1 is free." />
+			</Container>
+		</Section>
+
+		<!-- 8. Guarantees -->
+		<Section>
+			<Container>
+				<h2 class="font-display text-h2 text-core max-w-[16ch]">The risk sits with us</h2>
+				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:mt-16 lg:gap-8">
+					{
+						guarantees.map((guarantee) => (
+							<Card class="space-y-4">
+								<Icon name="check" class="h-6 w-6 text-core" />
+								<h3 class="font-display text-h3 text-core">{guarantee.title}</h3>
+								<p class="text-body text-ink-2">{guarantee.description}</p>
+							</Card>
+						))
+					}
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 9. Who it is for -->
+		<Section>
+			<Container>
+				<h2 class="font-display text-h2 text-core max-w-[18ch]">Who we are a good fit for</h2>
+				<div class="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:mt-16 lg:gap-16">
+					<div class="space-y-5">
+						<Label text="good fit" />
+						<ul class="space-y-4">
+							{
+								goodFit.map((item) => (
+									<li class="flex gap-3 text-body text-ink-2">
+										<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
+										<span>{item}</span>
+									</li>
+								))
+							}
+						</ul>
+					</div>
+					<div class="space-y-5">
+						<Label text="not a fit" />
+						<ul class="space-y-4">
+							{
+								notFit.map((item) => (
+									<li class="flex gap-3 text-body text-ink-2">
+										<Icon name="x" class="mt-[3px] h-5 w-5 shrink-0 text-ink-3" />
+										<span>{item}</span>
+									</li>
+								))
+							}
+						</ul>
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 10. Founder note -->
+		<Section>
+			<Container>
+				<div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
+					<EmptyState
+						label="[PLACEHOLDER: founder photo]"
+						class="aspect-[4/5] w-full max-w-[360px]"
+					/>
+					<div class="max-w-[560px] space-y-6">
+						<Label text="from the founder" />
+						<blockquote class="font-display text-h3 text-core">
+							"I started in performance marketing, watching good businesses lose leads to slow
+							replies. Now I build the systems that stop it."
+						</blockquote>
+						<p class="text-body text-ink-2">
+							When you book an audit, you talk to me directly, not a sales rep.
+						</p>
+						<p class="text-small text-ink-3">Aliyan Shah, founder of Fluigen</p>
+						<InlineCTA class="pt-2" />
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 11. FAQ -->
+		<Section>
+			<Container>
+				<h2 class="font-display text-h2 text-core max-w-[16ch]">Questions owners ask us</h2>
+				<div class="mt-12 max-w-[760px] border-t border-rule lg:mt-16">
+					{faqs.map((faq) => <FAQItem question={faq.question}>{faq.answer}</FAQItem>)}
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 12. Final call to action (no calendar here) -->
+		<GradientSection variant="mist" class="section-y">
+			<Container>
+				<div class="max-w-[520px] space-y-6">
+					<h2 class="font-display text-h2 text-null">Find the first thing worth automating</h2>
+					<p class="text-body text-null max-w-[46ch]">
+						30 minutes, and you leave with a written plan, even if you never hire us.
+					</p>
+					<Button href="/book" inverse>Book your free automation audit</Button>
+				</div>
+			</Container>
+		</GradientSection>
 	</main>
 	<Footer />
 </Layout>

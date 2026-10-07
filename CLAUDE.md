@@ -24,8 +24,8 @@ One goal: visitors book a free automation audit.
 
 ## Booking
 - Every CTA links to /book. There is no calendar on the homepage.
-- /book is the only page with the Cal.com calendar, embedded inline
-- Cal.com link: [CAL_LINK]
+- /book is the only page with the Calendly calendar, embedded inline
+- Calendly link: https://calendly.com/aliyannshahh/30min
 - Sticky nav button "Book a free audit" on every page, desktop and mobile
 - Main CTA wording everywhere else: "Book your free automation audit"
 
