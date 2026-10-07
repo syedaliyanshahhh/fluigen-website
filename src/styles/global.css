@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Prevents any stray wide element from creating sitewide horizontal scroll
+   (design/brand.md "Layout": no horizontal scrolling at any width). */
+body {
+  overflow-x: hidden;
+}
+
 /*
  * Self-hosted brand fonts (design/brand.md). Self-hosted rather than loaded
  * from the Google Fonts CDN so EU visitors' IPs are never sent to Google.
@@ -188,22 +194,36 @@
   }
 }
 
-/* Container/section primitives (Phase 3 components wrap these) */
+/*
+ * Container/section primitives (Phase 3 components wrap these) —
+ * design/brand.md "Layout". Nav, page content and footer all use
+ * container-content so the logo, every heading and the footer share one
+ * left edge, and the nav button and footer links share one right edge.
+ */
 @utility container-content {
-  max-width: 77.5rem; /* 1240px */
+  max-width: 80rem; /* 1280px */
   margin-inline: auto;
-  padding-inline: 1.25rem; /* 20px, mobile */
+  padding-inline: 1.25rem; /* 20px, below 640px */
 
+  @media (min-width: 40rem) {
+    padding-inline: 2rem; /* 32px, from 640px */
+  }
   @media (min-width: 64rem) {
-    padding-inline: 4.5rem; /* 72px */
+    padding-inline: 3rem; /* 48px, from 1024px */
+  }
+  @media (min-width: 90rem) {
+    padding-inline: 4rem; /* 64px, from 1440px */
   }
 }
 
 @utility section-y {
   padding-block: 5rem; /* 80px, mobile */
 
+  @media (min-width: 48rem) {
+    padding-block: 7rem; /* 112px, tablet (768px+) */
+  }
   @media (min-width: 64rem) {
-    padding-block: 9.375rem; /* 150px */
+    padding-block: 9.375rem; /* 150px, desktop (1024px+) */
   }
 }
 

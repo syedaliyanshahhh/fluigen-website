@@ -28,14 +28,16 @@ const { Content } = await render(entry);
 	<Nav />
 	<main>
 		<Section>
-			<Container class="max-w-[70ch] space-y-6">
-				<p class="font-mono text-label uppercase text-ink-3">{entry.data.clientLabel}</p>
-				<p class="font-display text-big-number text-core">{entry.data.stat}</p>
-				<p class="text-body text-ink-2">{entry.data.summary}</p>
-				<div class="text-body text-ink-2">
-					<Content />
+			<Container>
+				<div class="max-w-[720px] space-y-6">
+					<p class="font-mono text-label uppercase text-ink-3">{entry.data.clientLabel}</p>
+					<p class="font-display text-big-number text-core">{entry.data.stat}</p>
+					<p class="text-body text-ink-2">{entry.data.summary}</p>
+					<div class="text-body text-ink-2">
+						<Content />
+					</div>
+					<InlineCTA class="pt-6" />
 				</div>
-				<InlineCTA class="pt-6" />
 			</Container>
 		</Section>
 	</main>

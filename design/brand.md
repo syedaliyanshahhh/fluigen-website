@@ -46,10 +46,14 @@ Load from Google Fonts: Inter Tight (300, 400, 500), Inter (400, 500), Cascadia 
 - Labels in Cascadia Code are optional texture, not a heading above every section.
 
 ## Layout
-- Max content width 1240px, side padding 72px desktop, 20px mobile
-- Section spacing 150px desktop, 80px mobile
+- Container: max width 1280px, centered. Side padding 20px below 640px, 32px from 640px, 48px from 1024px, 64px from 1440px. Nav, page content and footer all use this same container, so the logo, every heading and the footer share one left edge, and the nav button and footer links share one right edge.
+- Section vertical spacing: 80px mobile, 112px tablet (768px+), 150px desktop (1024px+).
+- Inner-page text columns align to the container's left edge (never centered or offset), max width 720px.
+- Nav: height 64px mobile, 76px desktop. Logo 26px tall mobile, 30px desktop. Sticky, with a 1px rule border that only appears after scrolling.
+- Footer: padding 64px top / 32px bottom mobile, 96px top / 40px bottom desktop.
 - Card radius 20px, large panel radius 28px, buttons fully rounded (pill)
 - No drop shadows. Separate things with space, white surfaces, and 1px rules.
+- No horizontal scrolling at any width. Tap targets at least 44px. Body text at least 16px on mobile.
 
 ## Buttons and links
 - Primary: black pill, white text, Inter Tight 500, 17px, padding 15px 26px. On a gradient: white pill, black text.
