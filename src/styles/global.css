@@ -192,6 +192,16 @@ html {
   font-weight: 400;
 }
 
+/* A case study's leading number: the Big number style (weight 300, -5%,
+   line height 1), scaled from Big number's mobile size (48px) up to the
+   Hero H1 desktop size (104px), so it leads its page at every width. */
+@utility text-hero-number {
+  font-size: clamp(3rem, 1.7676rem + 5.2582vw, 6.5rem); /* 48px -> 104px */
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: 300;
+}
+
 @utility text-big-number {
   font-size: clamp(3rem, 2.4718rem + 2.2535vw, 4.5rem); /* 48px -> 72px */
   line-height: 1; /* 48/48 and 72/72 both reduce to 1 */
@@ -285,6 +295,16 @@ html {
 :root {
   --space-block: clamp(3rem, 2.2958rem + 3.0047vw, 5rem); /* 48px -> 80px */
   --space-head: clamp(2.5rem, 1.9718rem + 2.2535vw, 4rem); /* 40px -> 64px */
+}
+
+/*
+ * Short inner-page hero on the flow field (PageHero.astro). Shorter than
+ * the homepage hero; the bottom pad keeps the text in the field's dark
+ * part, above where it turns to flux and dissolves into the page.
+ */
+@utility page-hero-y {
+  padding-top: clamp(3rem, 1.9437rem + 4.507vw, 6rem); /* 48px -> 96px */
+  padding-bottom: clamp(7rem, 5.5915rem + 6.0094vw, 11rem); /* 112px -> 176px */
 }
 
 /* Inner-page header: top padding only; the next Section supplies the gap below. */

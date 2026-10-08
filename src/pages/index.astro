@@ -33,23 +33,11 @@ const solutions = await getSolutions();
 // The case studies marked "Featured on homepage" in content/copy/case-studies.
 const caseStudies = await getFeaturedCaseStudies();
 
-// Shorter homepage lines (content/copy/home.md sections 4 and 6). The
-// solution and case study pages keep their full card copy.
-const solutionLines: Record<string, string> = {
-	"ai-receptionist-and-voice-agents": "Every call answered, day or night, and booked straight into your calendar.",
-	"sales-follow-up-and-call-analysis":
-		"Every lead gets a reply while still interested, and every sales call gets reviewed.",
-	"client-and-operations-portals": "One place for updates, files and status, not five inboxes.",
-	"hiring-automation": "Applicants screened and shortlisted before you open your inbox.",
-	"content-and-knowledge-systems": "Your know-how turned into posts and answers, without writing each one.",
-};
-
+// Shorter homepage summary (content/copy/home.md section 6) where it differs
+// from the case study's own card summary.
 const caseStudySummaries: Record<string, string> = {
-	"it-services-company": "Adding or removing a person meant sixteen logins. Now one action does it everywhere.",
 	"restoration-company":
 		"An AI receptionist picks up every call, day or night, and the team gets the details in seconds.",
-	"marketing-agency-outbound":
-		"Instead of an outreach hire, an AI agent follows up every prospect for 45 days and books meetings.",
 };
 
 const painPoints = [
@@ -218,7 +206,7 @@ const nn = (index: number) => String(index + 1).padStart(2, "0");
 					{
 						solutions.map((solution) => (
 							<li>
-								<SolutionRow solution={solution} line={solutionLines[solution.id]} />
+								<SolutionRow solution={solution} />
 							</li>
 						))
 					}

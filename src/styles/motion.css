@@ -78,6 +78,20 @@
 	animation-delay: calc(var(--lr-delay, 0ms) + var(--line, 0) * 140ms);
 }
 
+/* ---------- Hero number (BigNumber size="hero") ---------- */
+
+/* A case study's headline number rises out of its own mask on load, like
+   the homepage headline's words. The mask's padding keeps descenders
+   ("45 days") inside it at line height 1. */
+.hero-number {
+	overflow: clip;
+	padding-block: 0.06em 0.16em;
+	margin-block: -0.06em -0.16em;
+}
+.motion .hero-number__value {
+	animation: line-up 1.2s var(--ease-out) 0.12s both;
+}
+
 /* ---------- Flow lines (FlowLines.astro) ---------- */
 
 /* Thin lines in the context's core color: three waves that merge into one.

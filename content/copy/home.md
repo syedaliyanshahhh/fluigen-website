@@ -26,7 +26,7 @@ Note next to button: We will find the first thing worth fixing.
 ## 4. What we build
 Heading: What we build
 Intro: Each one already runs for a real business.
-Homepage card lines (the solution pages keep their full card line):
+Card lines (the same as each solution's card line in content/copy/solutions):
 - AI receptionist and voice agents | Every call answered, day or night, and booked straight into your calendar.
 - Sales follow-up and call analysis | Every lead gets a reply while still interested, and every sales call gets reviewed.
 - Client and operations portals | One place for updates, files and status, not five inboxes.
@@ -42,7 +42,7 @@ Button: Book your free automation audit
 
 ## 6. Case studies
 Heading: Work that is already running
-Show the three case studies marked "Featured on homepage" in content/copy/case-studies, with each one's headline number and client label, and these shortened summaries (the case study pages keep their full card summary):
+Show the three case studies marked "Featured on homepage" in content/copy/case-studies, with each one's headline number and client label, and these summaries (only the restoration one differs from its case study's card summary):
 - 16 | IT support provider | Adding or removing a person meant sixteen logins. Now one action does it everywhere.
 - 24/7 | Disaster restoration company | An AI receptionist picks up every call, day or night, and the team gets the details in seconds.
 - 45 days | US marketing agency | Instead of an outreach hire, an AI agent follows up every prospect for 45 days and books meetings.

@@ -86,12 +86,15 @@ function countUp(el: HTMLElement) {
 	const grouped = digits.includes(",");
 	const format = (n: number) => (grouped ? n.toLocaleString("en-US") : String(n));
 
-	// Screen readers get the final value once; the ticking digits are hidden.
-	el.setAttribute("aria-label", text);
+	// Screen readers get the final value once (visually hidden text, since
+	// aria-label is not allowed on a <p>); the ticking digits are hidden.
+	const final = document.createElement("span");
+	final.className = "sr-only";
+	final.textContent = text;
 	const live = document.createElement("span");
 	live.setAttribute("aria-hidden", "true");
 	el.textContent = "";
-	el.append(live);
+	el.append(final, live);
 
 	const duration = 1600;
 	const start = performance.now();
@@ -117,7 +120,13 @@ if (motionOK && "IntersectionObserver" in window) {
 		},
 		{ threshold: 0.6 },
 	);
-	document.querySelectorAll<HTMLElement>("[data-count]").forEach((el) => counter.observe(el));
+	document.querySelectorAll<HTMLElement>("[data-count]").forEach((el) => {
+		// A hero number leads its page: it counts from the first frame while
+		// it rises out of its mask, rather than waiting to be 60% in view
+		// (the mask keeps it below that until the rise is nearly done).
+		if (el.closest(".hero-number")) countUp(el);
+		else counter.observe(el);
+	});
 }
 
 // ---------- Card glow that follows the cursor ----------

@@ -1,30 +1,36 @@
 ---
 // /about, copy from content/copy/about.md. Business name and city come
 // from src/site.config.ts.
+//
+// Rhythm: hero on the flow field, the founder note (light; the only place
+// "I" is used), what we believe as a dark scene with glass cards, where we
+// work (light), then the closing band.
 import { site } from "../site.config";
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import Container from "../components/Container.astro";
 import Section from "../components/Section.astro";
-import PageHeader from "../components/PageHeader.astro";
+import Scene from "../components/Scene.astro";
+import PageHero from "../components/PageHero.astro";
 import Label from "../components/Label.astro";
 import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
 import FounderPhoto from "../components/FounderPhoto.astro";
 import PageCTA from "../components/PageCTA.astro";
 
 const story = [
-	"I started out in performance marketing, running ads for businesses. The ads worked. What kept failing was everything after the click: calls that went to voicemail, leads nobody followed up, owners copying details between tools at night.",
-	`So I moved into automation and started building the systems that fix that part. ${site.businessName} is the result: a small team that builds those systems properly, hands them over, and stands behind them.`,
-	"When you book an audit, you talk to me directly, not a sales rep.",
+	"I started in performance marketing. The ads worked. What failed came after the click: missed calls and leads nobody followed up.",
+	`So I moved into automation. ${site.businessName} builds those systems properly, hands them over and stands behind them.`,
 ];
+const storyClose = "Book an audit and you talk to me, not a sales rep.";
 
 // "The team" section: hidden at launch (content/MISSING.md). Put the team
 // copy here to show it again.
 const teamPlaceholder = "";
 
 const beliefs = [
-	{ title: "Outcomes over jargon", description: "If we cannot explain it in plain words, we have not understood it." },
+	{ title: "Outcomes over jargon", description: "If we cannot explain it plainly, we have not understood it." },
 	{ title: "You own what we build", description: "No lock-in, full handover." },
 	{ title: "Real numbers only", description: "We never show results we cannot stand behind." },
 ];
@@ -36,23 +42,22 @@ const beliefs = [
 >
 	<Nav />
 	<main id="main">
-		<PageHeader
+		<PageHero
 			title="We build the systems that keep a business running when nobody is free."
-			lead={`${site.businessName} is an AI automation agency for owner-led businesses. We design, build and look after systems that answer calls, follow up leads and handle the back-office work that eats your week.`}
+			lead="An AI automation agency for owner-led businesses. Calls answered, leads followed up, back-office work handled."
 		/>
 
 		<!-- Why Fluigen exists (founder note: the only place "I" is used) -->
-		<Section glow="left">
-			<Container>
-				<div class="grid grid-cols-1 gap-[var(--space-head)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-start lg:gap-16">
-					<FounderPhoto class="w-full max-w-[360px]" />
-					<div class="max-w-[720px] space-y-6">
-						<h2 class="font-display text-h2 text-core">Why {site.businessName} exists</h2>
-						<div class="space-y-5 text-body text-ink-2">
-							{story.map((paragraph) => <p>{paragraph}</p>)}
-						</div>
-						<p class="text-small text-ink-3">Aliyan Shah, founder</p>
+		<Section>
+			<Container class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:grid-cols-12 lg:gap-10">
+				<FounderPhoto class="w-full max-w-[min(360px,72vw)] lg:col-span-4" />
+				<div class="max-w-[600px] space-y-6 lg:col-span-7 lg:col-start-6">
+					<h2 class="font-display text-h2 text-core">Why {site.businessName} exists</h2>
+					<div class="space-y-4 text-body text-ink-2">
+						{story.map((paragraph) => <p>{paragraph}</p>)}
 					</div>
+					<p class="font-display text-h3 text-core">{storyClose}</p>
+					<p class="text-small text-ink-3">Aliyan Shah, founder</p>
 				</div>
 			</Container>
 		</Section>
@@ -70,31 +75,32 @@ const beliefs = [
 			)
 		}
 
-		<!-- Where we work / What we believe -->
-		<Section class="border-t border-rule">
-			<Container>
-				<div class="max-w-[720px] space-y-6">
-					<h2 class="font-display text-h2 text-core">Where we work</h2>
-					<p class="text-body text-ink-2">
-						{site.businessName} is based in {site.city}. Our build team works remotely across time zones, so we
-						work your business hours, whether you are in the US, UK, Europe or Australia.
-					</p>
-				</div>
-
-				<h2 class="mt-[var(--space-block)] border-t border-rule pt-[var(--space-block)] font-display text-h2 text-core">
-					What we believe
-				</h2>
-				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 sm:grid-cols-3 lg:gap-8">
-					{
-						beliefs.map((belief, index) => (
-							<Card class="space-y-4">
+		<!-- What we believe (dark scene) -->
+		<Scene>
+			<h2 class="font-display text-h2 text-core">What we believe</h2>
+			<ul class="mt-[var(--space-head)] grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-8">
+				{
+					beliefs.map((belief, index) => (
+						<li>
+							<Card variant="glass" class="h-full space-y-4 lg:p-8">
 								<Label text={String(index + 1).padStart(2, "0")} />
 								<h3 class="font-display text-h3 text-core">{belief.title}</h3>
 								<p class="text-body text-ink-2">{belief.description}</p>
 							</Card>
-						))
-					}
-				</div>
+						</li>
+					))
+				}
+			</ul>
+		</Scene>
+
+		<!-- Where we work -->
+		<Section glow="right">
+			<Container class="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10">
+				<h2 class="font-display text-h2 text-core lg:col-span-5">Where we work</h2>
+				<p class="flex max-w-[46ch] gap-3 text-body text-ink-2 lg:col-span-7">
+					<Icon name="map-pin" class="mt-[0.3em] h-5 w-5 shrink-0 text-core" />
+					<span>Based in {site.city}. We work your business hours, in the US, UK, Europe or Australia.</span>
+				</p>
 			</Container>
 		</Section>
 

@@ -11,10 +11,13 @@ interface Props {
 	solution: CollectionEntry<"solutions">;
 	/** A shorter card line for this placement (content/copy/home.md). */
 	line?: string;
+	/** 3 under a section H2 (homepage); 2 directly under the page H1 (/solutions). */
+	headingLevel?: 2 | 3;
 	class?: string;
 }
 
-const { solution, line, class: className } = Astro.props;
+const { solution, line, headingLevel = 3, class: className } = Astro.props;
+const Heading = `h${headingLevel}`;
 const { title, cardLine, icon } = solution.data;
 const href = `/solutions/${solution.id}`;
 ---
@@ -33,7 +36,7 @@ const href = `/solutions/${solution.id}`;
 		<span class="grid h-11 w-11 place-items-center rounded-full border border-rule transition-colors duration-500 group-hover:border-core">
 			<Icon name={icon} class="h-5 w-5 text-core" />
 		</span>
-		<h3 class="font-display text-h3 text-core">{title}</h3>
+		<Heading class="font-display text-h3 text-core">{title}</Heading>
 		<p class="col-span-3 col-start-1 text-body text-ink-2 sm:col-span-2 sm:col-start-2 lg:col-span-1 lg:col-start-3 lg:row-start-1">
 			{line ?? cardLine}
 		</p>

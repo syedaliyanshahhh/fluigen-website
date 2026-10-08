@@ -1,20 +1,21 @@
 ---
 // One page per solution, built from content/copy/solutions/<slug>.md.
-// Reads top to bottom as a story: the problem, what we build, what changes,
-// the timeline, then the case studies that prove it, then the booking CTA.
-// A section whose copy is removed from the file is skipped, and the step
-// numbers close up around it.
+// Reads in seconds: the hero says what it is and how long it takes, then
+// one band shows the problem, what we build and what changes side by
+// side, then the case studies that prove it (dark scene), then the
+// booking CTA. A section whose copy is removed from the file is skipped,
+// and the step numbers close up around it.
 import type { GetStaticPaths } from "astro";
-import { site } from "../../site.config";
 import { type Solution, getRelatedCaseStudies, getSolutions } from "../../lib/content";
+import { sectionText } from "../../lib/copy-format";
 import Layout from "../../components/Layout.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import Container from "../../components/Container.astro";
 import Section from "../../components/Section.astro";
-import PageHeader from "../../components/PageHeader.astro";
+import Scene from "../../components/Scene.astro";
+import PageHero from "../../components/PageHero.astro";
 import Label from "../../components/Label.astro";
-import Card from "../../components/Card.astro";
 import Icon from "../../components/Icon.astro";
 import CopyBlocks from "../../components/CopyBlocks.astro";
 import CaseStudyCard from "../../components/CaseStudyCard.astro";
@@ -32,36 +33,59 @@ interface Props {
 const { entry } = Astro.props;
 const { title, cardLine, seoDescription, icon, problem, build, changes, timeline } = entry.data;
 const relatedCaseStudies = await getRelatedCaseStudies(entry);
+const timelineText = sectionText(timeline);
 
+// The problem reads as one display line; what we build and what changes
+// as short checklists, the result in full-strength text.
 const story = [
-	{ heading: "The problem", blocks: problem },
-	{ heading: "What we build", blocks: build },
-	{ heading: "What changes", blocks: changes, highlight: true },
-	{ heading: "Typical timeline", blocks: timeline },
+	{ heading: "The problem", blocks: problem, kind: "lead" },
+	{ heading: "What we build", blocks: build, kind: "list" },
+	{ heading: "What changes", blocks: changes, kind: "result" },
 ].filter((step) => step.blocks.length > 0);
+
+const single = relatedCaseStudies.length === 1;
 ---
 
 <Layout title={title} description={seoDescription ?? cardLine}>
 	<Nav />
 	<main id="main">
-		<PageHeader title={title} lead={cardLine} back={{ href: "/solutions", label: "All solutions" }}>
-			<Icon slot="before-title" name={icon} class="h-8 w-8 text-core" />
-		</PageHeader>
+		<PageHero title={title} lead={cardLine} back={{ href: "/solutions", label: "All solutions" }}>
+			<span slot="before-title" class="glass grid h-14 w-14 place-items-center rounded-full">
+				<Icon name={icon} class="h-6 w-6 text-core" />
+			</span>
+			{
+				timelineText && (
+					<p slot="aside" class="glass flex max-w-[34ch] items-start gap-3 rounded-card px-4 py-3 text-small text-core">
+						<Icon name="clock" class="mt-[2px] h-[18px] w-[18px] shrink-0" />
+						<span>
+							<span class="sr-only">Typical timeline: </span>
+							{timelineText}
+						</span>
+					</p>
+				)
+			}
+		</PageHero>
 
-		<Section glow="left">
+		<!-- Problem, what we build, what changes: one glance -->
+		<Section>
 			<Container>
-				<ol class="max-w-[720px] space-y-[var(--space-block)]">
+				<ol class="grid grid-cols-1 gap-x-10 gap-y-12 lg:grid-cols-3 lg:gap-x-12">
 					{
 						story.map((step, index) => (
-							<li class="space-y-5 border-t border-rule pt-8">
-								<Label text={String(index + 1).padStart(2, "0")} />
-								<h2 class="font-display text-h3 text-core">{step.heading}</h2>
-								{step.highlight ? (
-									<Card variant="panel">
-										<CopyBlocks blocks={step.blocks} />
-									</Card>
+							<li class="step-line space-y-5 border-t border-rule pt-6 lg:pt-8">
+								<div class="flex items-baseline gap-4">
+									<Label text={String(index + 1).padStart(2, "0")} />
+									<h2 class="font-mono text-label uppercase text-ink-3">{step.heading}</h2>
+								</div>
+								{step.kind === "lead" ? (
+									<div class="space-y-4 font-display text-h3 text-core">
+										{step.blocks.map((block) => block.type === "p" && <p>{block.text}</p>)}
+									</div>
 								) : (
-									<CopyBlocks blocks={step.blocks} />
+									<CopyBlocks
+										blocks={step.blocks}
+										class:list={[step.kind === "result" && "[&_li]:text-core"]}
+									/>
 								)}
 							</li>
 						))
@@ -70,20 +94,24 @@ const story = [
 			</Container>
 		</Section>
 
+		<!-- Proof (dark scene) -->
 		{
 			relatedCaseStudies.length > 0 && (
-				<Section class="border-t border-rule">
-					<Container>
-						<h2 class="font-display text-h2 text-core">
-							{relatedCaseStudies.length === 1 ? "Case study" : "Case studies"}
-						</h2>
-						<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-							{relatedCaseStudies.map((caseStudy) => (
-								<CaseStudyCard caseStudy={caseStudy} />
-							))}
-						</div>
-					</Container>
-				</Section>
+				<Scene>
+					<h2 class="font-display text-h2 text-core">{single ? "Case study" : "Case studies"}</h2>
+					<div
+						class:list={[
+							"mt-[var(--space-head)] grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8",
+							!single && "sm:grid-cols-2",
+							relatedCaseStudies.length > 2 && "lg:grid-cols-3",
+						]}
+						data-stagger
+					>
+						{relatedCaseStudies.map((caseStudy) => (
+							<CaseStudyCard caseStudy={caseStudy} variant="glass" layout={single ? "wide" : "card"} />
+						))}
+					</div>
+				</Scene>
 			)
 		}
 

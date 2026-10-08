@@ -53,9 +53,9 @@ Replaces the static gradient images (design/gradients stays as palette reference
 - Never a hard edge: every field dissolves into the page. Hero and closing fields bleed past their sections; glows are larger than their sections and fade out long before their box ends.
 - Performance: transform-only animation on compositor layers, no JavaScript per frame, paused while off screen, static under reduced motion.
 - Strength by place:
-  - `hero`: homepage and 404 hero, the strongest field, behind the floating nav.
+  - `hero`: the strongest field, behind the floating nav: the full-screen homepage hero, and the short hero that opens every other page (PageHero), Privacy and Terms excepted.
   - `closing`: the final call to action band (PageCTA) on every marketing page.
-  - `soft`: light haze behind inner page headers and the mobile menu.
+  - `soft`: light haze behind the legal page headers and the mobile menu.
   - `glow-left` / `glow-right`: one faint drifting light behind an ordinary Section (`<Section glow="left">`). Alternate sides and leave some sections plain.
   - `scene` and `arch`: teal light rising out of black, inside scenes and empty-state panels.
 - Text on a strong field is white and stays in its dark part (upper area; the light part dissolves at the bottom or bottom right). Every text element over a field or in a scene measures at least 4.5:1 at its worst drift position, from 375px to 1920px, in both themes. Recheck if a field's stops or blobs change.
@@ -82,6 +82,7 @@ Load from Google Fonts: Inter Tight (300, 400, 500), Inter (400, 500), Cascadia 
 | Small | Inter | 15 / 22 | 15 / 22 | 400 | 0 |
 | Label | Cascadia Code | 13 / 18 | 12 / 16 | 400 | +4%, uppercase, sparingly |
 | Big number | Inter Tight | 72 / 72 | 48 / 48 | 300 | -5% |
+| Hero number (case study lead) | Inter Tight | 104 / 104 | 48 / 48 | 300 | -5% |
 
 - Headlines are sentence case.
 - Keep line length under 70 characters for body text.

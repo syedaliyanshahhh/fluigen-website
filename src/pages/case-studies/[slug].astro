@@ -1,19 +1,20 @@
 ---
 // One page per case study, built from content/copy/case-studies/<slug>.md.
-// Leads with the headline number, then the problem, what we built and the
-// result, a link back to the solution, the client-facing software from
-// "Works with" as a small strip at the bottom, then the booking CTA. Any of these whose line is removed from
-// the copy file (headline number, result, testimonial, Works with) is skipped
-// cleanly instead of leaving a gap.
+// Leads with the headline number (rising and counting on the flow field),
+// then the problem and what we built side by side, the result as a dark
+// scene, the solution it uses, the client-facing software from "Works
+// with" as a small strip, then the booking CTA. Any of these whose line is
+// removed from the copy file (headline number, result, testimonial, Works
+// with) is skipped cleanly instead of leaving a gap.
 import type { GetStaticPaths } from "astro";
-import { site } from "../../site.config";
 import { type CaseStudy, getCaseStudies, getRelatedSolution } from "../../lib/content";
 import Layout from "../../components/Layout.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import Container from "../../components/Container.astro";
 import Section from "../../components/Section.astro";
-import PageHeader from "../../components/PageHeader.astro";
+import Scene from "../../components/Scene.astro";
+import PageHero from "../../components/PageHero.astro";
 import Label from "../../components/Label.astro";
 import Card from "../../components/Card.astro";
 import Icon from "../../components/Icon.astro";
@@ -37,103 +38,143 @@ const { title, clientLabel, headlineNumber, numberCaption, summary, problem, bui
 const solution = await getRelatedSolution(entry);
 
 const story = [
-	{ heading: "The problem", blocks: problem },
-	{ heading: "What we built", blocks: built },
+	{ heading: "The problem", blocks: problem, lead: true },
+	{ heading: "What we built", blocks: built, lead: false },
 ].filter((step) => step.blocks.length > 0);
+
+const hasNumber = Boolean(headlineNumber);
 ---
 
 <Layout title={title} description={summary}>
 	<Nav />
 	<main id="main">
-		<PageHeader title={title} lead={summary} back={{ href: "/case-studies", label: "All case studies" }}>
-			<div slot="before-title" class="space-y-4 pb-[var(--space-head)]">
-				<Label text={clientLabel} brackets={false} class="block" />
-				{headlineNumber && <BigNumber value={headlineNumber} size="hero" />}
+		<PageHero
+			title={title}
+			titleSize={hasNumber ? "h2" : "h1"}
+			back={{ href: "/case-studies", label: "All case studies" }}
+		>
+			<div slot="before-title" class="space-y-4">
+				<Label text={clientLabel} brackets={false} color="core" class="block" />
 				{
-					headlineNumber && numberCaption && (
-						<p
-							class:list={[
-								isPlaceholder(numberCaption)
-									? "inline-block rounded-card border border-dashed border-ink-3 px-3 py-2 font-mono text-label uppercase text-ink-3"
-									: "max-w-[36ch] text-body text-ink-2",
-							]}
-						>
-							{numberCaption}
-						</p>
+					headlineNumber && (
+						<div class="space-y-3">
+							<BigNumber value={headlineNumber} size="hero" />
+							{numberCaption && (
+								<p
+									class:list={[
+										isPlaceholder(numberCaption)
+											? "inline-block rounded-card border border-dashed border-ink-3 px-3 py-2 font-mono text-label uppercase text-ink-3"
+											: "max-w-[36ch] text-body text-core",
+									]}
+								>
+									{numberCaption}
+								</p>
+							)}
+						</div>
 					)
 				}
 			</div>
-		</PageHeader>
+		</PageHero>
 
-		<Section glow="left">
-			<Container>
-				<div class="max-w-[720px] space-y-[var(--space-block)]">
-					{
-						story.map((step) => (
-							<section class="space-y-5 border-t border-rule pt-8">
-								<h2 class="font-display text-h3 text-core">{step.heading}</h2>
-								<CopyBlocks blocks={step.blocks} />
-							</section>
-						))
-					}
+		<!-- The problem / What we built -->
+		{
+			story.length > 0 && (
+				<Section>
+					<Container>
+						<ol class="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-12">
+							{story.map((step, index) => (
+								<li
+									class:list={[
+										"step-line space-y-5 border-t border-rule pt-6 lg:pt-8",
+										step.lead ? "lg:col-span-5" : "lg:col-span-7",
+									]}
+								>
+									<div class="flex items-baseline gap-4">
+										<Label text={String(index + 1).padStart(2, "0")} />
+										<h2 class="font-mono text-label uppercase text-ink-3">{step.heading}</h2>
+									</div>
+									{step.lead ? (
+										<div class="space-y-4 font-display text-h3 text-core">
+											{step.blocks.map((block) => block.type === "p" && <p>{block.text}</p>)}
+										</div>
+									) : (
+										<CopyBlocks blocks={step.blocks} />
+									)}
+								</li>
+							))}
+						</ol>
+					</Container>
+				</Section>
+			)
+		}
 
-					{
-						result.length > 0 && (
-							<section class="space-y-5 border-t border-rule pt-8">
-								<h2 class="font-display text-h3 text-core">The result</h2>
-								<Card variant="panel">
-									<CopyBlocks blocks={result} class="[&_p]:font-display [&_p]:text-h3 [&_p]:text-core" />
-								</Card>
-							</section>
-						)
-					}
-
-					{
-						testimonial.length > 0 && (
-							<figure class="border-t border-rule pt-8">
+		<!-- The result (dark scene) -->
+		{
+			(result.length > 0 || testimonial.length > 0) && (
+				<Scene>
+					<div class="max-w-[960px] space-y-6">
+						<Label text="The result" />
+						{result.length > 0 && (
+							<div class="space-y-4 font-display text-h2 text-core [text-wrap:balance]">
+								{result.map((block) => block.type === "p" && <p>{block.text}</p>)}
+							</div>
+						)}
+					</div>
+					{testimonial.length > 0 && (
+						<figure class="mt-[var(--space-block)] max-w-[720px]">
+							<Card variant="glass" class="lg:p-8">
 								<blockquote class="space-y-4 font-display text-h3 text-core">
 									{testimonial.map((block) => block.type === "p" && <p>{block.text}</p>)}
 								</blockquote>
-							</figure>
-						)
-					}
+							</Card>
+						</figure>
+					)}
+				</Scene>
+			)
+		}
 
-					{
-						solution && (
-							<section class="space-y-5 border-t border-rule pt-8">
-								<h2 class="font-display text-h3 text-core">Solution</h2>
+		<!-- Solution and Works with -->
+		{
+			(solution || worksWith.length > 0) && (
+				<Section>
+					<Container>
+						{solution && (
+							<div class="space-y-5">
+								<h2 class="font-mono text-label uppercase text-ink-2">Solution</h2>
 								<a
 									href={`/solutions/${solution.id}`}
-									class="group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
+									class="group block max-w-[960px] rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
 								>
-									<Card interactive class="flex items-start gap-5">
-										<Icon name={solution.data.icon} class="mt-1 h-7 w-7 shrink-0 text-core" />
-										<div class="min-w-0 flex-1 space-y-2">
+									<Card interactive class="flex items-center gap-5 lg:px-8 lg:py-7">
+										<span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-rule transition-colors duration-500 group-hover:border-core">
+											<Icon name={solution.data.icon} class="h-5 w-5 text-core" />
+										</span>
+										<div class="min-w-0 flex-1 space-y-1">
 											<p class="font-display text-h3 text-core">{solution.data.title}</p>
 											<p class="text-body text-ink-2">{solution.data.cardLine}</p>
 										</div>
-										<Icon name="arrow-right" class="mt-2 hidden h-5 w-5 shrink-0 text-core transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1 sm:block" />
+										<span class="hidden h-11 w-11 shrink-0 place-items-center rounded-full border border-rule text-core transition-[transform,background-color,color,border-color] duration-500 ease-[var(--ease-out)] group-hover:translate-x-1 group-hover:border-core group-hover:bg-core group-hover:text-baseline sm:grid">
+											<Icon name="arrow-right" class="h-5 w-5" />
+										</span>
 									</Card>
 								</a>
-							</section>
-						)
-					}
+							</div>
+						)}
 
-					{
-						worksWith.length > 0 && (
-							<section class="flex flex-col gap-3 border-t border-rule pt-8 sm:flex-row sm:items-baseline sm:gap-6">
-								<h2 class="shrink-0 font-mono text-label uppercase text-ink-3">Works with</h2>
+						{worksWith.length > 0 && (
+							<div class:list={["flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6", solution && "mt-[var(--space-block)]"]}>
+								<h2 class="shrink-0 font-mono text-label uppercase text-ink-2">Works with</h2>
 								<ul class="flex flex-wrap gap-2">
 									{worksWith.map((name) => (
 										<li class="rounded-full border border-rule bg-null px-3 py-1 text-small text-ink-2">{name}</li>
 									))}
 								</ul>
-							</section>
-						)
-					}
-				</div>
-			</Container>
-		</Section>
+							</div>
+						)}
+					</Container>
+				</Section>
+			)
+		}
 
 		<PageCTA />
 	</main>
