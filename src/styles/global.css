@@ -255,8 +255,7 @@ html {
 /*
  * Full-screen homepage hero (one screen under the nav). The top pad keeps
  * the headline clear of the floating nav; the bottom pad keeps the buttons
- * and microcopy in the field's dark part, above where it dissolves into
- * the page (design/brand.md "Flow gradient").
+ * and microcopy above where the field dissolves into the page (design/brand.md "Flow gradient").
  */
 @utility hero-full-y {
   padding-top: clamp(2.5rem, 1.6197rem + 3.7559vw, 5rem); /* 40px -> 80px */
@@ -299,8 +298,8 @@ html {
 
 /*
  * Short inner-page hero on the flow field (PageHero.astro). Shorter than
- * the homepage hero; the bottom pad keeps the text in the field's dark
- * part, above where it turns to flux and dissolves into the page.
+ * the homepage hero; the bottom pad leaves room for the field to dissolve
+ * into the page.
  */
 @utility page-hero-y {
   padding-top: clamp(3rem, 1.9437rem + 4.507vw, 6rem); /* 48px -> 96px */

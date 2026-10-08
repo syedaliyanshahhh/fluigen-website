@@ -4,9 +4,9 @@
 // marketing page except the homepage opens with it; Privacy and Terms keep
 // the calm PageHeader instead.
 //
-// Content is a dark theme context (white on teal in both page themes) and
-// stays in the field's dark upper part: `page-hero-y` holds enough room
-// below it for the field to turn light and dissolve into the next section.
+// Content follows the page theme (black on the pale light-mode field,
+// white on the near-black dark one). `page-hero-y` holds room below it for
+// the field to dissolve into the next section.
 //
 // Load moment: the back link and `before-title` slot rise in, the H1 rises
 // line by line (LineReveal, as on the homepage), then the lead and the
@@ -36,7 +36,7 @@ const hasAfter = Boolean(lead) || Astro.slots.has("default") || Astro.slots.has(
 
 <section class:list={["page-hero-y relative", className]} data-flow-section="hero">
 	<FlowField variant="hero" />
-	<div data-theme="dark" class="relative">
+	<div class="relative">
 		<Container>
 			{
 				(back || hasBefore) && (

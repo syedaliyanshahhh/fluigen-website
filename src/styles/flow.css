@@ -139,96 +139,93 @@
 /* ---------- Variants ---------- */
 
 /*
- * Hero: the strongest field. Extends up behind the floating nav and bleeds
- * past the section bottom, dissolving into the next section. Light mode is
- * a deep teal sky (white text sits in its dark upper part); dark mode is
- * teal light rising out of black.
+ * Hero: the field behind the floating nav at the top of every page except
+ * Privacy and Terms. Extends up behind the nav and bleeds past the section
+ * bottom, dissolving into the next section. Minimal and low in saturation,
+ * and clearly different per theme: light mode is an airy near-white sky
+ * with a soft flux mist (black text, the page theme); dark mode is near
+ * black with one muted teal glow (white text). Its content follows the
+ * page theme, unlike the closing band and scenes.
  */
 .flow--hero {
 	top: calc(-1 * var(--nav-h));
 	bottom: calc(-1 * var(--flow-bleed));
-	mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
-	background: linear-gradient(
-		180deg,
-		var(--deep) 0%,
-		var(--substation) 50%,
-		var(--vector) 80%,
-		color-mix(in oklab, var(--flux) 70%, transparent) 90%,
-		transparent 100%
-	);
+	mask-image: linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%);
+	background: linear-gradient(180deg, var(--null) 0%, var(--baseline) 70%, transparent 100%);
 }
+/* A soft flux mist from the top right, the main light. */
 .flow--hero .flow__blob:nth-child(1) {
-	--c: var(--deep);
-	--x: -22;
-	--y: -18;
-	width: 82%;
-	height: 78%;
-	--dur: 38s;
+	--c: var(--flux);
+	--o: 0.8;
+	--x: 44;
+	--y: -26;
+	width: 74%;
+	height: 82%;
+	--dur: 40s;
 }
+/* A fainter echo low on the left. */
 .flow--hero .flow__blob:nth-child(2) {
-	--c: var(--substation);
-	--x: 42;
-	--y: -14;
-	width: 78%;
-	height: 74%;
+	--c: var(--flux);
+	--o: 0.56;
+	--x: -24;
+	--y: 22;
+	width: 62%;
+	height: 64%;
 	--anim: flow-drift-b;
-	--dur: 44s;
+	--dur: 46s;
 }
+/* A hint of vector under the mist, so it reads as teal light, not grey. */
 .flow--hero .flow__blob:nth-child(3) {
 	--c: var(--vector);
-	--o: 0.6;
-	--x: 58;
-	--y: 26;
-	width: 56%;
-	height: 44%;
+	--o: 0.26;
+	--x: 56;
+	--y: 4;
+	width: 44%;
+	height: 46%;
 	--anim: flow-drift-c;
-	--dur: 32s;
+	--dur: 34s;
 }
+/* White bloom behind the headline keeps its corner clean. */
 .flow--hero .flow__blob:nth-child(4) {
-	--c: var(--flux);
-	--o: 0.7;
-	--x: -12;
-	--y: 84;
-	width: 74%;
-	height: 34%;
+	--c: var(--null);
+	--o: 0.68;
+	--x: -18;
+	--y: -20;
+	width: 64%;
+	height: 60%;
 	--anim: flow-drift-b;
-	--dur: 40s;
+	--dur: 42s;
 	--delay: -12s;
+}
+.flow--hero .flow__grain {
+	opacity: calc(var(--grain-opacity) * 0.6);
 }
 
 /* The homepage hero fills the screen and keeps its buttons near the
-   bottom, so its field runs further past the section before it dissolves:
-   the text stays on the dark part at every height, and the light part
-   fades out behind the scene that follows. */
+   bottom, so its field runs further past the section before it dissolves
+   behind the scene that follows. */
 .hero-full > .flow--hero {
 	bottom: calc(-1 * var(--flow-bleed) - 30svh);
 }
 
 :root[data-theme="dark"] .flow--hero {
-	background: linear-gradient(
-		180deg,
-		var(--black) 0%,
-		color-mix(in oklab, var(--deep) 70%, var(--black)) 34%,
-		var(--deep) 62%,
-		color-mix(in oklab, var(--substation) 50%, transparent) 82%,
-		transparent 100%
-	);
+	background: linear-gradient(180deg, var(--black) 0%, var(--baseline) 70%, transparent 100%);
 }
 :root[data-theme="dark"] .flow--hero .flow__blob:nth-child(1) {
 	--c: var(--substation);
-	--o: 0.9;
+	--o: 0.5;
 }
 :root[data-theme="dark"] .flow--hero .flow__blob:nth-child(2) {
-	--c: var(--vector);
-	--o: 0.62;
+	--c: var(--deep);
+	--o: 0.7;
 }
 :root[data-theme="dark"] .flow--hero .flow__blob:nth-child(3) {
-	--c: var(--flux);
-	--o: 0.34;
+	--c: var(--vector);
+	--o: 0.14;
 }
 :root[data-theme="dark"] .flow--hero .flow__blob:nth-child(4) {
-	--c: var(--vector);
-	--o: 0.55;
+	--c: var(--black);
+	--o: 0.6;
 }
 
 /*
