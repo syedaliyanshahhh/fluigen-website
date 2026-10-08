@@ -16,6 +16,7 @@ import StatTile from "../components/StatTile.astro";
 import SolutionCard from "../components/SolutionCard.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
 import EmptyState from "../components/EmptyState.astro";
+import FounderPhoto from "../components/FounderPhoto.astro";
 import FAQItem from "../components/FAQItem.astro";
 import Icon from "../components/Icon.astro";
 
@@ -313,10 +314,7 @@ const faqs = [
 		<Section>
 			<Container>
 				<div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-					<EmptyState
-						label="[PLACEHOLDER: founder photo]"
-						class="aspect-[4/5] w-full max-w-[360px]"
-					/>
+					<FounderPhoto class="w-full max-w-[360px]" />
 					<div class="max-w-[560px] space-y-6">
 						<Label text="from the founder" />
 						<blockquote class="font-display text-h3 text-core">

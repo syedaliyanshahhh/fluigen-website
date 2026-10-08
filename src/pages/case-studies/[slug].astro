@@ -1,9 +1,9 @@
 ---
 // One page per case study, built from content/copy/case-studies/<slug>.md.
 // Leads with the headline number, then the problem, what we built and the
-// result, a link back to the solution, the tools as a small strip at the
-// bottom, then the booking CTA. Any of these whose line is removed from
-// the copy file (headline number, result, testimonial, tools) is skipped
+// result, a link back to the solution, the client-facing software from
+// "Works with" as a small strip at the bottom, then the booking CTA. Any of these whose line is removed from
+// the copy file (headline number, result, testimonial, Works with) is skipped
 // cleanly instead of leaving a gap.
 import type { GetStaticPaths } from "astro";
 import { site } from "../../site.config";
@@ -32,7 +32,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, clientLabel, headlineNumber, numberCaption, summary, problem, built, result, testimonial, tools } =
+const { title, clientLabel, headlineNumber, numberCaption, summary, problem, built, result, testimonial, worksWith } =
 	entry.data;
 const solution = await getRelatedSolution(entry);
 
@@ -120,21 +120,12 @@ const story = [
 					}
 
 					{
-						tools.length > 0 && (
+						worksWith.length > 0 && (
 							<section class="flex flex-col gap-3 border-t border-rule pt-8 sm:flex-row sm:items-baseline sm:gap-6">
-								<h2 class="shrink-0 font-mono text-label uppercase text-ink-3">Tools</h2>
+								<h2 class="shrink-0 font-mono text-label uppercase text-ink-3">Works with</h2>
 								<ul class="flex flex-wrap gap-2">
-									{tools.map((tool) => (
-										<li
-											class:list={[
-												"rounded-full border px-3 py-1 text-small",
-												isPlaceholder(tool)
-													? "border-dashed border-ink-3 font-mono uppercase text-ink-3"
-													: "border-rule bg-null text-ink-2",
-											]}
-										>
-											{tool}
-										</li>
+									{worksWith.map((name) => (
+										<li class="rounded-full border border-rule bg-null px-3 py-1 text-small text-ink-2">{name}</li>
 									))}
 								</ul>
 							</section>

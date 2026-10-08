@@ -22,5 +22,5 @@ Calls answered 24/7, with the team briefed seconds after every call ends.
 ## Testimonial
 None yet
 
-## Tools
-[PLACEHOLDER: tools used]
+## Works with
+Google Maps, Keycafe

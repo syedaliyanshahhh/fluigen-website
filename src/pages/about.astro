@@ -10,7 +10,7 @@ import Section from "../components/Section.astro";
 import PageHeader from "../components/PageHeader.astro";
 import Label from "../components/Label.astro";
 import Card from "../components/Card.astro";
-import EmptyState from "../components/EmptyState.astro";
+import FounderPhoto from "../components/FounderPhoto.astro";
 import PageCTA from "../components/PageCTA.astro";
 
 const story = [
@@ -44,7 +44,7 @@ const beliefs = [
 		<Section>
 			<Container>
 				<div class="grid grid-cols-1 gap-[var(--space-head)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-start lg:gap-16">
-					<EmptyState label="[PLACEHOLDER: founder photo]" class="aspect-[4/5] w-full max-w-[360px]" />
+					<FounderPhoto class="w-full max-w-[360px]" />
 					<div class="max-w-[720px] space-y-6">
 						<h2 class="font-display text-h2 text-core">Why {site.businessName} exists</h2>
 						<div class="space-y-5 text-body text-ink-2">

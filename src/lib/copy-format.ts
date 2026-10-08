@@ -55,7 +55,7 @@ export function parseCopy(raw: string): CopyDoc {
 	return doc;
 }
 
-/** All text in a section as one string (for single-line sections like Tools). */
+/** All text in a section as one string (for single-line sections like Works with). */
 export function sectionText(blocks: Block[] | undefined): string {
 	return (blocks ?? [])
 		.map((block) => (block.type === "p" ? block.text : block.items.join(", ")))

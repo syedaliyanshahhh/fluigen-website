@@ -78,11 +78,23 @@ const solutions = defineCollection({
 	}),
 });
 
+// Backend and build tools never appear on the site (CLAUDE.md "Integrations").
+// A "Works with" list naming one of these fails the build instead of shipping.
+const backendTools = /\b(n8n|make(\.com)?|zapier|retell|supabase|elevenlabs|openai|chatgpt|gpt|claude|anthropic|assemblyai|lovable|vapi|pinecone)\b/i;
+
 const caseStudies = defineCollection({
 	loader: copyLoader("content/copy/case-studies", (doc, file) => {
 		const featured = doc.meta["featured on homepage"] ?? "";
 		const testimonial = doc.sections.testimonial;
-		const tools = sectionText(doc.sections.tools);
+		// Only the client-facing software from "Works with"; no section, no strip.
+		const worksWith = sectionText(doc.sections["works with"])
+			.split(",")
+			.map((name) => name.trim())
+			.filter(Boolean);
+		const backend = worksWith.filter((name) => backendTools.test(name));
+		if (backend.length > 0) {
+			throw new Error(`${file}.md "Works with" lists backend tools (${backend.join(", ")}). Only client-facing software belongs there.`);
+		}
 		return {
 			id: doc.meta.slug ?? file,
 			data: {
@@ -99,7 +111,7 @@ const caseStudies = defineCollection({
 				result: doc.sections["the result"],
 				// "None yet" means no testimonial: never show one that isn't real.
 				testimonial: /^none\b/i.test(sectionText(testimonial)) ? [] : testimonial,
-				tools: !tools ? [] : tools.includes("[PLACEHOLDER") ? [tools] : tools.split(",").map((t) => t.trim()).filter(Boolean),
+				worksWith,
 			},
 		};
 	}),
@@ -116,7 +128,7 @@ const caseStudies = defineCollection({
 		built: blocks,
 		result: blocks,
 		testimonial: blocks,
-		tools: z.array(z.string()),
+		worksWith: z.array(z.string()),
 	}),
 });
 

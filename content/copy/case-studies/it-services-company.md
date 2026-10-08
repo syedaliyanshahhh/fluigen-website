@@ -22,5 +22,5 @@ A shared directory shows who has a seat in which system, instead of sixteen sepa
 ## Testimonial
 None yet
 
-## Tools
-Xactimate, XactAnalysis, HubSpot, Dialpad, Dropbox, ZoomInfo, n8n
+## Works with
+Xactimate, XactAnalysis, HubSpot, Dialpad, Dropbox, ZoomInfo

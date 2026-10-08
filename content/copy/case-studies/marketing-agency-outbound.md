@@ -17,10 +17,10 @@ An AI business development agent that runs a 45-day sequence of voice calls, tex
 Leads who are not ready yet move into a monthly follow-up, so nobody is dropped.
 
 ## The result
-A 45-day follow-up on every lead, run without an outreach hire.
+A 45-day follow-up on every lead across a list of 3,000 contacts, replacing a full-time outreach hire.
 
 ## Testimonial
 None yet
 
-## Tools
-GoHighLevel, Retell AI, n8n
+## Works with
+GoHighLevel

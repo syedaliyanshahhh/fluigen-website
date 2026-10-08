@@ -30,6 +30,10 @@ One goal: visitors book a free automation audit.
 - Sticky nav button "Book a free audit" on every page, desktop and mobile
 - Main CTA wording everywhere else: "Book your free automation audit"
 
+## Integrations
+- Case study pages end with a small "Works with" strip listing only the client-facing software from that file's "Works with" section. No "Works with" section means no strip.
+- Never show backend or build tools anywhere on the site (n8n, Make.com, Retell AI, Supabase, ElevenLabs, OpenAI and similar). `src/content.config.ts` fails the build if one appears in a "Works with" list.
+
 ## Copy rules
 - No em dashes, no emoji
 - Plain words, no tool names in headlines
