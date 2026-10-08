@@ -12,12 +12,15 @@ One goal: visitors book a free automation audit.
 ## Branches and environments
 - `dev` branch: all work happens here. Deploys to https://preview.fluigen.com
 - `main` branch: production, https://fluigen.com. Only merge `dev` into `main` when I say so
-- Until launch, `main` shows a simple holding page
 - The preview site is always hidden from search engines (noindex meta tag and `X-Robots-Tag` header), before and after launch. See "Launch settings".
+
+## Release process
+- All work happens on `dev` and is checked on https://preview.fluigen.com
+- A release means merging `dev` into `main` and pushing `main`, which deploys https://fluigen.com. Only release when I say so.
 
 ## Launch settings
 Both live in `settings` in `src/site.config.ts`.
-- `searchIndexing` (currently `false`): set to `true` at launch to let search engines index fluigen.com. It only takes effect on production builds (Cloudflare Pages branch `main`, read from `CF_PAGES_BRANCH`), so preview.fluigen.com stays noindexed whatever it is set to. It controls the robots meta tag, the `X-Robots-Tag` header in `dist/_headers`, and the sitemap line in robots.txt.
+- `searchIndexing` (currently `true`, launched October 2026): lets search engines index fluigen.com. It only takes effect on production builds (Cloudflare Pages branch `main`, read from `CF_PAGES_BRANCH`), so preview.fluigen.com stays noindexed whatever it is set to. It controls the robots meta tag, the `X-Robots-Tag` header in `dist/_headers`, and the sitemap line in robots.txt.
 - `showSeeItWork` (currently `false`): the homepage "See it work" section. Set to `true` once the 60-second recording is in place. While it is off, "What we build" carries the booking CTA instead, so there is still a CTA after every two sections.
 - `/styleguide` and `/404` are always noindexed and left out of the sitemap (`unlistedPaths` in `src/lib/indexing.ts`).
 
