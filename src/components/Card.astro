@@ -1,0 +1,24 @@
+---
+// Surface card — design/brand.md "Cards". Solid `null` surface with a 1px
+// rule border, 20px radius (card) or 28px (panel).
+// - `interactive`: lifts on hover with a soft glow that follows the cursor
+//   (motion.css `.card-hover`). Use inside a link with the `group` class.
+// - `glass`: frosted surface for cards over a flow field or inside a scene.
+interface Props {
+	variant?: "card" | "panel" | "glass";
+	interactive?: boolean;
+	class?: string;
+}
+
+const { variant = "card", interactive = false, class: className } = Astro.props;
+
+const variantClass = {
+	card: "rounded-card p-6 bg-null border border-rule",
+	panel: "rounded-panel p-8 bg-null border border-rule",
+	glass: "glass glass-card",
+}[variant];
+---
+
+<div class:list={[variantClass, interactive && "card-hover", className]} data-glow={interactive ? "" : undefined}>
+	<slot />
+</div>

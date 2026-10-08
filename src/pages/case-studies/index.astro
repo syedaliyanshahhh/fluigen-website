@@ -1,0 +1,62 @@
+---
+// /case-studies: every case study. Heading is the homepage's case studies
+// heading (content/copy/home.md section 6).
+//
+// Rhythm: hero on the flow field, the homepage-featured case studies as
+// wide light rows led by their numbers, the rest as glass cards in a dark
+// scene, then the closing band.
+import { getCaseStudies } from "../../lib/content";
+import Layout from "../../components/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Container from "../../components/Container.astro";
+import Section from "../../components/Section.astro";
+import Scene from "../../components/Scene.astro";
+import PageHero from "../../components/PageHero.astro";
+import CaseStudyCard from "../../components/CaseStudyCard.astro";
+import PageCTA from "../../components/PageCTA.astro";
+
+const caseStudies = await getCaseStudies();
+const featured = caseStudies.filter((entry) => entry.data.featured);
+const more = caseStudies.filter((entry) => !entry.data.featured);
+---
+
+<Layout
+	title="Case studies"
+	description="Work that is already running: the AI receptionists, follow-up, portals and hiring systems we have built for real businesses, and what changed for each one."
+>
+	<Nav />
+	<main id="main">
+		<PageHero title="Work that is already running" />
+
+		<Section>
+			<Container>
+				<ul class="space-y-3 sm:space-y-4">
+					{
+						featured.map((caseStudy) => (
+							<li>
+								<CaseStudyCard caseStudy={caseStudy} layout="wide" />
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		{
+			more.length > 0 && (
+				<Scene>
+					<h2 class="font-display text-h2 text-core">More case studies</h2>
+					<div class="mt-[var(--space-head)] grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:gap-8">
+						{more.map((caseStudy) => (
+							<CaseStudyCard caseStudy={caseStudy} variant="glass" />
+						))}
+					</div>
+				</Scene>
+			)
+		}
+
+		<PageCTA />
+	</main>
+	<Footer />
+</Layout>

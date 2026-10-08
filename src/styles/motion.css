@@ -1,0 +1,579 @@
+/*
+ * Motion and interaction system — design/brand.md "Motion".
+ *
+ * Everything here animates `transform`, `opacity`, `clip-path` or colors
+ * only. The reduced-motion kill switch at the end of global.css flattens
+ * all of it; scripts also check `prefers-reduced-motion` and skip their
+ * animations (reveals, count-ups, FAQ height, view transitions).
+ *
+ * `html.motion` is set by the inline script in Layout.astro only when
+ * motion is allowed, so without JavaScript or with reduced motion, nothing
+ * is ever hidden waiting for a reveal.
+ */
+
+/* ---------- Page load (hero and page headers only) ---------- */
+
+/* The one page-load moment: a soft rise, children staggered. The first
+   child starts at once so the page's largest text paints immediately. */
+@keyframes rise-in {
+	from {
+		opacity: 0;
+		transform: translate3d(0, 18px, 0);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+/* `--rise-delay` holds a whole group back, e.g. hero text that follows a
+   headline revealed line by line. */
+@utility rise-in {
+	& > * {
+		animation: rise-in 0.9s var(--ease-out) both;
+		animation-delay: var(--rise-delay, 0s);
+	}
+	& > :nth-child(2) {
+		animation-delay: calc(var(--rise-delay, 0s) + 0.08s);
+	}
+	& > :nth-child(3) {
+		animation-delay: calc(var(--rise-delay, 0s) + 0.16s);
+	}
+	& > :nth-child(4) {
+		animation-delay: calc(var(--rise-delay, 0s) + 0.24s);
+	}
+	& > :nth-child(n + 5) {
+		animation-delay: calc(var(--rise-delay, 0s) + 0.32s);
+	}
+}
+
+/* ---------- Line reveal (LineReveal.astro) ---------- */
+
+/* Each word rises out of its own mask; words on the same line share a
+   delay (`--line`, set by LineReveal's inline script), so the headline
+   arrives one line at a time. The mask's padding keeps descenders inside
+   it at the hero's tight line height. */
+.line-reveal__mask {
+	display: inline-block;
+	overflow: clip;
+	vertical-align: top;
+	padding-block: 0.06em 0.14em;
+	margin-block: -0.06em -0.14em;
+}
+.line-reveal__word {
+	display: inline-block;
+}
+@keyframes line-up {
+	from {
+		transform: translate3d(0, 115%, 0);
+	}
+	to {
+		transform: none;
+	}
+}
+.motion .line-reveal:not([data-ready]) .line-reveal__word {
+	transform: translate3d(0, 115%, 0);
+}
+.motion .line-reveal[data-ready] .line-reveal__word {
+	animation: line-up 1.15s var(--ease-out) both;
+	animation-delay: calc(var(--lr-delay, 0ms) + var(--line, 0) * 140ms);
+}
+
+/* ---------- Hero number (BigNumber size="hero") ---------- */
+
+/* A case study's headline number rises out of its own mask on load, like
+   the homepage headline's words. The mask's padding keeps descenders
+   ("45 days") inside it at line height 1. */
+.hero-number {
+	overflow: clip;
+	padding-block: 0.06em 0.16em;
+	margin-block: -0.06em -0.16em;
+}
+.motion .hero-number__value {
+	animation: line-up 1.2s var(--ease-out) 0.12s both;
+}
+
+/* ---------- Flow lines (FlowLines.astro) ---------- */
+
+/* Thin lines in the context's core color: three waves that merge into one.
+   Layers are stacked SVGs so each can be wiped in on its own. */
+.flow-lines {
+	position: relative;
+	color: var(--core);
+	height: clamp(6rem, 3.8873rem + 9.0141vw, 12rem); /* 96px -> 192px */
+	pointer-events: none;
+}
+.flow-lines__breath,
+.flow-lines__layer,
+.flow-lines__sheen {
+	position: absolute;
+	inset: 0;
+}
+.flow-lines__layer,
+.flow-lines__bright {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+.flow-lines__layer {
+	opacity: 0.5;
+	stroke-width: 1.5px;
+}
+.flow-lines__sheen {
+	overflow: hidden;
+}
+/* The light: a soft-edged window that slides across while the bright copy
+   of the lines inside it slides back by the same distance, so the lines
+   stay put and only the light moves. The window is 30% of the band:
+   it travels -100% -> 333.33% of itself, the copy 30% -> -100% of itself. */
+.flow-lines__window {
+	position: absolute;
+	inset-block: 0;
+	left: 0;
+	width: 30%;
+	transform: translate3d(-100%, 0, 0);
+	-webkit-mask-image: linear-gradient(90deg, transparent, #000 45%, #000 55%, transparent);
+	mask-image: linear-gradient(90deg, transparent, #000 45%, #000 55%, transparent);
+}
+.flow-lines__bright {
+	position: absolute;
+	inset-block: 0;
+	left: 0;
+	width: calc(100% / 0.3);
+	stroke-width: 1.5px;
+	transform: translate3d(30%, 0, 0);
+}
+
+@keyframes flow-lines-draw {
+	from {
+		clip-path: inset(-10% 100% -10% 0);
+	}
+	to {
+		clip-path: inset(-10% 0 -10% 0);
+	}
+}
+@keyframes flow-lines-window {
+	0% {
+		transform: translate3d(-100%, 0, 0);
+	}
+	42%,
+	100% {
+		transform: translate3d(333.33%, 0, 0);
+	}
+}
+@keyframes flow-lines-bright {
+	0% {
+		transform: translate3d(30%, 0, 0);
+	}
+	42%,
+	100% {
+		transform: translate3d(-100%, 0, 0);
+	}
+}
+@keyframes flow-lines-breath {
+	from {
+		transform: scaleY(1);
+	}
+	to {
+		transform: scaleY(0.86);
+	}
+}
+
+.motion .flow-lines__layer {
+	animation: flow-lines-draw 1.9s var(--ease-in-out) both;
+	animation-delay: calc(0.45s + var(--n, 2) * 0.16s);
+}
+.motion .flow-lines__window,
+.motion .flow-lines__bright {
+	will-change: transform;
+	animation: 7.5s linear 2.9s infinite both;
+}
+.motion .flow-lines__window {
+	animation-name: flow-lines-window;
+}
+.motion .flow-lines__bright {
+	animation-name: flow-lines-bright;
+}
+.motion .flow-lines__breath {
+	animation: flow-lines-breath 6s var(--ease-in-out) 2.4s infinite alternate both;
+}
+.js .flow-lines:not(.is-live) * {
+	animation-play-state: paused;
+}
+/* Still, with reduced motion: the lines are drawn and nothing moves. */
+.flow-lines__sheen {
+	display: none;
+}
+.motion .flow-lines__sheen {
+	display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+	.flow-lines__sheen {
+		display: none !important;
+	}
+}
+
+/* ---------- Progress line (homepage steps) ---------- */
+
+/* A 2px vector line that draws across the top rule of each step as the
+   step reveals, one after another (design/brand.md: vector for 2px lines). */
+.step-line {
+	position: relative;
+}
+.step-line::before {
+	content: "";
+	position: absolute;
+	top: -1px;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: var(--vector);
+	transform-origin: left center;
+	transition: transform 1.1s var(--ease-out);
+	transition-delay: calc(min(var(--i, 0), 6) * 90ms + 0.2s);
+}
+.motion .step-line[data-reveal]:not(.is-in)::before {
+	transform: scaleX(0);
+}
+
+/* ---------- Scroll reveals ---------- */
+
+/* Set by src/scripts/motion.ts on section content (`[data-reveal]`) and on
+   grid/list children (`--i` gives each its stagger slot). */
+.motion [data-reveal] {
+	opacity: 0;
+	transform: translate3d(0, 28px, 0);
+	transition:
+		opacity 0.9s var(--ease-out),
+		transform 1s var(--ease-out);
+	transition-delay: calc(min(var(--i, 0), 6) * 90ms);
+}
+.motion [data-reveal].is-in {
+	opacity: 1;
+	transform: none;
+}
+
+/* ---------- Buttons ---------- */
+
+/*
+ * Primary: a pill in --btn-bg. On hover a fill sweeps across from the left
+ * (substation in light, flux in dark), the button lifts 1px and the arrow
+ * slips out to the right and back in from the left. Press squeezes it.
+ */
+.btn {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.65em;
+	min-height: 2.75rem;
+	border-radius: 9999px;
+	font-family: var(--font-display);
+	font-weight: 500;
+	line-height: 1;
+	-webkit-tap-highlight-color: transparent;
+	transition:
+		transform 0.35s var(--ease-out),
+		color 0.45s var(--ease-out),
+		border-color 0.45s var(--ease-out);
+}
+.btn::before {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	z-index: -1;
+	border-radius: inherit;
+	background: var(--btn-fill);
+	transform: scaleX(0);
+	transform-origin: right center;
+	transition: transform 0.55s var(--ease-out);
+}
+@media (hover: hover) {
+	.btn:hover {
+		transform: translate3d(0, -1px, 0);
+	}
+	.btn:hover::before {
+		transform: scaleX(1);
+		transform-origin: left center;
+	}
+	.btn:hover .btn__arrow svg {
+		animation: arrow-through 0.6s var(--ease-out);
+	}
+}
+.btn:focus-visible::before {
+	transform: scaleX(1);
+	transform-origin: left center;
+}
+.btn:active {
+	transform: scale(0.965);
+	transition-duration: 0.12s;
+}
+
+.btn-primary {
+	background-color: var(--btn-bg);
+	color: var(--btn-ink);
+}
+@media (hover: hover) {
+	.btn-primary:hover {
+		color: var(--btn-fill-ink);
+	}
+}
+.btn-primary:focus-visible {
+	color: var(--btn-fill-ink);
+}
+
+/* Secondary: outline; the sweep fills it with core and the text inverts. */
+.btn-secondary {
+	--btn-fill: var(--core);
+	border: 1.5px solid var(--core);
+	color: var(--core);
+}
+@media (hover: hover) {
+	.btn-secondary:hover {
+		color: var(--null);
+	}
+}
+.btn-secondary:focus-visible {
+	color: var(--null);
+}
+
+.btn__arrow {
+	display: inline-flex;
+	overflow: hidden;
+	width: 1.05em;
+	height: 1.05em;
+	flex-shrink: 0;
+}
+.btn__arrow svg {
+	width: 100%;
+	height: 100%;
+}
+@keyframes arrow-through {
+	0% {
+		transform: translateX(0);
+	}
+	45% {
+		transform: translateX(120%);
+	}
+	46% {
+		transform: translateX(-120%);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+/* ---------- Links ---------- */
+
+/*
+ * Underlines are drawn with a background line rather than
+ * text-decoration so they can animate. They sit at the bottom of the
+ * inline box, which lands ~5px under the baseline at body size.
+ */
+
+/* Always underlined (body links, text buttons): on hover the line wipes
+   out to the right and redraws from the left. */
+.link-u {
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-size: 100% 1px;
+	background-position: 0 100%;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+	text-decoration: none;
+}
+@media (hover: hover) {
+	.link-u:hover,
+	.group:hover .link-u {
+		animation: underline-wipe 0.7s var(--ease-out);
+	}
+}
+@keyframes underline-wipe {
+	0% {
+		background-size: 100% 1px;
+		background-position: 100% 100%;
+	}
+	45% {
+		background-size: 0% 1px;
+		background-position: 100% 100%;
+	}
+	46% {
+		background-size: 0% 1px;
+		background-position: 0 100%;
+	}
+	100% {
+		background-size: 100% 1px;
+		background-position: 0 100%;
+	}
+}
+
+/* Links inside running prose (legal pages): same as .link-u. */
+.prose-links a {
+	color: var(--core);
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-size: 100% 1px;
+	background-position: 0 100%;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+@media (hover: hover) {
+	.prose-links a:hover {
+		animation: underline-wipe 0.7s var(--ease-out);
+	}
+}
+
+/* Underline on hover only (nav and footer links): grows from the left,
+   leaves to the right. Put it on the text span, not a flex box. */
+.link-grow {
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-size: 0% 1px;
+	background-position: 100% 100%;
+	transition: background-size 0.45s var(--ease-out);
+}
+@media (hover: hover) {
+	.link-grow:hover,
+	a:hover > .link-grow,
+	.group:hover .link-grow {
+		background-size: 100% 1px;
+		background-position: 0 100%;
+	}
+}
+a:focus-visible > .link-grow,
+.link-grow[aria-current="page"],
+[aria-current="page"] > .link-grow {
+	background-size: 100% 1px;
+	background-position: 0 100%;
+}
+
+/* ---------- Cards ---------- */
+
+/*
+ * Interactive cards (links) lift on hover and carry a soft teal light that
+ * follows the cursor (`--mx`/`--my`, set by src/scripts/motion.ts), plus a
+ * faint halo underneath.
+ */
+.card-hover {
+	position: relative;
+	isolation: isolate;
+	transition:
+		transform 0.5s var(--ease-out),
+		box-shadow 0.5s var(--ease-out),
+		border-color 0.5s var(--ease-out);
+}
+.card-hover::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	opacity: 0;
+	background: radial-gradient(
+		26rem circle at var(--mx, 50%) var(--my, 0%),
+		var(--card-glow),
+		transparent 65%
+	);
+	transition: opacity 0.5s var(--ease-out);
+}
+@media (hover: hover) {
+	.group:hover .card-hover,
+	.card-hover:hover {
+		transform: translate3d(0, -4px, 0);
+		border-color: color-mix(in oklab, var(--vector) 40%, var(--rule));
+		box-shadow: 0 22px 48px -28px var(--card-halo);
+	}
+	.group:hover .card-hover::before,
+	.card-hover:hover::before {
+		opacity: 1;
+	}
+}
+.group:focus-visible .card-hover {
+	border-color: color-mix(in oklab, var(--vector) 40%, var(--rule));
+}
+.group:active .card-hover {
+	transform: translate3d(0, -1px, 0) scale(0.99);
+	transition-duration: 0.15s;
+}
+
+/* ---------- Count-ups ---------- */
+
+[data-count] {
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- FAQ ---------- */
+
+.faq__body {
+	overflow: hidden;
+}
+.faq__icon {
+	transition: transform 0.5s var(--ease-out);
+}
+details[open] > summary .faq__icon {
+	transform: rotate(180deg);
+}
+
+/* ---------- Page transitions ---------- */
+
+/*
+ * Cross-document view transitions: navigating between pages crossfades
+ * with a short rise, while the nav and the theme toggle stay put. Browsers
+ * without support simply navigate as usual.
+ */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+::view-transition-old(root) {
+	animation: vt-out 0.28s var(--ease-in-out) both;
+}
+::view-transition-new(root) {
+	animation: vt-in 0.5s var(--ease-out) both;
+}
+@keyframes vt-out {
+	to {
+		opacity: 0;
+		transform: translate3d(0, -8px, 0);
+	}
+}
+@keyframes vt-in {
+	from {
+		opacity: 0;
+		transform: translate3d(0, 14px, 0);
+	}
+}
+#site-header {
+	view-transition-name: site-header;
+}
+#theme-toggle {
+	view-transition-name: theme-toggle;
+}
+
+/* Theme switch: the new theme spreads out in a circle from the toggle
+   (clip-path animated by ThemeToggle's script). Header and toggle join the
+   root snapshot for this one, so the whole page changes together. */
+.vt-theme::view-transition-old(root),
+.vt-theme::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+.vt-theme #site-header,
+.vt-theme #theme-toggle {
+	view-transition-name: none;
+}
+
+/* Fallback theme switch where view transitions are missing: a short
+   color crossfade on everything. */
+.theme-fade,
+.theme-fade *,
+.theme-fade *::before,
+.theme-fade *::after {
+	transition:
+		background-color 0.45s var(--ease-out),
+		border-color 0.45s var(--ease-out),
+		color 0.45s var(--ease-out),
+		fill 0.45s var(--ease-out) !important;
+}

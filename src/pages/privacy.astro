@@ -1,0 +1,73 @@
+---
+// /privacy, copy from content/copy/privacy.md. Business name, website,
+// location, email and effective date come from src/site.config.ts.
+import { site, siteLocation } from "../site.config";
+import LegalPage from "../components/LegalPage.astro";
+
+const email = site.email;
+---
+
+<LegalPage
+	title="Privacy Policy"
+	description={`How ${site.businessName} collects, uses and protects the information you share when you visit ${site.website} or book a call.`}
+>
+	<h2>Who we are</h2>
+	<p>
+		{site.website} is run by {site.businessName}, based in {siteLocation} ("we", "us"). Questions:{" "}
+		<a href={`mailto:${email}`}>{email}</a>.
+	</p>
+
+	<h2>What we collect</h2>
+	<ul>
+		<li>
+			Booking details. Calendly, our booking provider, collects what you enter when you book, such as your name,
+			email, company website and notes about your business. It processes this under its own privacy policy and may
+			set cookies on the booking page.
+		</li>
+		<li>Emails. If you email us, we keep your message and contact details to reply.</li>
+		<li>
+			Analytics. Cloudflare Web Analytics counts visits and page use. It uses no cookies and does not track you
+			across other sites.
+		</li>
+		<li>
+			Technical data. Cloudflare, our host, processes standard data such as IP address and browser type to deliver
+			and protect the site.
+		</li>
+	</ul>
+
+	<h2>How we use it</h2>
+	<ul>
+		<li>To arrange and hold the calls you book</li>
+		<li>To reply to you and send the plan or proposal you asked for</li>
+		<li>To improve the website and keep it secure</li>
+	</ul>
+	<p>We do not sell your personal information or use it for advertising.</p>
+
+	<h2>Who we share it with</h2>
+	<p>
+		Only the providers that help us run the business, such as Calendly, Cloudflare and our email provider, and only
+		as far as they need. We may also share information if the law requires it.
+	</p>
+
+	<h2>How long we keep it</h2>
+	<p>As long as we need it to work with you and meet legal or accounting duties, then we delete it.</p>
+
+	<h2>Your rights</h2>
+	<p>
+		Depending on where you live, including the EU, the UK and some US states, you may have the right to see, correct
+		or delete your personal information, or object to how we use it. Email <a href={`mailto:${email}`}>{email}</a>{" "}
+		and we will reply within 30 days.
+	</p>
+
+	<h2>Children</h2>
+	<p>This website is for businesses, not children under 16. We do not knowingly collect their information.</p>
+
+	<h2>Changes to this policy</h2>
+	<p>If we change this policy, we will update this page and its effective date.</p>
+
+	<h2>Contact</h2>
+	<p>
+		{site.businessName}, {siteLocation}<br />
+		<a href={`mailto:${email}`}>{email}</a>
+	</p>
+</LegalPage>

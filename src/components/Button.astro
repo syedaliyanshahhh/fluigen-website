@@ -1,0 +1,62 @@
+---
+// Button variants — design/brand.md "Buttons and links". Styles and
+// interactions live in src/styles/motion.css:
+// - primary: pill in the theme's button color (black on light, near-white
+//   on dark and inside any dark context: flow sections, scenes). Hover
+//   sweeps a fill across, press squeezes, the arrow slips through.
+// - secondary: 1.5px outline in core; hover fills it with core.
+// - text: underlined text; hover wipes the underline out and back.
+// Focus: 2px ring outline, 3px offset (vector on light, flux on dark).
+//
+// `arrow` adds the moving arrow. It is on by default for the booking CTA
+// buttons (primary), off for the others.
+import Icon from "./Icon.astro";
+
+interface Props {
+	href?: string;
+	variant?: "primary" | "secondary" | "text";
+	arrow?: boolean;
+	type?: "button" | "submit";
+	class?: string;
+	[attr: string]: unknown;
+}
+
+const {
+	href,
+	variant = "primary",
+	arrow = variant === "primary",
+	type = "button",
+	class: className,
+	...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+const focus =
+	"outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring";
+
+const variantClass = {
+	primary: "btn btn-primary px-[26px] py-[15px] text-[17px]",
+	secondary: "btn btn-secondary px-[26px] py-[15px] text-[17px]",
+	text: "link-u inline font-display font-medium text-[17px] leading-[1.4] text-core",
+}[variant];
+---
+
+<Tag href={href} type={!href ? type : undefined} class:list={[variantClass, focus, className]} {...rest}>
+	{
+		variant === "text" ? (
+			<slot />
+		) : (
+			<>
+				<span>
+					<slot />
+				</span>
+				{arrow && (
+					<span class="btn__arrow">
+						<Icon name="arrow-right" />
+					</span>
+				)}
+			</>
+		)
+	}
+</Tag>

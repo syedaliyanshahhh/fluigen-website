@@ -1,31 +1,374 @@
 ---
-import '../styles/global.css';
-import logo from '../../design/logos/fluigen-horizontal-black.svg';
+// Homepage, sections 1-12 (content/copy/home.md, content/brief.md).
+//
+// Rhythm: the full-screen hero on the flow field, then light sections with
+// two dark scenes (proof strip, case studies) for depth, ending on the
+// closing flow band. A booking CTA follows every two sections.
+import { settings, site } from "../site.config";
+import { getFeaturedCaseStudies, getSolutions } from "../lib/content";
+import Layout from "../components/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import Container from "../components/Container.astro";
+import Section from "../components/Section.astro";
+import FlowSection from "../components/FlowSection.astro";
+import FlowLines from "../components/FlowLines.astro";
+import LineReveal from "../components/LineReveal.astro";
+import Scene from "../components/Scene.astro";
+import PageCTA from "../components/PageCTA.astro";
+import Button from "../components/Button.astro";
+import InlineCTA from "../components/InlineCTA.astro";
+import Label from "../components/Label.astro";
+import Card from "../components/Card.astro";
+import StatTile from "../components/StatTile.astro";
+import SolutionRow from "../components/SolutionRow.astro";
+import CaseStudyCard from "../components/CaseStudyCard.astro";
+import EmptyState from "../components/EmptyState.astro";
+import FounderPhoto from "../components/FounderPhoto.astro";
+import FAQItem from "../components/FAQItem.astro";
+import Icon from "../components/Icon.astro";
+
+const solutions = await getSolutions();
+
+// The case studies marked "Featured on homepage" in content/copy/case-studies.
+const caseStudies = await getFeaturedCaseStudies();
+
+// Shorter homepage summary (content/copy/home.md section 6) where it differs
+// from the case study's own card summary.
+const caseStudySummaries: Record<string, string> = {
+	"restoration-company":
+		"An AI receptionist picks up every call, day or night, and the team gets the details in seconds.",
+};
+
+const painPoints = [
+	{
+		title: "Calls go to voicemail",
+		description: "Nobody picks up after hours, so callers book with whoever answers first.",
+	},
+	{
+		title: "Leads go cold",
+		description: "Follow-ups slip on busy days, and the lead moves on.",
+	},
+	{
+		title: "You chase the team for updates",
+		description: "Details get copied between tools, and your evenings go on checking what got done.",
+	},
+];
+
+const proofStats = [
+	{ value: "16", label: "systems run from one client portal" },
+	{ value: "24/7", label: "calls answered, 2am emergencies included" },
+	{ value: "45 days", label: "of follow-up on every lead" },
+	{ value: "2 to 3", label: "weeks from kickoff to live, for most builds" },
+];
+
+const steps = [
+	{ title: "Audit", description: "A 30-minute call, then a written plan and fixed price within 48 hours." },
+	{ title: "Build", description: "One process, built in your own accounts, with about two hours of your time." },
+	{ title: "Go live", description: "We test it with real work, hand it over, and you pay the second half." },
+	{ title: "Care", description: "Optional monthly plan: we watch it, fix it and keep improving it." },
+];
+
+const guarantees = [
+	{
+		title: "Pay the second half when it is live",
+		description: "50% to start, the rest once it is running. Not before.",
+	},
+	{
+		title: "You own everything",
+		description: "Your accounts, data and workflows, with a full documented handover.",
+	},
+	{
+		title: "30 days of free fixes",
+		description: "If something needs adjusting after launch, we fix it free.",
+	},
+];
+
+const goodFit = [
+	"Owner-led, roughly 10 to 200 people",
+	"The same tasks every day or week",
+	"You know where the hours go, but nobody has time to fix it",
+	"You want it done for you, not another tool",
+];
+
+const notFit = [
+	"One-off experiments with no process behind them",
+	"Businesses still working out how they run",
+	"Cheapest option or hourly billing",
+];
+
+const faqs = [
+	{
+		question: "Who owns what you build?",
+		answer: "You do. At handover you get every login, the workflows, written docs and a video walkthrough.",
+	},
+	{
+		question: "Is my data safe?",
+		answer:
+			"It stays in the tools you already use. We only take the access a build needs, and you can remove it at handover.",
+	},
+	{
+		question: "What if it breaks?",
+		answer:
+			"You get 30 days of free fixes after launch. After that, the Care Plan covers it, or call us when you need us.",
+	},
+	{
+		question: "How long does it take?",
+		answer: "Most builds are live in 2 to 3 weeks. Your audit plan sets a fixed price and finish date first.",
+	},
+	{
+		question: "Do I need to learn anything?",
+		answer: "No. It runs inside the tools your team already uses.",
+	},
+	{
+		question: "What time zone do you work in?",
+		answer: `We are based in ${site.city} and work your business hours, in the US, UK, Europe or Australia.`,
+	},
+];
+
+/** Two-digit step and item numbers, as mono texture. */
+const nn = (index: number) => String(index + 1).padStart(2, "0");
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="robots" content="noindex" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Fluigen</title>
+<Layout
+	description="AI that answers your calls, follows up your leads and runs your back office. Live in weeks."
+>
+	<Nav />
+	<main id="main">
+		<!-- 1. Hero: one full screen on the flow field -->
+		<FlowSection variant="hero" class="hero-full">
+			<div class="hero-full-y flex min-h-[calc(100svh-var(--nav-h))] flex-col justify-between gap-[var(--space-head)]">
+				<Container class="w-full">
+					<LineReveal
+						text={"Your business,\nrunning on its own."}
+						delay={80}
+						class="font-display text-hero-h1 text-core [text-wrap:balance]"
+					/>
+				</Container>
 
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-		<link rel="manifest" href="/site.webmanifest" />
-	</head>
-	<body class="min-h-screen bg-[#F7F7F7] flex flex-col items-center justify-center gap-6 px-5">
-		<img src={logo.src} alt="Fluigen" class="h-10 w-auto" />
-		<p class="text-black text-lg text-center">New website on the way.</p>
-		<a
-			href="mailto:aliyan@fluigen.com"
-			class="text-black underline underline-offset-[5px] decoration-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#267B85]"
-		>
-			aliyan@fluigen.com
-		</a>
-	</body>
-</html>
+				<FlowLines />
+
+				<Container class="w-full">
+					<div class="rise-in grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-10" style="--rise-delay: 0.5s">
+						<p class="text-body text-core max-w-[38ch] lg:col-span-5">
+							AI that answers your calls, follows up your leads and runs your back office.
+						</p>
+						<div class="flex flex-col gap-4 lg:col-span-7 lg:items-end">
+							<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+								<Button href={site.bookingPath} class="w-full sm:w-auto">Book your free automation audit</Button>
+								<Button href="#case-studies" variant="secondary" class="w-full sm:w-auto">See our work</Button>
+							</div>
+							<p class="text-small text-core [text-wrap:balance]">Live in weeks. Pay the second half only when it works.</p>
+						</div>
+					</div>
+				</Container>
+			</div>
+		</FlowSection>
+
+		<!-- 2. Proof strip (dark scene) -->
+		<Scene>
+			<div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-4">
+				{proofStats.map((stat) => <StatTile row value={stat.value} label={stat.label} />)}
+			</div>
+		</Scene>
+
+		<!-- 3. The problem -->
+		<Section glow="left">
+			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch] lg:col-span-5">
+					What stops when one person is unavailable?
+				</h2>
+				<ol class="lg:col-span-7">
+					{
+						painPoints.map((pain, index) => (
+							<li class="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 border-t border-rule py-7 last:border-b sm:gap-x-8">
+								<Label text={nn(index)} class="pt-[0.45em]" />
+								<div class="space-y-2">
+									<h3 class="font-display text-h3 text-core">{pain.title}</h3>
+									<p class="text-body text-ink-2 max-w-[46ch]">{pain.description}</p>
+								</div>
+							</li>
+						))
+					}
+				</ol>
+				<InlineCTA class="lg:col-span-7 lg:col-start-6" note="We will find the first thing worth fixing." />
+			</Container>
+		</Section>
+
+		<!-- 4. What we build -->
+		<Section>
+			<Container>
+				<div class="grid gap-4 lg:grid-cols-12 lg:items-end lg:gap-10">
+					<h2 class="font-display text-h2 text-core lg:col-span-5">What we build</h2>
+					<p class="text-body text-ink-2 max-w-[46ch] lg:col-span-7">Each one already runs for a real business.</p>
+				</div>
+				<ul class="mt-[var(--space-head)] space-y-3 sm:space-y-4">
+					{
+						solutions.map((solution) => (
+							<li>
+								<SolutionRow solution={solution} />
+							</li>
+						))
+					}
+				</ul>
+				{!settings.showSeeItWork && <InlineCTA class="mt-[var(--space-block)]" />}
+			</Container>
+		</Section>
+
+		<!-- 5. See it work: hidden until the recording exists (settings.showSeeItWork) -->
+		{
+			settings.showSeeItWork && (
+				<Section>
+					<Container>
+						<div class="max-w-[640px] space-y-4">
+							<h2 class="font-display text-h2 text-core">Hear an AI receptionist take a real call</h2>
+							<p class="text-body text-ink-2">
+								Sixty seconds: it answers, asks the right questions and books the appointment.
+							</p>
+						</div>
+						<EmptyState
+							label="[PLACEHOLDER: 60-second recording]"
+							class="mt-10 aspect-[16/9] w-full lg:mt-12"
+						>
+							<span class="flex h-16 w-16 items-center justify-center rounded-full bg-null sm:h-20 sm:w-20">
+								<Icon name="play" class="h-6 w-6 translate-x-[2px] text-core sm:h-7 sm:w-7" />
+							</span>
+						</EmptyState>
+						<InlineCTA class="mt-10 lg:mt-12" />
+					</Container>
+				</Section>
+			)
+		}
+
+		<!-- 6. Case studies (dark scene, glass cards; a swipeable row on phones) -->
+		<Scene id="case-studies">
+			<div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch]">Work that is already running</h2>
+				<Button href="/case-studies" variant="text" class="shrink-0 self-start sm:self-auto">
+					See all case studies
+				</Button>
+			</div>
+			<div
+				class="mt-[var(--space-head)] -mx-[calc(var(--container-pad)-var(--scene-inset))] flex snap-x snap-mandatory scroll-px-[calc(var(--container-pad)-var(--scene-inset))] gap-4 overflow-x-auto px-[calc(var(--container-pad)-var(--scene-inset))] py-3 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-0 sm:py-0 lg:gap-8 [&::-webkit-scrollbar]:hidden"
+				data-stagger
+			>
+				{
+					caseStudies.map((caseStudy) => (
+						<CaseStudyCard
+							caseStudy={caseStudy}
+							variant="glass"
+							summary={caseStudySummaries[caseStudy.id]}
+							class="w-[84%] shrink-0 snap-start sm:w-auto"
+						/>
+					))
+				}
+			</div>
+		</Scene>
+
+		<!-- 7. How it works -->
+		<Section glow="right">
+			<Container>
+				<h2 class="font-display text-h2 text-core">How it works</h2>
+				<ol class="mt-[var(--space-head)] grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+					{
+						steps.map((step, index) => (
+							<li class="step-line space-y-3 border-t border-rule pt-6">
+								<Label text={nn(index)} />
+								<h3 class="font-display text-h3 text-core">{step.title}</h3>
+								<p class="text-body text-ink-2 max-w-[34ch]">{step.description}</p>
+							</li>
+						))
+					}
+				</ol>
+				<InlineCTA class="mt-[var(--space-block)]" note="Step 1 is free." />
+			</Container>
+		</Section>
+
+		<!-- 8. Guarantees -->
+		<Section>
+			<Container>
+				<h2 class="font-display text-h2 text-core max-w-[16ch]">The risk sits with us</h2>
+				<ul class="mt-[var(--space-head)] grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-8">
+					{
+						guarantees.map((guarantee) => (
+							<li>
+								<Card class="h-full space-y-4 lg:p-8">
+									<span class="grid h-11 w-11 place-items-center rounded-full bg-core text-baseline">
+										<Icon name="check" class="h-5 w-5" />
+									</span>
+									<h3 class="font-display text-h3 text-core">{guarantee.title}</h3>
+									<p class="text-body text-ink-2">{guarantee.description}</p>
+								</Card>
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		<!-- 9. Who it is for -->
+		<Section glow="left">
+			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch] lg:col-span-5">Who we are a good fit for</h2>
+				<div class="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 lg:col-span-7">
+					<div class="space-y-5">
+						<Label text="good fit" />
+						<ul class="border-t border-rule">
+							{
+								goodFit.map((item) => (
+									<li class="flex gap-3 border-b border-rule py-4 text-body text-core">
+										<Icon name="check" class="mt-[0.3em] h-5 w-5 shrink-0 text-core" />
+										<span>{item}</span>
+									</li>
+								))
+							}
+						</ul>
+					</div>
+					<div class="space-y-5">
+						<Label text="not a fit" />
+						<ul class="border-t border-rule">
+							{
+								notFit.map((item) => (
+									<li class="flex gap-3 border-b border-rule py-4 text-body text-ink-2">
+										<Icon name="x" class="mt-[0.3em] h-5 w-5 shrink-0 text-ink-3" />
+										<span>{item}</span>
+									</li>
+								))
+							}
+						</ul>
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 10. Founder note -->
+		<Section>
+			<Container class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:grid-cols-12 lg:gap-10">
+				<FounderPhoto class="w-full max-w-[min(360px,72vw)] lg:col-span-4" />
+				<div class="max-w-[560px] space-y-6 lg:col-span-7 lg:col-start-6">
+					<Label text="from the founder" />
+					<blockquote class="font-display text-h3 text-core">
+						"I watched good businesses lose leads to slow replies. Now I build the systems that stop it."
+					</blockquote>
+					<p class="text-body text-ink-2">Book an audit and you talk to me, not a sales rep.</p>
+					<p class="text-small text-ink-3">Aliyan Shah, founder of {site.businessName}</p>
+					<InlineCTA class="pt-2" />
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 11. FAQ -->
+		<Section glow="right">
+			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
+				<h2 class="font-display text-h2 text-core max-w-[12ch] lg:col-span-5">Questions owners ask us</h2>
+				<div class="border-t border-rule lg:col-span-7" data-stagger>
+					{faqs.map((faq) => <FAQItem question={faq.question}>{faq.answer}</FAQItem>)}
+				</div>
+			</Container>
+		</Section>
+
+		<!-- 12. Final call to action (no calendar here) -->
+		<PageCTA text="30 minutes, and a written plan even if you never hire us." />
+	</main>
+	<Footer />
+</Layout>

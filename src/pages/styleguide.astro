@@ -1,0 +1,426 @@
+---
+// Dev-only reference for the whole visual system (docs/build-plan.md Phase 2,
+// design/brand.md). Not linked from Nav/Footer. Noindexed by Layout.astro.
+//
+// Every piece renders live in the current page theme (switch with the
+// toggle in the corner), and the "Side by side" section also renders the
+// core components in forced light and dark contexts at once.
+import { site } from "../site.config";
+import Layout from "../components/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import Container from "../components/Container.astro";
+import Section from "../components/Section.astro";
+import FlowSection from "../components/FlowSection.astro";
+import Scene from "../components/Scene.astro";
+import PageCTA from "../components/PageCTA.astro";
+import Button from "../components/Button.astro";
+import Label from "../components/Label.astro";
+import Card from "../components/Card.astro";
+import StatTile from "../components/StatTile.astro";
+import FAQItem from "../components/FAQItem.astro";
+import EmptyState from "../components/EmptyState.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import Icon, { type IconName } from "../components/Icon.astro";
+
+const themedColors = [
+	{ token: "baseline", light: "#F7F7F7", dark: "#0A0F10", role: "Page background" },
+	{ token: "null", light: "#FFFFFF", dark: "#121A1B", role: "Cards and surfaces" },
+	{ token: "core", light: "#000000", dark: "#F7F7F7", role: "Text, headlines, primary button" },
+	{ token: "ink-2", light: "#3A3A3A", dark: "#C9D2D3", role: "Secondary text" },
+	{ token: "ink-3", light: "#6B6B6B", dark: "#8FA0A2", role: "Muted text, captions" },
+	{ token: "rule", light: "#DCDCDC", dark: "#26302F", role: "Borders and dividers" },
+	{ token: "ring", light: "#267B85", dark: "#97C1C5", role: "Focus ring (vector, flux)" },
+];
+
+const fixedColors = [
+	{ token: "flux", hex: "#97C1C5", role: "Flow fields, dark focus ring, dark button fill" },
+	{ token: "vector", hex: "#267B85", role: "Flow fields, glows, light focus ring" },
+	{ token: "substation", hex: "#02525E", role: "Flow fields, light button fill" },
+	{ token: "deep", hex: "substation + core", role: "Darkest part of a flow field" },
+];
+
+const typeStyles = [
+	{ name: "Hero H1", className: "font-display text-hero-h1", sample: "Your business, running on its own.", meta: "Inter Tight 300 · 104/100 to 44/46 · -4.5%" },
+	{ name: "H1 (inner pages)", className: "font-display text-h1", sample: "Built to run without you.", meta: "Inter Tight 400 · 72/72 to 40/42 · -3%" },
+	{ name: "H2", className: "font-display text-h2", sample: "We map the process before we build.", meta: "Inter Tight 400 · 56/58 to 34/36 · -3%" },
+	{ name: "H3", className: "font-display text-h3", sample: "Platforms connected by one workflow.", meta: "Inter Tight 400 · 28/34 to 22/28 · -1.5%" },
+	{ name: "Body", className: "font-sans text-body", sample: "We cut your onboarding from three days to twenty minutes.", meta: "Inter 400 · 18/29 to 17/27" },
+	{ name: "Small", className: "font-sans text-small", sample: "Real numbers, clean layouts, nothing extra.", meta: "Inter 400 · 15/22 at every width" },
+	{ name: "Label", className: "font-mono text-label uppercase", sample: "[ operations automated ]", meta: "Cascadia Code 400 · 13/18 to 12/16 · +4%, uppercase" },
+	{ name: "Big number", className: "font-display text-big-number", sample: "99.9%", meta: "Inter Tight 300 · 72/72 to 48/48 · -5%" },
+];
+
+const flowVariants = [
+	{ name: "hero", use: "Homepage and 404 hero. Strongest field, behind the glass nav, bleeds into the next section." },
+	{ name: "closing", use: "Final call to action band on every marketing page (PageCTA). Dissolves in and out." },
+	{ name: "soft", use: "Light haze behind inner page headers (PageHeader) and the mobile menu." },
+	{ name: "glow-left / glow-right", use: 'One faint drifting light behind a Section: <Section glow="left">.' },
+	{ name: "scene", use: "Teal light rising out of black inside a Scene." },
+	{ name: "arch", use: "The same column of light inside a framed panel (EmptyState)." },
+];
+
+const icons: IconName[] = ["phone-call", "headset", "layout-dashboard", "users", "book-open", "check", "x", "chevron-down", "play", "arrow-left", "arrow-right", "menu"];
+
+const demoStats = [
+	{ value: "16", label: "systems managed from one client portal" },
+	{ value: "45 days", label: "of follow-up on every lead, with no outreach hire" },
+	{ value: "24/7", label: "stays as written: not a counting number" },
+];
+
+const sectionHead = "font-display text-h2 text-core";
+const lead = "mt-4 max-w-[60ch] text-body text-ink-2";
+const caption = "font-mono text-label uppercase text-ink-3";
+---
+
+<Layout title="Styleguide" noindex description="Dev-only reference for the Fluigen visual system. Not part of the public site.">
+	<Nav />
+	<main id="main">
+		<!-- Hero: the hero flow field itself -->
+		<FlowSection variant="hero" class="hero-section-y">
+			<Container>
+				<div class="rise-in max-w-[860px] space-y-6">
+					<Label text="dev only, noindexed" color="core" />
+					<h1 class="font-display text-hero-h1 text-core">Styleguide</h1>
+					<p class="max-w-[60ch] text-body text-core">
+						Every token, component and motion in the site's visual system, from design/brand.md. This hero is
+						the live hero flow field. Switch themes with the toggle in the bottom-right corner.
+					</p>
+					<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
+						<Button href={site.bookingPath}>Book your free automation audit</Button>
+						<Button href="#side-by-side" variant="text">Light and dark side by side</Button>
+					</div>
+				</div>
+			</Container>
+		</FlowSection>
+
+		<!-- Side by side -->
+		<Section id="side-by-side" glow="right">
+			<Container>
+				<h2 class={sectionHead}>Side by side</h2>
+				<p class={lead}>
+					The same components in a forced light context and a forced dark context. Any element with
+					data-theme opens its own theme, which is how hero content and scenes stay white-on-dark.
+				</p>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 lg:grid-cols-2">
+					{
+						(["light", "dark"] as const).map((theme) => (
+							<div data-theme={theme} class="space-y-6 rounded-panel border border-rule bg-baseline p-6 sm:p-8">
+								<p class={caption}>{theme} theme</p>
+								<div class="flex flex-wrap items-center gap-4">
+									<Button href={site.bookingPath}>Book your free automation audit</Button>
+									<Button href="/case-studies" variant="secondary">See our work</Button>
+									<Button href="/how-we-work" variant="text">How it works</Button>
+								</div>
+								<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+									<a href="/solutions" class="group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring">
+										<Card interactive class="h-full space-y-3">
+											<Icon name="headset" class="h-7 w-7 text-core" />
+											<p class="font-display text-h3 text-core">Interactive card</p>
+											<p class="text-small text-ink-2">Hover: lift, halo, light follows the cursor.</p>
+										</Card>
+									</a>
+									<Card class="space-y-3">
+										<Label text="label" />
+										<p class="font-display text-h3 text-core">Static card</p>
+										<p class="text-small text-ink-3">Muted caption text in ink-3.</p>
+									</Card>
+								</div>
+								<div class="flex items-center justify-between border-t border-rule pt-5">
+									<a href="/about" class="text-body text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring">
+										<span class="link-grow">Nav link, underline on hover</span>
+									</a>
+									<span class="pointer-events-none" aria-hidden="true">
+										<span class="glass inline-block h-[1.875rem] w-14 rounded-full" />
+									</span>
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</Container>
+		</Section>
+
+		<!-- Colors -->
+		<Section>
+			<Container>
+				<h2 class={sectionHead}>Colors</h2>
+				<p class={lead}>
+					Themed roles swap between light and dark; the token name is the role, not the hex. The teal palette
+					never swaps and never appears as a flat block or as text.
+				</p>
+				<ul class="mt-[var(--space-head)] grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+					{
+						themedColors.map((c) => (
+							<li class="overflow-hidden rounded-card border border-rule bg-null">
+								<div class="grid h-20 grid-cols-2 border-b border-rule">
+									<span style={`background-color: ${c.light}`} />
+									<span style={`background-color: ${c.dark}`} />
+								</div>
+								<div class="space-y-1 p-4">
+									<p class="font-mono text-label uppercase text-core">{c.token}</p>
+									<p class="text-small text-ink-3">
+										{c.light} / {c.dark}
+									</p>
+									<p class="text-small text-ink-2">{c.role}</p>
+								</div>
+							</li>
+						))
+					}
+				</ul>
+				<ul class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+					{
+						fixedColors.map((c) => (
+							<li class="overflow-hidden rounded-card border border-rule bg-null">
+								<div class="h-20 border-b border-rule" style={`background-color: var(--${c.token})`} />
+								<div class="space-y-1 p-4">
+									<p class="font-mono text-label uppercase text-core">{c.token}</p>
+									<p class="text-small text-ink-3">{c.hex}</p>
+									<p class="text-small text-ink-2">{c.role}</p>
+								</div>
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		<!-- Flow gradient -->
+		<Section glow="left">
+			<Container>
+				<h2 class={sectionHead}>Flow gradient</h2>
+				<p class={lead}>
+					Soft radial light in the teal palette with static grain, drifting slowly and shifting as its section
+					scrolls past. Transform-only animation, paused off screen, still under reduced motion. Fields always
+					dissolve into the page; text goes only on their dark part.
+				</p>
+				<ul class="mt-[var(--space-head)] grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+					{
+						flowVariants.map((v) => (
+							<li class="space-y-2 border-t border-rule pt-5">
+								<p class="font-mono text-label uppercase text-core">{v.name}</p>
+								<p class="text-small text-ink-2">{v.use}</p>
+							</li>
+						))
+					}
+				</ul>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 lg:grid-cols-2">
+					<EmptyState label="arch: empty state panel" class="aspect-[16/10] w-full">
+						<span class="grid h-16 w-16 place-items-center rounded-full bg-core sm:h-20 sm:w-20">
+							<Icon name="play" class="h-6 w-6 translate-x-[2px] text-baseline sm:h-7 sm:w-7" />
+						</span>
+					</EmptyState>
+					<div class="relative isolate flex aspect-[16/10] w-full items-end overflow-hidden rounded-panel border border-rule">
+						<div class="flow flow--soft !inset-0 !z-0" aria-hidden="true" data-flow>
+							<div class="flow__drift"><span class="flow__blob"></span><span class="flow__blob"></span></div>
+						</div>
+						<p class="relative p-6 font-mono text-label uppercase text-core">soft: page header haze</p>
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- Scene with glass -->
+		<Scene>
+			<Label text="scene" />
+			<h2 class="mt-4 max-w-[18ch] font-display text-h2 text-core">Dark scene with glass cards</h2>
+			<p class="mt-4 max-w-[60ch] text-body text-ink-2">
+				A black stage lit by teal, inset from the viewport edge with a large radius. Its content is a dark theme
+				context in both page themes. At most two per page, never two in a row.
+			</p>
+			<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 sm:grid-cols-3 lg:gap-8">
+				{
+					["Glass card", "Frosted over light", "Text stays core"].map((title) => (
+						<Card variant="glass" class="space-y-4">
+							<Icon name="check" class="h-6 w-6 text-core" />
+							<h3 class="font-display text-h3 text-core">{title}</h3>
+							<p class="text-body text-ink-2">Blur 18px, 1px edge, tint strong enough for 4.5:1 text.</p>
+						</Card>
+					))
+				}
+			</div>
+			<div class="mt-10 flex flex-wrap items-center gap-4">
+				<Button href={site.bookingPath}>Book your free automation audit</Button>
+				<Button href="/case-studies" variant="secondary">Secondary in a scene</Button>
+			</div>
+		</Scene>
+
+		<!-- Glass -->
+		<Section glow="right">
+			<Container>
+				<h2 class={sectionHead}>Glass</h2>
+				<p class={lead}>
+					Only for things that float over color: the nav bar, the theme toggle, cards over a field or in a scene.
+					Ordinary cards stay solid. Scroll the page to see the nav turn compact.
+				</p>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
+					<div class="space-y-4">
+						<p class={caption}>Floating nav</p>
+						<div class="relative isolate overflow-hidden rounded-panel border border-rule p-6 sm:p-8">
+							<div class="flow flow--soft !inset-0 !z-0" aria-hidden="true" data-flow>
+								<div class="flow__drift"><span class="flow__blob"></span><span class="flow__blob"></span></div>
+							</div>
+							<div class="glass relative flex h-[var(--nav-bar-h)] items-center justify-between rounded-full px-[var(--nav-pad)]">
+								<span class="font-display text-body text-core">fluigen</span>
+								<span class="hidden gap-6 text-small text-core sm:flex"><span>Solutions</span><span>About</span></span>
+								<span class="btn btn-primary min-h-10 px-4 text-[15px]">Book a free audit</span>
+							</div>
+							<div class="glass relative mx-auto mt-4 flex h-[var(--nav-bar-h-compact)] w-[88%] items-center justify-between rounded-full px-[var(--nav-pad)]">
+								<span class="font-display text-small text-core">fluigen</span>
+								<span class="font-mono text-label uppercase text-ink-3">compact on scroll</span>
+							</div>
+						</div>
+					</div>
+					<div class="space-y-4">
+						<p class={caption}>Theme toggle</p>
+						<div class="flex items-center gap-6 rounded-panel border border-rule bg-null p-6 sm:p-8">
+							<ThemeToggle inline />
+							<p class="text-small text-ink-2">
+								Fixed bottom right on every page. Steps aside whenever it would sit over a link, button or text,
+								and while a touch screen scrolls.
+							</p>
+						</div>
+						<Card variant="glass" class="space-y-2">
+							<p class={caption}>Glass card on the page</p>
+							<p class="text-small text-ink-2">Same surface as in the scene, over a light ground.</p>
+						</Card>
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- Typography -->
+		<Section>
+			<Container>
+				<h2 class={sectionHead}>Typography</h2>
+				<p class={lead}>Every sample uses the live fluid utility, scaling between 375px and 1440px.</p>
+				<ul class="mt-[var(--space-head)] space-y-10">
+					{
+						typeStyles.map((t) => (
+							<li class="space-y-2 border-t border-rule pt-6">
+								<p class={caption}>{t.name}</p>
+								<p class={`${t.className} text-core`}>{t.sample}</p>
+								<p class="text-small text-ink-3">{t.meta}</p>
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		<!-- Buttons and links -->
+		<Section glow="left">
+			<Container>
+				<h2 class={sectionHead}>Buttons and links</h2>
+				<p class={lead}>
+					Hover: a fill sweeps across, the button lifts 1px and the arrow slips through. Press squeezes it.
+					Tab to see the focus ring. Underlines wipe out and redraw on hover.
+				</p>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2">
+					<div class="space-y-3">
+						<p class={caption}>Primary, with arrow</p>
+						<Button href={site.bookingPath}>Book your free automation audit</Button>
+					</div>
+					<div class="space-y-3">
+						<p class={caption}>Secondary</p>
+						<Button href="/case-studies" variant="secondary">See our work</Button>
+					</div>
+					<div class="space-y-3">
+						<p class={caption}>Text button</p>
+						<Button href="/case-studies" variant="text">See all case studies</Button>
+					</div>
+					<div class="space-y-3">
+						<p class={caption}>Links</p>
+						<p class="text-body text-ink-2">
+							Body copy with an <a href="/privacy" class="link-u text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring">underlined link</a> and a
+							<a href="/terms" class="text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"><span class="link-grow">hover-only link</span></a>.
+						</p>
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- Cards -->
+		<Section>
+			<Container>
+				<h2 class={sectionHead}>Cards</h2>
+				<p class={lead}>Cards reveal one after another as the grid scrolls in. Link cards lift and glow on hover.</p>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+					<Card class="space-y-2">
+						<p class={caption}>Card, 20px</p>
+						<p class="text-body text-core">Solid surface, 1px rule.</p>
+					</Card>
+					<Card variant="panel" class="space-y-2">
+						<p class={caption}>Panel, 28px</p>
+						<p class="text-body text-core">Larger radius and padding.</p>
+					</Card>
+					<a href="/solutions" class="group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring">
+						<Card interactive class="h-full space-y-2">
+							<p class={caption}>Interactive</p>
+							<p class="text-body text-core">Lift, halo, cursor light.</p>
+						</Card>
+					</a>
+					<Card variant="glass" class="space-y-2">
+						<p class={caption}>Glass</p>
+						<p class="text-body text-core">Over fields and in scenes.</p>
+					</Card>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- Motion -->
+		<Section glow="right">
+			<Container>
+				<h2 class={sectionHead}>Motion</h2>
+				<p class={lead}>
+					Count-ups run once as numbers scroll into view (a leading number of 10 or more only). The FAQ opens
+					and closes smoothly. Links to other pages crossfade with a short rise while the nav stays put. All of
+					it turns off with reduced motion.
+				</p>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-3">
+					{demoStats.map((stat) => <StatTile value={stat.value} label={stat.label} />)}
+				</div>
+				<div class="mt-[var(--space-block)] max-w-[760px] border-t border-rule">
+					<FAQItem question="Who owns what you build?">
+						You do. We build inside your accounts wherever possible, and at handover you get every login, the
+						workflows, written documentation and a video walkthrough.
+					</FAQItem>
+					<FAQItem question="How long does it take?">
+						Most builds are live in 2 to 3 weeks. Your audit plan gives you a fixed price and a finish date before
+						anything starts.
+					</FAQItem>
+				</div>
+				<div class="mt-[var(--space-block)] flex flex-wrap gap-x-8 gap-y-4">
+					<Button href="/" variant="text">Page transition: go home</Button>
+					<Button href="/about" variant="text">Page transition: About</Button>
+				</div>
+			</Container>
+		</Section>
+
+		<!-- Labels and icons -->
+		<Section>
+			<Container>
+				<h2 class={sectionHead}>Labels and icons</h2>
+				<div class="mt-[var(--space-head)] flex flex-wrap items-center gap-6">
+					<Label text="guarantee" />
+					<Label text="no brackets" brackets={false} />
+					<Label text="core" color="core" />
+				</div>
+				<ul class="mt-10 flex flex-wrap gap-6">
+					{
+						icons.map((name) => (
+							<li class="flex flex-col items-center gap-2">
+								<Icon name={name} class="h-7 w-7 text-core" />
+								<span class="font-mono text-label text-ink-3">{name}</span>
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		<!-- Closing band -->
+		<PageCTA />
+	</main>
+	<Footer />
+</Layout>

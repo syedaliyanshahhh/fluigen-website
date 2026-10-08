@@ -1,0 +1,135 @@
+/*
+ * Light and dark themes — design/brand.md "Themes".
+ *
+ * Every themed color is a CSS custom property scoped to `data-theme`, not
+ * to `:root` alone, so any element can open a local theme context:
+ *
+ *   <html data-theme="light|dark">   the page theme (set before first paint
+ *                                    by the inline script in Layout.astro)
+ *   <div data-theme="dark">          a dark context inside a light page:
+ *                                    the hero and closing flow sections and
+ *                                    every scene section use this, so the
+ *                                    same Button/Card/text classes render
+ *                                    white-on-dark there without `inverse`
+ *                                    variants
+ *
+ * Tailwind utilities (`bg-baseline`, `text-core`, `border-rule`, ...) read
+ * these variables (`@theme inline` in global.css), so they resolve against
+ * the nearest theme context. Token names are roles, not hexes: `core` is
+ * "the text and primary button color" in both themes, `null` is "the card
+ * surface".
+ *
+ * Dark values are the ones in design/reference-draft-homepage.html.
+ */
+
+:root {
+	/* Fixed brand palette (never swaps). */
+	--flux: #97c1c5;
+	--vector: #267b85;
+	--substation: #02525e;
+	--black: #000000;
+	--white: #ffffff;
+	/* Deep teal: substation pushed toward core, the darkest part of a flow
+	   field (ACCURON's near-black teal). Derived, not a new hue. */
+	--deep: color-mix(in oklab, var(--substation) 45%, var(--black));
+
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+	--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root,
+[data-theme="light"] {
+	color-scheme: light;
+	--baseline: #f7f7f7;
+	--null: #ffffff;
+	--core: #000000;
+	--ink-2: #3a3a3a;
+	--ink-3: #6b6b6b;
+	--rule: #dcdcdc;
+	--ring: var(--vector);
+
+	--btn-bg: var(--black);
+	--btn-ink: var(--white);
+	/* Hover fill that sweeps across a primary button. */
+	--btn-fill: var(--substation);
+	--btn-fill-ink: var(--white);
+
+	--glass-bg: rgb(255 255 255 / 0.62);
+	--glass-bg-strong: rgb(255 255 255 / 0.8);
+	--glass-border: rgb(255 255 255 / 0.75);
+	--glass-edge: rgb(0 0 0 / 0.07);
+	--glass-shadow: rgb(2 82 94 / 0.14);
+
+	/* Cursor-following card glow and hover halo. */
+	--card-glow: rgb(38 123 133 / 0.13);
+	--card-halo: rgb(38 123 133 / 0.22);
+
+	/* Logo and icon swaps: `.only-light` / `.only-dark` read these. */
+	--show-light: inline-block;
+	--show-dark: none;
+}
+
+[data-theme="dark"] {
+	color-scheme: dark;
+	--baseline: #0a0f10;
+	--null: #121a1b;
+	--core: #f7f7f7;
+	--ink-2: #c9d2d3;
+	--ink-3: #8fa0a2;
+	--rule: #26302f;
+	--ring: var(--flux);
+
+	--btn-bg: #f7f7f7;
+	--btn-ink: var(--black);
+	--btn-fill: var(--flux);
+	--btn-fill-ink: var(--black);
+
+	--glass-bg: rgb(10 15 16 / 0.5);
+	--glass-bg-strong: rgb(10 15 16 / 0.72);
+	--glass-border: rgb(255 255 255 / 0.12);
+	--glass-edge: rgb(255 255 255 / 0.05);
+	--glass-shadow: rgb(0 0 0 / 0.45);
+
+	--card-glow: rgb(151 193 197 / 0.12);
+	--card-halo: rgb(38 123 133 / 0.4);
+
+	--show-light: none;
+	--show-dark: inline-block;
+}
+
+/* A theme context also resets inherited text color, so plain text inside a
+   dark context inside a light page is light, not the page's black. */
+[data-theme] {
+	color: var(--core);
+}
+
+.only-light {
+	display: var(--show-light);
+}
+.only-dark {
+	display: var(--show-dark);
+}
+
+/*
+ * Page-level values: read only from <html>, never redefined by a nested
+ * theme context, so a flow field or scene keeps the page theme's look even
+ * though its content sits in a dark context.
+ */
+:root {
+	/* Scene sections: pure core black on the light page. */
+	--scene-bg: var(--black);
+	--scene-border: transparent;
+	/* Ambient glows behind ordinary sections. */
+	--glow-opacity: 0.26;
+	--grain-opacity: 0.32;
+}
+:root[data-theme="dark"] {
+	/* On the dark page a scene drops to pure black, below the #0A0F10 page,
+	   with a hairline so its edge reads. */
+	--scene-bg: var(--black);
+	--scene-border: rgb(151 193 197 / 0.12);
+	/* Gradients glow brighter in dark mode. */
+	--glow-opacity: 0.5;
+	--grain-opacity: 0.4;
+}

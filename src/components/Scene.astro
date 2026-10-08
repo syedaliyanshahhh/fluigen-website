@@ -1,0 +1,27 @@
+---
+// Dark scene section (design/brand.md "Scenes"): a black stage lit by teal
+// light, for alternating rhythm between light sections, as ACCURON does.
+// Content is a dark theme context in both page themes, so cards, buttons
+// and text inside need no special variants. Cards placed here read best as
+// `Card variant="glass"`.
+//
+// Use at most two per page and never two in a row.
+import FlowField from "./FlowField.astro";
+import Container from "./Container.astro";
+
+interface Props {
+	id?: string;
+	class?: string;
+}
+
+const { id, class: className } = Astro.props;
+---
+
+<section id={id} class:list={["scene section-y", className]} data-reveal-scope>
+	<FlowField variant="scene" />
+	<div data-theme="dark" class="scene__content">
+		<Container>
+			<slot />
+		</Container>
+	</div>
+</section>

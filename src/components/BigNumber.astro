@@ -1,0 +1,47 @@
+---
+// Big-number type style for a headline stat. A value that is still a
+// [PLACEHOLDER] renders as a small mono tag instead, so it stays visible on
+// preview without blowing out the layout at 72px. Real numbers count up
+// when they scroll into view (src/scripts/motion.ts).
+//
+// `size="hero"` leads a page (case study heroes): the larger hero-number
+// scale, and the number rises out of a mask on load (motion.css "Hero
+// number") while it counts, so even values that never count ("24/7",
+// "1 month", "9") arrive with movement.
+import { isPlaceholder } from "../lib/copy-format";
+
+interface Props {
+	value: string;
+	// "hero" uses the hero-number scale and rise, for a number that leads its page.
+	size?: "default" | "hero";
+	as?: string;
+	/** false: never count up (a "404" is a code, not a quantity). */
+	count?: boolean;
+	class?: string;
+}
+
+const { value, size = "default", as: Tag = "p", count = true, class: className } = Astro.props;
+const countAttr = count ? "" : undefined;
+const sizeClass = size === "hero" ? "text-hero-number" : "text-big-number";
+---
+
+{
+	isPlaceholder(value) ? (
+		<Tag
+			class:list={[
+				"inline-block rounded-card border border-dashed border-ink-3 px-3 py-2 font-mono text-label uppercase text-ink-3 break-words",
+				className,
+			]}
+		>
+			{value}
+		</Tag>
+	) : size === "hero" ? (
+		<div class:list={["hero-number", className]}>
+			<Tag class:list={["hero-number__value font-display text-core break-words", sizeClass]} data-count={countAttr}>
+				{value}
+			</Tag>
+		</div>
+	) : (
+		<Tag class:list={["font-display text-core break-words", sizeClass, className]} data-count={countAttr}>{value}</Tag>
+	)
+}

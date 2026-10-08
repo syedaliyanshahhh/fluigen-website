@@ -1,0 +1,38 @@
+---
+// Founder portrait for the homepage founder note and /about.
+// The source is a 1254px square PNG (design/images/founder.png); Astro crops
+// it to 4:5 and serves AVIF/WebP at several widths so phones download a
+// small file and large screens still get a sharp one. Its light studio
+// backdrop sits on baseline, so it uses a plain white panel with a 1px rule
+// instead of a gradient frame.
+import { Picture } from "astro:assets";
+import founder from "../../design/images/founder.png";
+import { site } from "../site.config";
+
+interface Props {
+	class?: string;
+	/** Above-the-fold use only; the founder note and /about are both below it. */
+	eager?: boolean;
+}
+
+const { class: className, eager = false } = Astro.props;
+---
+
+<div class:list={["overflow-hidden rounded-panel border border-rule bg-null", className]}>
+	<Picture
+		src={founder}
+		alt={`Aliyan Shah, founder of ${site.businessName}, in a navy suit and white shirt, smiling at the camera`}
+		formats={["avif", "webp"]}
+		fallbackFormat="jpg"
+		width={720}
+		height={900}
+		widths={[320, 480, 640, 720, 960]}
+		sizes="(min-width: 1024px) 360px, min(360px, calc(100vw - 40px))"
+		fit="cover"
+		position="top"
+		quality={72}
+		loading={eager ? "eager" : "lazy"}
+		decoding="async"
+		class="block aspect-[4/5] h-auto w-full object-cover"
+	/>
+</div>

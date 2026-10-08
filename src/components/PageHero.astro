@@ -1,0 +1,96 @@
+---
+// Inner-page hero: a short band on the strong flow field, the same field
+// as the homepage and 404 heroes (design/brand.md "Flow gradient"). Every
+// marketing page except the homepage opens with it; Privacy and Terms keep
+// the calm PageHeader instead.
+//
+// Content is a dark theme context (white on teal in both page themes) and
+// stays in the field's dark upper part: `page-hero-y` holds enough room
+// below it for the field to turn light and dissolve into the next section.
+//
+// Load moment: the back link and `before-title` slot rise in, the H1 rises
+// line by line (LineReveal, as on the homepage), then the lead and the
+// default slot follow.
+//
+// - `titleSize="h2"`: when something larger leads the page (a case
+//   study's headline number), the H1 steps down to the H2 scale.
+// - `aside` slot: a short note set beside the lead from lg up (solution
+//   timeline).
+import Container from "./Container.astro";
+import FlowField from "./FlowField.astro";
+import LineReveal from "./LineReveal.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+	title: string;
+	lead?: string;
+	back?: { href: string; label: string };
+	titleSize?: "h1" | "h2";
+	class?: string;
+}
+
+const { title, lead, back, titleSize = "h1", class: className } = Astro.props;
+const hasBefore = Astro.slots.has("before-title");
+const hasAfter = Boolean(lead) || Astro.slots.has("default") || Astro.slots.has("aside");
+---
+
+<section class:list={["page-hero-y relative", className]} data-flow-section="hero">
+	<FlowField variant="hero" />
+	<div data-theme="dark" class="relative">
+		<Container>
+			{
+				(back || hasBefore) && (
+					<div class="rise-in space-y-5 pb-6 sm:pb-8">
+						{back && (
+							<a
+								href={back.href}
+								class="group inline-flex min-h-11 items-center gap-2 text-small text-ink-2 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
+							>
+								<Icon
+									name="arrow-left"
+									class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out)] group-hover:-translate-x-1"
+								/>
+								<span class="link-grow">{back.label}</span>
+							</a>
+						)}
+						{hasBefore && (
+							<div>
+								<slot name="before-title" />
+							</div>
+						)}
+					</div>
+				)
+			}
+
+			<LineReveal
+				text={title}
+				delay={back || hasBefore ? 160 : 60}
+				class:list={[
+					"font-display text-core [text-wrap:balance]",
+					titleSize === "h1" ? "text-h1 max-w-[18ch]" : "text-h2 max-w-[24ch]",
+				]}
+			/>
+
+			{
+				hasAfter && (
+					<div
+						class="rise-in mt-6 grid gap-6 sm:mt-8 lg:grid-cols-12 lg:items-end lg:gap-10"
+						style="--rise-delay: 0.45s"
+					>
+						{lead && <p class="text-body text-core max-w-[46ch] lg:col-span-7">{lead}</p>}
+						{Astro.slots.has("aside") && (
+							<div class="lg:col-span-5 lg:justify-self-end">
+								<slot name="aside" />
+							</div>
+						)}
+						{Astro.slots.has("default") && (
+							<div class="lg:col-span-12">
+								<slot />
+							</div>
+						)}
+					</div>
+				)
+			}
+		</Container>
+	</div>
+</section>

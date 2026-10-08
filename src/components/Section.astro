@@ -1,0 +1,32 @@
+---
+// Section spacing (80px -> 150px) primitive — design/brand.md "Layout".
+// Wraps the `section-y` utility from global.css. Pair with <Container> for
+// the max-width + side padding.
+//
+// `glow` adds one faint drifting teal light behind the section (flow.css),
+// so color keeps moving between the hero and the closing band. Alternate
+// sides down a page and leave some sections plain.
+//
+// Content inside the section's Container reveals as it scrolls into view
+// (src/scripts/motion.ts); `reveal={false}` opts out.
+import FlowField from "./FlowField.astro";
+
+interface Props {
+	as?: string;
+	id?: string;
+	glow?: "left" | "right";
+	reveal?: boolean;
+	class?: string;
+}
+
+const { as: Tag = "section", id, glow, reveal = true, class: className } = Astro.props;
+---
+
+<Tag
+	id={id}
+	class:list={["section-y", glow && "relative", className]}
+	data-reveal-scope={reveal ? "" : undefined}
+>
+	{glow && <FlowField variant={glow === "left" ? "glow-left" : "glow-right"} />}
+	<slot />
+</Tag>

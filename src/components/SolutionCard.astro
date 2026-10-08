@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Card from "./Card.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+	solution: CollectionEntry<"solutions">;
+	/** 3 under a section H2 (homepage); 2 directly under the page H1 (/solutions). */
+	headingLevel?: 2 | 3;
+	class?: string;
+}
+
+const { solution, headingLevel = 3, class: className } = Astro.props;
+const Heading = `h${headingLevel}`;
+const { title, cardLine, icon } = solution.data;
+const href = `/solutions/${solution.id}`;
+---
+
+<a
+	href={href}
+	class:list={[
+		"group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring",
+		className,
+	]}
+>
+	<Card interactive class="h-full space-y-5">
+		<Icon name={icon} class="h-7 w-7 text-core" />
+		<Heading class="font-display text-h3 text-core">{title}</Heading>
+		<p class="text-body text-ink-2">{cardLine}</p>
+		<span class="inline-flex items-center gap-2 text-small text-core">
+			<span class="link-u">How it works</span>
+			<Icon name="arrow-right" class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1" />
+		</span>
+	</Card>
+</a>

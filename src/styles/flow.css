@@ -1,0 +1,506 @@
+/*
+ * Flow gradient, glass and scenes — design/brand.md "Flow gradient".
+ *
+ * A flow field is a stack of soft radial "blobs" in the brand palette
+ * (deep, substation, vector, flux) over a base wash, with static grain on
+ * top. Each blob is its own compositor layer animated with `transform`
+ * only, so the drift costs no main-thread work and stays smooth on phones.
+ * Blobs are radial gradients that reach full transparency at their own
+ * edge, and every field is masked to transparent where it meets the page,
+ * so there is never a hard edge.
+ *
+ * Fields sit at z-index -1 inside <main> (a stacking context, see
+ * Layout.astro), so they paint under every section's content, including
+ * the next section's where a field bleeds past its own section.
+ *
+ * Markup comes from FlowField.astro; never hand-write it.
+ */
+
+.flow {
+	position: absolute;
+	z-index: -1;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	contain: strict;
+	container-type: size;
+}
+
+.flow__drift {
+	position: absolute;
+	inset: 0;
+}
+
+/* Blobs sit at the field's top left in layout and are placed with
+   `translate` in container units (--x/--y: percent of the field). When the
+   field resizes (fonts arriving, viewport changes) only a transform
+   changes, so the page records no layout shift. */
+.flow__blob {
+	position: absolute;
+	top: 0;
+	left: 0;
+	translate: calc(var(--x, 0) * 1cqw) calc(var(--y, 0) * 1cqh);
+	border-radius: 50%;
+	background: radial-gradient(
+		closest-side,
+		var(--c) 0%,
+		color-mix(in oklab, var(--c) 62%, transparent) 42%,
+		color-mix(in oklab, var(--c) 18%, transparent) 72%,
+		transparent 100%
+	);
+	opacity: var(--o, 1);
+	will-change: transform;
+	animation: var(--anim, flow-drift-a) var(--dur, 36s) var(--ease-in-out) infinite alternate;
+	animation-delay: var(--delay, 0s);
+}
+
+/* Three drift paths so neighbouring blobs never move in step. Percentages
+   are of the blob's own size, so the motion scales with the field. */
+@keyframes flow-drift-a {
+	0% {
+		transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+	}
+	50% {
+		transform: translate3d(9%, 6%, 0) rotate(8deg) scale(1.08);
+	}
+	100% {
+		transform: translate3d(-6%, 10%, 0) rotate(-4deg) scale(0.96);
+	}
+}
+@keyframes flow-drift-b {
+	0% {
+		transform: translate3d(0, 0, 0) rotate(0deg) scale(1.04);
+	}
+	50% {
+		transform: translate3d(-10%, 5%, 0) rotate(-7deg) scale(0.95);
+	}
+	100% {
+		transform: translate3d(5%, -7%, 0) rotate(5deg) scale(1.1);
+	}
+}
+@keyframes flow-drift-c {
+	0% {
+		transform: translate3d(0, 0, 0) scale(0.96);
+	}
+	50% {
+		transform: translate3d(7%, -9%, 0) scale(1.1);
+	}
+	100% {
+		transform: translate3d(-8%, -3%, 0) scale(1);
+	}
+}
+
+/* Static film grain (ACCURON texture). One small SVG noise tile, painted
+   once; it never animates. Fields are paint-contained, so the grain blends
+   only with the field's own layers: every grained variant has a base
+   background. */
+.flow__grain {
+	position: absolute;
+	inset: 0;
+	opacity: var(--grain-opacity);
+	mix-blend-mode: overlay;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	background-size: 180px 180px;
+}
+
+/* Animations only run while a field is on screen (FlowField's script adds
+   .is-live), so off-screen fields cost nothing. Without JS they still run. */
+.js .flow:not(.is-live) .flow__blob {
+	animation-play-state: paused;
+}
+
+/* Gentle reaction to scroll: the whole field slides and settles as its
+   section passes through the viewport. Scroll-driven, so no JS and no
+   main-thread work where supported; elsewhere the drift alone remains. */
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.flow__drift {
+			animation: flow-scroll linear both;
+			animation-timeline: view();
+		}
+	}
+}
+@keyframes flow-scroll {
+	from {
+		transform: translate3d(0, -5%, 0) scale(1.08);
+	}
+	to {
+		transform: translate3d(0, 7%, 0) scale(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.flow__blob,
+	.flow__drift {
+		animation: none !important;
+	}
+}
+
+/* ---------- Variants ---------- */
+
+/*
+ * Hero: the strongest field. Extends up behind the floating nav and bleeds
+ * past the section bottom, dissolving into the next section. Light mode is
+ * a deep teal sky (white text sits in its dark upper part); dark mode is
+ * teal light rising out of black.
+ */
+.flow--hero {
+	top: calc(-1 * var(--nav-h));
+	bottom: calc(-1 * var(--flow-bleed));
+	mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+	background: linear-gradient(
+		180deg,
+		var(--deep) 0%,
+		var(--substation) 50%,
+		var(--vector) 80%,
+		color-mix(in oklab, var(--flux) 70%, transparent) 90%,
+		transparent 100%
+	);
+}
+.flow--hero .flow__blob:nth-child(1) {
+	--c: var(--deep);
+	--x: -22;
+	--y: -18;
+	width: 82%;
+	height: 78%;
+	--dur: 38s;
+}
+.flow--hero .flow__blob:nth-child(2) {
+	--c: var(--substation);
+	--x: 42;
+	--y: -14;
+	width: 78%;
+	height: 74%;
+	--anim: flow-drift-b;
+	--dur: 44s;
+}
+.flow--hero .flow__blob:nth-child(3) {
+	--c: var(--vector);
+	--o: 0.6;
+	--x: 58;
+	--y: 26;
+	width: 56%;
+	height: 44%;
+	--anim: flow-drift-c;
+	--dur: 32s;
+}
+.flow--hero .flow__blob:nth-child(4) {
+	--c: var(--flux);
+	--o: 0.7;
+	--x: -12;
+	--y: 84;
+	width: 74%;
+	height: 34%;
+	--anim: flow-drift-b;
+	--dur: 40s;
+	--delay: -12s;
+}
+
+/* The homepage hero fills the screen and keeps its buttons near the
+   bottom, so its field runs further past the section before it dissolves:
+   the text stays on the dark part at every height, and the light part
+   fades out behind the scene that follows. */
+.hero-full > .flow--hero {
+	bottom: calc(-1 * var(--flow-bleed) - 30svh);
+}
+
+:root[data-theme="dark"] .flow--hero {
+	background: linear-gradient(
+		180deg,
+		var(--black) 0%,
+		color-mix(in oklab, var(--deep) 70%, var(--black)) 34%,
+		var(--deep) 62%,
+		color-mix(in oklab, var(--substation) 50%, transparent) 82%,
+		transparent 100%
+	);
+}
+:root[data-theme="dark"] .flow--hero .flow__blob:nth-child(1) {
+	--c: var(--substation);
+	--o: 0.9;
+}
+:root[data-theme="dark"] .flow--hero .flow__blob:nth-child(2) {
+	--c: var(--vector);
+	--o: 0.62;
+}
+:root[data-theme="dark"] .flow--hero .flow__blob:nth-child(3) {
+	--c: var(--flux);
+	--o: 0.34;
+}
+:root[data-theme="dark"] .flow--hero .flow__blob:nth-child(4) {
+	--c: var(--vector);
+	--o: 0.55;
+}
+
+/*
+ * Closing: the final call to action band. A diagonal field (mist) that
+ * dissolves in from the section above and out into the footer. Text sits
+ * in the dark upper left.
+ */
+.flow--closing {
+	top: calc(-1 * var(--flow-bleed));
+	bottom: calc(-1 * var(--flow-bleed));
+	mask-image: linear-gradient(
+		to bottom,
+		transparent 0,
+		#000 calc(var(--flow-bleed) * 1.4),
+		#000 calc(100% - var(--flow-bleed) * 1.6),
+		transparent 100%
+	);
+	background: linear-gradient(
+		165deg,
+		var(--deep) 4%,
+		var(--substation) 36%,
+		var(--vector) 64%,
+		color-mix(in oklab, var(--flux) 80%, transparent) 84%,
+		transparent 98%
+	);
+}
+.flow--closing .flow__blob:nth-child(1) {
+	--c: var(--deep);
+	--x: -24;
+	--y: 0;
+	width: 80%;
+	height: 80%;
+	--dur: 40s;
+}
+.flow--closing .flow__blob:nth-child(2) {
+	--c: var(--vector);
+	--o: 0.6;
+	--x: 38;
+	--y: 8;
+	width: 70%;
+	height: 60%;
+	--anim: flow-drift-b;
+	--dur: 34s;
+}
+.flow--closing .flow__blob:nth-child(3) {
+	--c: var(--flux);
+	--o: 0.75;
+	--x: 58;
+	--y: 70;
+	width: 66%;
+	height: 46%;
+	--anim: flow-drift-c;
+	--dur: 42s;
+}
+:root[data-theme="dark"] .flow--closing {
+	background: linear-gradient(
+		165deg,
+		var(--black) 0%,
+		var(--deep) 34%,
+		color-mix(in oklab, var(--substation) 80%, transparent) 64%,
+		transparent 94%
+	);
+}
+:root[data-theme="dark"] .flow--closing .flow__blob:nth-child(1) {
+	--c: var(--substation);
+}
+:root[data-theme="dark"] .flow--closing .flow__blob:nth-child(2) {
+	--o: 0.6;
+}
+:root[data-theme="dark"] .flow--closing .flow__blob:nth-child(3) {
+	--c: var(--vector);
+	--o: 0.55;
+}
+
+/*
+ * Soft: a light haze for inner page headers. Black text stays on a light
+ * ground in light mode; in dark mode it is a teal glow from the top right.
+ */
+.flow--soft {
+	top: calc(-1 * var(--nav-h));
+	bottom: calc(-1 * var(--flow-bleed));
+	mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+}
+.flow--soft .flow__blob:nth-child(1) {
+	--c: var(--flux);
+	--o: 0.55;
+	--x: 46;
+	--y: -30;
+	width: 80%;
+	height: 90%;
+	--dur: 40s;
+}
+.flow--soft .flow__blob:nth-child(2) {
+	--c: var(--vector);
+	--o: 0.18;
+	--x: 70;
+	--y: -10;
+	width: 50%;
+	height: 60%;
+	--anim: flow-drift-b;
+	--dur: 34s;
+}
+:root[data-theme="dark"] .flow--soft .flow__blob:nth-child(1) {
+	--c: var(--substation);
+	--o: 0.8;
+}
+:root[data-theme="dark"] .flow--soft .flow__blob:nth-child(2) {
+	--o: 0.45;
+}
+
+/*
+ * Glow: one faint drifting light behind an ordinary section, so color
+ * keeps flowing between the hero and the closing band. Larger than its
+ * section on purpose; it fades out long before the field box ends.
+ */
+.flow--glow {
+	/* A fixed fluid bleed, not a percentage: the field's position must not
+	   depend on its section's height, or text reflowing inside the section
+	   would move the field and register as a layout shift. */
+	top: calc(-1.5 * var(--flow-bleed));
+	bottom: calc(-1.5 * var(--flow-bleed));
+}
+.flow--glow .flow__blob {
+	--c: var(--vector);
+	--o: var(--glow-opacity);
+	--y: 10;
+	width: min(70%, 62rem);
+	height: 80%;
+	--dur: 46s;
+}
+.flow--glow-left .flow__blob {
+	--x: -26;
+}
+.flow--glow-right .flow__blob {
+	--x: 56;
+	--anim: flow-drift-b;
+}
+:root[data-theme="dark"] .flow--glow .flow__blob {
+	--c: var(--substation);
+}
+
+/*
+ * Scene and arch: ACCURON's column of teal light rising out of black.
+ * Used inside scene sections and empty-state panels.
+ */
+.flow--scene .flow__blob:nth-child(1),
+.flow--arch .flow__blob:nth-child(1) {
+	--c: var(--substation);
+	--o: 0.8;
+	--x: -15;
+	--y: 72;
+	width: 130%;
+	height: 60%;
+	--dur: 44s;
+}
+.flow--scene .flow__blob:nth-child(2),
+.flow--arch .flow__blob:nth-child(2) {
+	--c: var(--vector);
+	--o: 0.4;
+	--x: 60;
+	--y: 52;
+	width: 34%;
+	height: 100%;
+	--anim: flow-drift-c;
+	--dur: 36s;
+}
+.flow--scene .flow__blob:nth-child(3) {
+	--c: var(--vector);
+	--o: 0.35;
+	--x: -18;
+	--y: -30;
+	width: 60%;
+	height: 60%;
+	--anim: flow-drift-b;
+	--dur: 40s;
+}
+:root[data-theme="dark"] .flow--scene .flow__blob:nth-child(2),
+:root[data-theme="dark"] .flow--arch .flow__blob:nth-child(2) {
+	--o: 0.55;
+}
+.flow--arch {
+	background: var(--black);
+}
+.flow--arch .flow__blob:nth-child(2) {
+	--x: 26;
+	--y: 22;
+	width: 48%;
+	height: 120%;
+}
+
+/* ---------- Flow section (hero, closing) ---------- */
+
+/* `--flow-bleed`: how far a field dissolves past its section, 96px -> 192px
+   (375px -> 1440px, same anchors as every clamp in global.css). */
+:root {
+	--flow-bleed: clamp(6rem, 3.8873rem + 9.0141vw, 12rem);
+}
+
+/* ---------- Scene ---------- */
+
+/*
+ * A deep section for alternating rhythm: black stage, teal light, white
+ * text. It floats a few pixels in from the viewport edge with a large
+ * radius, so its edge reads as a shape, not a seam. Content inside keeps
+ * the page container's left edge: the container's padding shrinks by the
+ * same inset.
+ *   --scene-inset   8px -> 24px   (375px -> 1440px)
+ *   --radius-scene  28px -> 40px
+ */
+:root {
+	--scene-inset: clamp(0.5rem, 0.1479rem + 1.5023vw, 1.5rem);
+	--radius-scene: clamp(1.75rem, 1.4859rem + 1.1268vw, 2.5rem);
+}
+.scene {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	margin-inline: var(--scene-inset);
+	border-radius: var(--radius-scene);
+	background: var(--scene-bg);
+	box-shadow: inset 0 0 0 1px var(--scene-border);
+}
+.scene .flow {
+	z-index: 0;
+	/* Fields are paint-contained, so grain only blends with what is inside
+	   the field: give it the scene's black to blend with. */
+	background: var(--scene-bg);
+}
+.scene > .scene__content {
+	position: relative;
+	z-index: 1;
+	/* Teal light sits behind scene text, so muted text steps up one tone
+	   to hold 4.5:1 over the brightest part of the glow. */
+	--ink-3: var(--ink-2);
+}
+.scene .container-content {
+	max-width: calc(90rem - 2 * var(--scene-inset));
+	padding-inline: calc(var(--container-pad) - var(--scene-inset));
+}
+
+/* ---------- Glass ---------- */
+
+/*
+ * Frosted surface for things that float over color: the nav, the theme
+ * toggle and cards placed over a flow field or inside a scene. Use it
+ * sparingly; ordinary cards stay solid `bg-null`. Text on glass is always
+ * `text-core` of the surrounding theme context, and the tint is strong
+ * enough to hold 4.5:1 over the darkest and lightest parts of a field.
+ */
+@utility glass {
+	background-color: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+	box-shadow:
+		inset 0 1px 0 var(--glass-edge),
+		0 12px 40px -18px var(--glass-shadow);
+	-webkit-backdrop-filter: blur(18px) saturate(150%);
+	backdrop-filter: blur(18px) saturate(150%);
+
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		background-color: var(--glass-bg-strong);
+	}
+}
+
+/* A glass card: the glass surface plus card radius and padding. */
+@utility glass-card {
+	border-radius: var(--radius-card);
+	padding: 1.5rem;
+}
+
+/* A page that ends on the closing band dissolves straight into the footer:
+   no rule line cutting across the field. */
+main:has(> [data-flow-section="closing"]:last-child) + footer,
+main[data-flow-end] + footer {
+	border-top-color: transparent;
+}

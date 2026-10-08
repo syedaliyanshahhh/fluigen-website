@@ -1,0 +1,171 @@
+---
+// Page shell: everything in <head> that search engines and link previews
+// read, plus the skip link. Each page passes its own title and description;
+// canonical URLs always point at fluigen.com, share previews at the site
+// this build is served from (src/lib/indexing.ts).
+//
+// Theme: the inline script at the top of <head> sets `data-theme` on <html>
+// before anything paints (stored choice, else the OS setting), so the wrong
+// theme never flashes, including across page transitions. It also sets
+// `motion` when the visitor allows motion (src/styles/motion.css).
+import "../styles/global.css";
+import { site, siteUrl } from "../site.config";
+import { deployOrigin, indexable } from "../lib/indexing";
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+	/** Page name; " | Fluigen" is added. Leave out on the homepage. */
+	title?: string;
+	description: string;
+	/** Keep this page out of search results even after launch. */
+	noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+
+const fullTitle = title ? `${title} | ${site.businessName}` : `${site.businessName} | ${site.tagline}`;
+const path = Astro.url.pathname.replace(/(\/index)?\.html$/, "").replace(/\/$/, "") || "/";
+const canonical = new URL(path, siteUrl).href;
+const shareUrl = new URL(path, deployOrigin).href;
+const shareImage = new URL("/og-image-1200x630.png", deployOrigin).href;
+const robots = indexable && !noindex ? "index, follow, max-image-preview:large" : "noindex, nofollow";
+
+const structuredData = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "Organization",
+			"@id": `${siteUrl}/#organization`,
+			name: site.businessName,
+			url: `${siteUrl}/`,
+			logo: `${siteUrl}/android-chrome-512x512.png`,
+			image: `${siteUrl}/og-image-1200x630.png`,
+			description: site.tagline,
+			email: site.email,
+			address: {
+				"@type": "PostalAddress",
+				addressLocality: site.city,
+				addressRegion: site.state,
+				addressCountry: site.country,
+			},
+			areaServed: site.areasServed,
+			contactPoint: {
+				"@type": "ContactPoint",
+				contactType: "sales",
+				email: site.email,
+				url: `${siteUrl}${site.bookingPath}`,
+			},
+		},
+		{
+			"@type": "WebSite",
+			"@id": `${siteUrl}/#website`,
+			name: site.businessName,
+			url: `${siteUrl}/`,
+			publisher: { "@id": `${siteUrl}/#organization` },
+		},
+	],
+};
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="theme-color" content="#f7f7f7" />
+		<script is:inline>
+			(function () {
+				var root = document.documentElement;
+				var theme;
+				try {
+					theme = localStorage.getItem("fluigen-theme");
+				} catch (e) {}
+				if (theme !== "light" && theme !== "dark") {
+					theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+				}
+				root.dataset.theme = theme;
+				root.classList.add("js");
+				document.querySelector('meta[name="theme-color"]').setAttribute("content", theme === "dark" ? "#0a0f10" : "#f7f7f7");
+				if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+					root.classList.add("motion");
+					// Never leave content hidden if the motion script fails to load.
+					setTimeout(function () {
+						if (!window.__flMotion) root.classList.remove("motion");
+					}, 3000);
+				}
+			})();
+		</script>
+		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		<meta name="robots" content={robots} />
+		{!noindex && <link rel="canonical" href={canonical} />}
+
+		<link
+			rel="preload"
+			href="/fonts/inter-400.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<!-- Hero and big-number weight: preloaded so the hero headline never
+		     re-wraps when it arrives (that reflow moved every section below). -->
+		<link
+			rel="preload"
+			href="/fonts/inter-tight-300.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			href="/fonts/inter-tight-400.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="manifest" href="/site.webmanifest" />
+		<meta name="application-name" content={site.businessName} />
+		<meta name="apple-mobile-web-app-title" content={site.businessName} />
+
+		<!-- Share previews (LinkedIn, WhatsApp, Slack, Facebook read Open Graph; X reads twitter:*) -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={site.businessName} />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={shareUrl} />
+		<meta property="og:image" content={shareImage} />
+		<meta property="og:image:secure_url" content={shareImage} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={`${site.businessName}, ${site.tagline}`} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={fullTitle} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={shareImage} />
+		<meta name="twitter:image:alt" content={`${site.businessName}, ${site.tagline}`} />
+
+		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+		<!-- Page-specific hints, e.g. /book preconnects to Calendly. -->
+		<slot name="head" />
+	</head>
+	<body class="bg-baseline font-sans text-core">
+		<a
+			href="#main"
+			class="sr-only rounded-full bg-core px-5 py-3 font-display font-medium text-baseline focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
+		>
+			Skip to content
+		</a>
+		<slot />
+		<ThemeToggle />
+		<script>
+			import "../scripts/motion.ts";
+		</script>
+	</body>
+</html>

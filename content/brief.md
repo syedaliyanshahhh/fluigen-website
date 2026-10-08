@@ -15,7 +15,7 @@ The site is a hybrid: one homepage that pitches and books, plus deeper pages for
 | Recurring offer | Care Plan: monthly monitoring, fixes and small improvements |
 | Guarantees | Pay the second half when it is live. You own everything. 30 days of free fixes |
 | Primary CTA | Book your free automation audit |
-| Booking | Every CTA links to /book, which holds the Cal.com calendar. No calendar on any other page |
+| Booking | Every CTA links to /book, which holds the Calendly calendar. No calendar on any other page |
 | Pricing | Not shown on the site. Each audit plan carries a fixed price |
 | Voice | "We" for Fluigen. Plain words, no tool names in headlines, no emoji, no em dashes |
 
@@ -103,7 +103,7 @@ The booking button is visible on every screen. Every CTA takes the visitor to /b
 - **No qualifying form before the calendar.** Qualify on the call, not before it.
 - **Booking hours match client time zones.** Evening and night slots in Pakistan time cover US and UK business hours.
 - **/book is the single booking page** for the site, emails, proposals and LinkedIn.
-- **Tool:** Cal.com free plan covers the inline embed, time zones and reminders.
+- **Tool:** Calendly free plan covers the inline embed, time zones and reminders.
 
 ## Sitemap
 

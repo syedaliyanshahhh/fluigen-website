@@ -1,0 +1,69 @@
+---
+// /solutions: all five solutions. Heading, intro and the case studies
+// scene are the homepage's "What we build" and "Case studies" copy
+// (content/copy/home.md sections 4 and 6).
+//
+// Rhythm: hero on the flow field, the solutions as light link rows, the
+// featured case studies as a dark scene, then the closing band.
+import { getFeaturedCaseStudies, getSolutions } from "../../lib/content";
+import Layout from "../../components/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Container from "../../components/Container.astro";
+import Section from "../../components/Section.astro";
+import Scene from "../../components/Scene.astro";
+import PageHero from "../../components/PageHero.astro";
+import SolutionRow from "../../components/SolutionRow.astro";
+import CaseStudyCard from "../../components/CaseStudyCard.astro";
+import Button from "../../components/Button.astro";
+import PageCTA from "../../components/PageCTA.astro";
+
+const solutions = await getSolutions();
+const caseStudies = await getFeaturedCaseStudies();
+---
+
+<Layout
+	title="What we build"
+	description="AI receptionists, lead follow-up, client portals, hiring automation and knowledge systems, each backed by a system we have already built for a real business."
+>
+	<Nav />
+	<main id="main">
+		<PageHero title="What we build" lead="Each one already runs for a real business." />
+
+		<Section>
+			<Container>
+				<ul class="space-y-3 sm:space-y-4">
+					{
+						solutions.map((solution) => (
+							<li>
+								<SolutionRow solution={solution} headingLevel={2} />
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		<Scene>
+			<div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch]">Work that is already running</h2>
+				<Button href="/case-studies" variant="text" class="shrink-0 self-start sm:self-auto">
+					See all case studies
+				</Button>
+			</div>
+			<div
+				class="mt-[var(--space-head)] -mx-[calc(var(--container-pad)-var(--scene-inset))] flex snap-x snap-mandatory scroll-px-[calc(var(--container-pad)-var(--scene-inset))] gap-4 overflow-x-auto px-[calc(var(--container-pad)-var(--scene-inset))] py-3 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-0 sm:py-0 lg:gap-8 [&::-webkit-scrollbar]:hidden"
+				data-stagger
+			>
+				{
+					caseStudies.map((caseStudy) => (
+						<CaseStudyCard caseStudy={caseStudy} variant="glass" class="w-[84%] shrink-0 snap-start sm:w-auto" />
+					))
+				}
+			</div>
+		</Scene>
+
+		<PageCTA />
+	</main>
+	<Footer />
+</Layout>

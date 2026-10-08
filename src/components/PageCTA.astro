@@ -1,0 +1,32 @@
+---
+// Closing booking band for every marketing page: the closing flow field
+// (the page's second strong gradient moment), one button to the booking
+// page. Default heading and text are the homepage's final CTA copy
+// (content/copy/home.md section 12); pages with their own CTA copy pass it in.
+import { site } from "../site.config";
+import Container from "./Container.astro";
+import FlowSection from "./FlowSection.astro";
+import Button from "./Button.astro";
+
+interface Props {
+	heading?: string;
+	text?: string | false;
+}
+
+const {
+	heading = "Find the first thing worth automating",
+	text = "30 minutes, and you leave with a written plan, even if you never hire us.",
+} = Astro.props;
+---
+
+<FlowSection variant="closing" class="section-y">
+	<Container>
+		<div class="max-w-[520px] space-y-6" data-reveal-scope data-reveal-children>
+			<h2 class="font-display text-h2 text-core">{heading}</h2>
+			{text && <p class="text-body text-core max-w-[46ch]">{text}</p>}
+			<div>
+				<Button href={site.bookingPath}>Book your free automation audit</Button>
+			</div>
+		</div>
+	</Container>
+</FlowSection>

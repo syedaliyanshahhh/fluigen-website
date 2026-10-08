@@ -1,0 +1,23 @@
+---
+// Placeholder frame for an asset that hasn't landed yet (the "See it work"
+// recording and so on): ACCURON's arch of teal light rising out of black
+// (FlowField "arch"). Content inside is a dark theme context.
+import FlowField from "./FlowField.astro";
+
+interface Props {
+	label: string;
+	class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div class:list={["relative isolate overflow-hidden rounded-panel bg-[var(--black)]", className]}>
+	<FlowField variant="arch" class="!z-0" />
+	<div data-theme="dark" class="relative z-10 flex h-full items-center justify-center">
+		<slot />
+	</div>
+	<p data-theme="dark" class="absolute inset-x-0 bottom-0 z-10 p-6 font-mono text-label uppercase text-core">
+		{label}
+	</p>
+</div>

@@ -1,1 +1,342 @@
 @import "tailwindcss";
+@import "./theme.css";
+@import "./flow.css";
+@import "./motion.css";
+
+/* `dark:` utilities follow the nearest theme context (theme.css), not the
+   OS setting, so they also work inside a scene or a forced-theme panel. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Prevents any stray wide element from creating sitewide horizontal scroll
+   (design/brand.md "Layout": no horizontal scrolling at any width). */
+body {
+  overflow-x: hidden;
+}
+
+/* Every page's <main> is a stacking context, so flow fields (z-index -1)
+   paint under all section content, including a later section's where a
+   field bleeds past its own section (src/styles/flow.css). */
+main {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Smooth in-page scroll (e.g. hero's "See what we have built" link) — killed
+   below for prefers-reduced-motion along with every other animation.
+   Anchored targets stop clear of the floating nav. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Self-hosted brand fonts (design/brand.md). Self-hosted rather than loaded
+ * from the Google Fonts CDN so EU visitors' IPs are never sent to Google.
+ */
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/inter-tight-300.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-tight-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter-tight-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cascadia Code";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/cascadia-code-400.woff2") format("woff2");
+}
+
+/* Colors — design/brand.md. Themed roles read the variables in theme.css,
+   so every utility below follows the nearest light/dark context.
+   `flux` (#97C1C5) is deliberately not a utility: it only ever appears
+   inside flow fields, the dark-mode focus ring and the dark button fill.
+   `null` is the brand guidelines' literal name for the surface color. */
+@theme inline {
+  --color-baseline: var(--baseline);
+  --color-null: var(--null);
+  --color-core: var(--core);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  /* Focus ring: vector on light, flux on dark (vector is too dim on teal). */
+  --color-ring: var(--ring);
+}
+
+@theme {
+  --color-vector: #267b85;
+  --color-substation: #02525e;
+
+  /* Fonts */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display:
+    "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+
+  /* Radius — pills use the built-in rounded-full utility */
+  --radius-card: 1.25rem; /* 20px */
+  --radius-panel: 1.75rem; /* 28px */
+}
+
+/*
+ * Fluid responsive system — design/brand.md "Layout".
+ *
+ * Every spacing and type value below is a single `clamp()`, continuously
+ * interpolated between a mobile anchor at a 375px viewport and a desktop
+ * anchor at a 1440px viewport (1440 is the single most common laptop
+ * logical width), then held flat outside that range. Nothing here steps
+ * at a breakpoint — resize the window and every value glides. The two
+ * endpoints still land exactly on the mobile/desktop pixel pairs
+ * design/brand.md specifies, so this is a faithful interpolation of those
+ * values, not a reinvention of them.
+ *
+ * Don't reintroduce `@media`-stepped overrides for type or spacing — add
+ * a new fluid clamp() anchored the same way instead (see CLAUDE.md's
+ * "Responsive system" rule). Each clamp below follows the same formula:
+ *   slope      = (desktopPx - mobilePx) / (1440 - 375)
+ *   intercept  = mobilePx - 375 * slope      // px, then /16 for rem
+ *   clamp(mobileRem, interceptRem + (slope * 100)vw, desktopRem)
+ *
+ * This also sidesteps the Tailwind/Lightning CSS bug noted in git history:
+ * a single clamp() is one literal property value, not a custom property
+ * redeclared under `@media`, so that bug class can't occur here. (That
+ * bug: a --text-* theme token redeclared under a plain
+ * `@media { :root { ... } }` block was verified broken in a real
+ * `astro build` — Tailwind/Lightning CSS silently dropped the mobile
+ * value, leaving only the desktop size active at every width. The first
+ * fix used discrete mobile/desktop values switched at one `@media`
+ * breakpoint instead; this fluid system replaces that in turn.)
+ */
+@utility text-hero-h1 {
+  font-size: clamp(2.75rem, 1.4296rem + 5.6338vw, 6.5rem); /* 44px -> 104px */
+  line-height: clamp(2.875rem, 1.6866rem + 5.0704vw, 6.25rem); /* 46px -> 100px */
+  letter-spacing: -0.045em;
+  font-weight: 300;
+}
+
+@utility text-h1 {
+  font-size: clamp(2.5rem, 1.7958rem + 3.0047vw, 4.5rem); /* 40px -> 72px */
+  line-height: clamp(2.625rem, 1.9648rem + 2.8169vw, 4.5rem); /* 42px -> 72px */
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+
+@utility text-h2 {
+  font-size: clamp(2.125rem, 1.6408rem + 2.0657vw, 3.5rem); /* 34px -> 56px */
+  line-height: clamp(2.25rem, 1.7658rem + 2.0657vw, 3.625rem); /* 36px -> 58px */
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+
+@utility text-h3 {
+  font-size: clamp(1.375rem, 1.243rem + 0.5634vw, 1.75rem); /* 22px -> 28px */
+  line-height: clamp(1.75rem, 1.618rem + 0.5634vw, 2.125rem); /* 28px -> 34px */
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+
+@utility text-body {
+  font-size: clamp(1.0625rem, 1.0405rem + 0.0939vw, 1.125rem); /* 17px -> 18px */
+  line-height: clamp(1.6875rem, 1.6435rem + 0.1878vw, 1.8125rem); /* 27px -> 29px */
+  letter-spacing: 0em;
+  font-weight: 400;
+}
+
+@utility text-small {
+  /* Same 15px/22 at every width per design/brand.md — no fluid range */
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.4666667; /* 22/15 */
+  letter-spacing: 0em;
+  font-weight: 400;
+}
+
+@utility text-label {
+  font-size: clamp(0.75rem, 0.728rem + 0.0939vw, 0.8125rem); /* 12px -> 13px */
+  line-height: clamp(1rem, 0.956rem + 0.1878vw, 1.125rem); /* 16px -> 18px */
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+
+/* A case study's leading number: the Big number style (weight 300, -5%,
+   line height 1), scaled from Big number's mobile size (48px) up to the
+   Hero H1 desktop size (104px), so it leads its page at every width. */
+@utility text-hero-number {
+  font-size: clamp(3rem, 1.7676rem + 5.2582vw, 6.5rem); /* 48px -> 104px */
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: 300;
+}
+
+@utility text-big-number {
+  font-size: clamp(3rem, 2.4718rem + 2.2535vw, 4.5rem); /* 48px -> 72px */
+  line-height: 1; /* 48/48 and 72/72 both reduce to 1 */
+  letter-spacing: -0.05em;
+  font-weight: 300;
+}
+
+/*
+ * Container/section primitives (Phase 3 components wrap these). Nav, page
+ * content and footer all use container-content so the logo, every
+ * heading and the footer share one left edge, and the nav button and
+ * footer links share one right edge.
+ *
+ * Max-width raised from an earlier fixed 1280px to 1440px: 1440 is the
+ * single most common laptop logical width, so on that screen the
+ * container now reaches the viewport edges (padding only) instead of
+ * leaving a large empty margin either side of it.
+ */
+@utility container-content {
+  max-width: 90rem; /* 1440px */
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* A variable so scenes (flow.css) can subtract their inset and keep the
+   same content edge. */
+:root {
+  --container-pad: clamp(1.25rem, 0.2817rem + 4.1315vw, 4rem); /* 20px -> 64px */
+}
+
+@utility section-y {
+  padding-block: clamp(5rem, 3.4595rem + 6.5728vw, 9.375rem); /* 80px -> 150px */
+}
+
+/*
+ * Hero-only vertical padding, anchored the same way as section-y above
+ * (375px -> 1440px) but with its own asymmetric bottom value (140px ->
+ * 220px, vs. section-y's shared 80px -> 150px). The hero sits on the
+ * horizon gradient, whose dark part is concentrated in its top ~60%; the
+ * larger bottom value keeps the headline/subline/CTA inside that dark
+ * band while leaving extra room below them for the image to fade toward
+ * baseline before the next section starts, per design/brand.md's gradient
+ * contrast rule. Defined with its own padding-top (not combined with
+ * section-y) so the two can't fight over which sets padding-bottom.
+ */
+@utility hero-section-y {
+  padding-top: clamp(5rem, 3.4595rem + 6.5728vw, 9.375rem); /* 80px -> 150px */
+  padding-bottom: clamp(8.75rem, 6.9894rem + 7.5117vw, 13.75rem); /* 140px -> 220px */
+}
+
+/*
+ * Full-screen homepage hero (one screen under the nav). The top pad keeps
+ * the headline clear of the floating nav; the bottom pad keeps the buttons
+ * and microcopy in the field's dark part, above where it dissolves into
+ * the page (design/brand.md "Flow gradient").
+ */
+@utility hero-full-y {
+  padding-top: clamp(2.5rem, 1.6197rem + 3.7559vw, 5rem); /* 40px -> 80px */
+  padding-bottom: clamp(6rem, 4.5915rem + 6.0094vw, 10rem); /* 96px -> 160px */
+}
+
+/*
+ * Nav and footer fluid sizing. --nav-h is a plain custom property (not a
+ * Tailwind-namespaced token) so Nav.astro's sticky header and its mobile
+ * menu panel can both read the exact same value via `h-[var(--nav-h)]` /
+ * `top-[var(--nav-h)]` — the menu's top offset can never drift from the
+ * header's real height, at any viewport width.
+ */
+:root {
+  --nav-h: clamp(4rem, 3.7359rem + 1.1268vw, 4.75rem); /* 64px -> 76px */
+  --nav-logo-h: clamp(1.625rem, 1.537rem + 0.3756vw, 1.875rem); /* 26px -> 30px */
+  /* The floating glass bar inside the --nav-h strip. It shrinks to the
+     compact height once the page scrolls (Nav.astro). */
+  --nav-bar-h: clamp(3.25rem, 3.0739rem + 0.7512vw, 3.75rem); /* 52px -> 60px */
+  --nav-bar-h-compact: clamp(2.875rem, 2.743rem + 0.5634vw, 3.25rem); /* 46px -> 52px */
+  --nav-logo-h-compact: clamp(1.375rem, 1.287rem + 0.3756vw, 1.625rem); /* 22px -> 26px */
+  /* Bar inner padding. Always smaller than --container-pad, so the bar
+     floats inside the gutter and the logo keeps the container's edge. */
+  --nav-pad: clamp(0.75rem, 0.5739rem + 0.7512vw, 1.25rem); /* 12px -> 20px */
+  /* Theme toggle distance from the viewport corner. */
+  --toggle-offset: clamp(0.75rem, 0.4859rem + 1.1268vw, 1.5rem); /* 12px -> 24px */
+}
+
+/*
+ * Inner-page spacing, anchored 375px -> 1440px like everything above.
+ * --space-block separates stacked blocks inside one section (story steps
+ * on a solution page, problem/build/result on a case study).
+ * --space-head is the gap between a section heading and its content.
+ * Used as `mt-[var(--space-block)]`, `gap-[var(--space-head)]` and so on.
+ */
+:root {
+  --space-block: clamp(3rem, 2.2958rem + 3.0047vw, 5rem); /* 48px -> 80px */
+  --space-head: clamp(2.5rem, 1.9718rem + 2.2535vw, 4rem); /* 40px -> 64px */
+}
+
+/*
+ * Short inner-page hero on the flow field (PageHero.astro). Shorter than
+ * the homepage hero; the bottom pad keeps the text in the field's dark
+ * part, above where it turns to flux and dissolves into the page.
+ */
+@utility page-hero-y {
+  padding-top: clamp(3rem, 1.9437rem + 4.507vw, 6rem); /* 48px -> 96px */
+  padding-bottom: clamp(7rem, 5.5915rem + 6.0094vw, 11rem); /* 112px -> 176px */
+}
+
+/* Inner-page header: top padding only; the next Section supplies the gap below. */
+@utility page-top {
+  padding-top: clamp(4rem, 2.7676rem + 5.2582vw, 7.5rem); /* 64px -> 120px */
+}
+
+/* /book: the calendar block sits close under the nav so the calendar is on
+   the first screen of a phone. */
+@utility book-y {
+  padding-top: clamp(1.25rem, 0.6338rem + 2.6291vw, 3rem); /* 20px -> 48px */
+  padding-bottom: clamp(2.5rem, 1.6197rem + 3.7559vw, 5rem); /* 40px -> 80px */
+}
+
+@utility footer-y {
+  padding-top: clamp(4rem, 3.2958rem + 3.0047vw, 6rem); /* 64px -> 96px */
+  padding-bottom: clamp(2rem, 1.8239rem + 0.7512vw, 2.5rem); /* 32px -> 40px */
+}
+
+/*
+ * Motion lives in motion.css (and the flow drift in flow.css). Below is the
+ * single sitewide kill switch: with reduced motion, every current and
+ * future animation and transition is neutralized together rather than
+ * gated per component.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

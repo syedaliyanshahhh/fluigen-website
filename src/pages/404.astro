@@ -1,0 +1,59 @@
+---
+// Not-found page. Cloudflare Pages serves dist/404.html (with a 404 status)
+// for any URL that doesn't match a page. The same hero flow field as every
+// other page, led by a rising "404", then the main routes so nobody is
+// left at a dead end.
+import { site } from "../site.config";
+import Layout from "../components/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import Container from "../components/Container.astro";
+import Section from "../components/Section.astro";
+import PageHero from "../components/PageHero.astro";
+import BigNumber from "../components/BigNumber.astro";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+
+const links = [
+	{ href: "/", label: "Home" },
+	{ href: "/solutions", label: "Solutions" },
+	{ href: "/case-studies", label: "Case studies" },
+	{ href: "/how-we-work", label: "How we work" },
+	{ href: "/about", label: "About" },
+];
+---
+
+<Layout title="Page not found" description="This page could not be found." noindex>
+	<Nav />
+	<main id="main">
+		<PageHero title="This page does not exist." titleSize="h2" lead="The link may be old or mistyped.">
+			<BigNumber slot="before-title" value="404" size="hero" count={false} />
+			<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
+				<Button href={site.bookingPath}>Book your free automation audit</Button>
+				<Button href="/" variant="text">Back to the homepage</Button>
+			</div>
+		</PageHero>
+
+		<Section>
+			<Container>
+				<h2 class="font-display text-h3 text-core">Or go to</h2>
+				<ul class="mt-6 max-w-[720px] border-t border-rule">
+					{
+						links.map((link) => (
+							<li class="border-b border-rule">
+								<a
+									href={link.href}
+									class="group flex min-h-11 items-center justify-between gap-4 py-4 text-body text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
+								>
+									<span class="link-grow">{link.label}</span>
+									<Icon name="arrow-right" class="h-5 w-5 shrink-0 transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1" />
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+	</main>
+	<Footer />
+</Layout>

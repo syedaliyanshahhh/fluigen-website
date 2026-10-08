@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Card from "./Card.astro";
+import BigNumber from "./BigNumber.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+	caseStudy: CollectionEntry<"case-studies">;
+	/** Glass over a scene or flow field (homepage); solid elsewhere. */
+	variant?: "card" | "glass";
+	/** A shorter summary for this placement (content/copy/home.md). */
+	summary?: string;
+	/**
+	 * `wide`: one full-width row (number on the left, label and summary on
+	 * the right, arrow at the end) for featured lists and a lone related
+	 * case study. Stacks like the card on phones.
+	 */
+	layout?: "card" | "wide";
+	class?: string;
+}
+
+const { caseStudy, variant = "card", summary: summaryOverride, layout = "card", class: className } = Astro.props;
+const { clientLabel, headlineNumber } = caseStudy.data;
+const summary = summaryOverride ?? caseStudy.data.summary;
+const href = `/case-studies/${caseStudy.id}`;
+---
+
+<a
+	href={href}
+	class:list={[
+		"group block min-w-0 rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring",
+		className,
+	]}
+>
+	{
+		layout === "wide" ? (
+			<Card
+				variant={variant}
+				interactive
+				class="grid h-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)_auto] sm:items-center sm:gap-8 lg:gap-10 lg:px-8 lg:py-8"
+			>
+				{headlineNumber && <BigNumber value={headlineNumber} />}
+				<div class="min-w-0 space-y-3 sm:col-start-2">
+					<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
+					<p class="text-body text-ink-2">{summary}</p>
+				</div>
+				<span class="hidden h-11 w-11 place-items-center rounded-full border border-rule text-core transition-[transform,background-color,color,border-color] duration-500 ease-[var(--ease-out)] group-hover:translate-x-1 group-hover:border-core group-hover:bg-core group-hover:text-baseline sm:grid">
+					<Icon name="arrow-right" class="h-5 w-5" />
+				</span>
+			</Card>
+		) : (
+			<Card variant={variant} interactive class="h-full min-w-0 space-y-4">
+				{headlineNumber && <BigNumber value={headlineNumber} />}
+				<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
+				<p class="text-body text-ink-2">{summary}</p>
+			</Card>
+		)
+	}
+</a>

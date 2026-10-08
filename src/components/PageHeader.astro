@@ -1,0 +1,45 @@
+---
+// Inner-page header: optional back link, H1 and lead text aligned to the
+// container's left edge (design/brand.md "Layout"). Lead text keeps the
+// 720px text column; the H1 may run a little wider so long titles don't
+// stack into four lines. The `before-title` slot sits between the back link
+// and the H1 (solution icon, case study client label and headline number).
+//
+// A soft flow field drifts behind it (top right, under the glass nav), and
+// its content rises in on load: the page's one load moment.
+import Container from "./Container.astro";
+import FlowField from "./FlowField.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+	title: string;
+	lead?: string;
+	back?: { href: string; label: string };
+	class?: string;
+}
+
+const { title, lead, back, class: className } = Astro.props;
+---
+
+<header class:list={["page-top relative", className]}>
+	<FlowField variant="soft" />
+	<Container class="rise-in">
+		{
+			back && (
+				<a
+					href={back.href}
+					class="group mb-8 inline-flex min-h-11 items-center gap-2 text-small text-ink-2 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring lg:mb-10"
+				>
+					<Icon name="arrow-left" class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out)] group-hover:-translate-x-1" />
+					<span class="link-grow">{back.label}</span>
+				</a>
+			)
+		}
+		<div class="space-y-6">
+			<slot name="before-title" />
+			<h1 class="max-w-[22ch] font-display text-h1 text-core">{title}</h1>
+			{lead && <p class="max-w-[720px] text-body text-ink-2">{lead}</p>}
+			<slot />
+		</div>
+	</Container>
+</header>
