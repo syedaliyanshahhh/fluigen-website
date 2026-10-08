@@ -1,9 +1,11 @@
 ---
-// Footer: top row (logo/tagline left, links right) above a 1px rule, then
-// a bottom row (copyright left, Privacy/Terms right) — design/brand.md
-// "Layout". Uses the shared Container so links line up with the nav
-// button and page content above.
+// Footer: top row (logo/tagline/contact left, links right) above a 1px
+// rule, then a bottom row (copyright left, Privacy/Terms right) —
+// design/brand.md "Layout". Business name, location and email come from
+// src/site.config.ts. Uses the shared Container so links line up with the
+// nav button and page content above.
 import logo from "../../design/logos/fluigen-horizontal-black.svg";
+import { site, siteLocation } from "../site.config";
 import Container from "./Container.astro";
 
 const year = new Date().getFullYear();
@@ -28,10 +30,20 @@ const linkClass =
 	<Container class="footer-y">
 		<div class="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
 			<div class="space-y-4">
-				<a href="/" aria-label="Fluigen home">
-					<img src={logo.src} alt="Fluigen" class="h-7 w-auto" />
+				<a href="/" aria-label={`${site.businessName} home`}>
+					<img src={logo.src} alt={site.businessName} class="h-7 w-auto" />
 				</a>
 				<p class="text-small text-ink-3 max-w-[32ch]">AI automation for growing businesses.</p>
+				<address class="space-y-1 text-small not-italic text-ink-3">
+					<p>{siteLocation}</p>
+					<p>
+						<a
+							href={`mailto:${site.email}`}
+							class="text-core underline underline-offset-[5px] decoration-1 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
+							>{site.email}</a
+						>
+					</p>
+				</address>
 			</div>
 
 			<nav aria-label="Footer">
@@ -52,7 +64,7 @@ const linkClass =
 		<div
 			class="mt-8 flex flex-col gap-2 border-t border-rule pt-6 sm:flex-row sm:items-center sm:justify-between lg:mt-10"
 		>
-			<p class="text-small text-ink-3">&copy; {year} Fluigen</p>
+			<p class="text-small text-ink-3">&copy; {year} {site.businessName}</p>
 			<ul class="flex gap-6">
 				{
 					legalLinks.map((link) => (

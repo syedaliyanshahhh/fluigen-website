@@ -1,6 +1,7 @@
 ---
 // Homepage, sections 1-12 (docs/build-plan.md Phase 5).
-import { getCollection } from "astro:content";
+import { site } from "../site.config";
+import { getFeaturedCaseStudies, getSolutions } from "../lib/content";
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
@@ -18,13 +19,10 @@ import EmptyState from "../components/EmptyState.astro";
 import FAQItem from "../components/FAQItem.astro";
 import Icon from "../components/Icon.astro";
 
-const solutions = (await getCollection("solutions", ({ data }) => !data.draft)).sort(
-	(a, b) => a.data.order - b.data.order,
-);
+const solutions = await getSolutions();
 
-const caseStudies = (
-	await getCollection("case-studies", ({ data }) => !data.draft && data.featured)
-).sort((a, b) => a.data.order - b.data.order);
+// The case studies marked "Featured on homepage" in content/copy/case-studies.
+const caseStudies = await getFeaturedCaseStudies();
 
 const painPoints = [
 	{
@@ -45,9 +43,9 @@ const painPoints = [
 ];
 
 const proofStats = [
-	{ value: "12", label: "platforms connected by one employee onboarding workflow" },
-	{ value: "[PLACEHOLDER]", label: "[PLACEHOLDER: what it measures, voice agent projects]" },
-	{ value: "[PLACEHOLDER]", label: "[PLACEHOLDER: what it measures, recruiting engine]" },
+	{ value: "16", label: "systems managed from one client portal" },
+	{ value: "24/7", label: "calls answered for a restoration company, including 2am emergencies" },
+	{ value: "45 days", label: "of follow-up on every lead, with no outreach hire" },
 	{ value: "2 to 3", label: "weeks from kickoff to a live system, for most builds" },
 ];
 
@@ -131,13 +129,12 @@ const faqs = [
 	},
 	{
 		question: "What time zone do you work in?",
-		answer:
-			"We are based in Pakistan and work your business hours, including US, UK and Australian time zones.",
+		answer: `We are based in ${site.city} and our team works remotely across time zones, so we work your business hours, whether you are in the US, UK, Europe or Australia.`,
 	},
 ];
 ---
 
-<Layout title="Fluigen">
+<Layout title={site.businessName}>
 	<Nav />
 	<main>
 		<!-- 1. Hero -->
@@ -151,7 +148,7 @@ const faqs = [
 						Done for you, live in weeks, and you pay the second half only once it is running.
 					</p>
 					<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
-						<Button href="/book" inverse>Book your free automation audit</Button>
+						<Button href={site.bookingPath} inverse>Book your free automation audit</Button>
 						<Button href="#case-studies" variant="text" inverse>See what we have built</Button>
 					</div>
 					<p class="text-small text-null pt-2">
@@ -354,7 +351,7 @@ const faqs = [
 					<p class="text-body text-null max-w-[46ch]">
 						30 minutes, and you leave with a written plan, even if you never hire us.
 					</p>
-					<Button href="/book" inverse>Book your free automation audit</Button>
+					<Button href={site.bookingPath} inverse>Book your free automation audit</Button>
 				</div>
 			</Container>
 		</GradientSection>

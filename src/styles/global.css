@@ -226,6 +226,23 @@ html {
   --nav-logo-h: clamp(1.625rem, 1.537rem + 0.3756vw, 1.875rem); /* 26px -> 30px */
 }
 
+/*
+ * Inner-page spacing, anchored 375px -> 1440px like everything above.
+ * --space-block separates stacked blocks inside one section (story steps
+ * on a solution page, problem/build/result on a case study).
+ * --space-head is the gap between a section heading and its content.
+ * Used as `mt-[var(--space-block)]`, `gap-[var(--space-head)]` and so on.
+ */
+:root {
+  --space-block: clamp(3rem, 2.2958rem + 3.0047vw, 5rem); /* 48px -> 80px */
+  --space-head: clamp(2.5rem, 1.9718rem + 2.2535vw, 4rem); /* 40px -> 64px */
+}
+
+/* Inner-page header: top padding only; the next Section supplies the gap below. */
+@utility page-top {
+  padding-top: clamp(4rem, 2.7676rem + 5.2582vw, 7.5rem); /* 64px -> 120px */
+}
+
 @utility footer-y {
   padding-top: clamp(4rem, 3.2958rem + 3.0047vw, 6rem); /* 64px -> 96px */
   padding-bottom: clamp(2rem, 1.8239rem + 0.7512vw, 2.5rem); /* 32px -> 40px */

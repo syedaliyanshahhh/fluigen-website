@@ -8,9 +8,9 @@ Secondary link: See what we have built (scrolls to case studies)
 Microcopy: 30 minutes. You leave with a written plan, even if you never hire us.
 
 ## 2. Proof strip
-- 12 | platforms connected by one employee onboarding workflow
-- [PLACEHOLDER: real number] | [PLACEHOLDER: what it measures, voice agent projects]
-- [PLACEHOLDER: real number] | [PLACEHOLDER: what it measures, recruiting engine]
+- 16 | systems managed from one client portal
+- 24/7 | calls answered for a restoration company, including 2am emergencies
+- 45 days | of follow-up on every lead, with no outreach hire
 - 2 to 3 | weeks from kickoff to a live system, for most builds
 
 ## 3. The problem
@@ -39,9 +39,10 @@ Button: Book your free automation audit
 
 ## 6. Case studies
 Heading: Work that is already running
-- 12 | IT services company | New hires used to be set up by hand across a dozen tools. One workflow now creates and removes every account when someone joins or leaves.
-- [PLACEHOLDER: number] | Marketing strategist | A digital twin trained on her own material now drafts content and answers client questions in her voice, so she is not the bottleneck.
-- [PLACEHOLDER: number] | Recruiting firm | Every applicant is screened against the role before a recruiter looks, so the team spends its time on candidates who fit.
+Show the three case studies marked "Featured on homepage" in content/copy/case-studies, using each one's headline number, client label and card summary:
+- 16 | IT support provider | Adding or removing a person used to mean logging into sixteen systems one by one. Now one action gives or removes access everywhere.
+- 24/7 | Disaster restoration company | In restoration, the job goes to whoever answers first. An AI receptionist now picks up every call, day or night, and the team gets the details in seconds.
+- 45 days | US marketing agency | Instead of hiring someone to chase leads, an AI agent now calls, texts and emails every prospect for 45 days and books meetings in their time zone.
 Link: See all case studies
 
 ## 7. How it works
@@ -85,7 +86,7 @@ Heading: Questions owners ask us
 - What if it breaks? | You get 30 days of free fixes after launch. After that, the Care Plan covers monitoring and fixes, or you can call us when you need us.
 - How long does it take? | Most builds are live in 2 to 3 weeks. Your audit plan gives you a fixed price and a finish date before anything starts.
 - Do I need to learn anything? | No. It runs in the background of tools your team already uses. We show your team the few things they need to know.
-- What time zone do you work in? | We are based in Pakistan and work your business hours, including US, UK and Australian time zones.
+- What time zone do you work in? | We are based in Chicago and our team works remotely across time zones, so we work your business hours, whether you are in the US, UK, Europe or Australia.
 
 ## 12. Final call to action (no calendar here)
 Heading: Find the first thing worth automating

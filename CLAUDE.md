@@ -21,11 +21,12 @@ One goal: visitors book a free automation audit.
 - Page structure: content/brief.md
 - Final words: content/copy. Never write marketing copy. Use [PLACEHOLDER] where copy is missing.
 - Never invent testimonials, metrics, client names or logos.
+- Site details (business name, city, state, country, email, website, booking link, legal effective date): `src/site.config.ts`. The footer, About, Privacy, Terms, /book and every CTA read from it. Never hard-code these values anywhere else.
 
 ## Booking
 - Every CTA links to /book. There is no calendar on the homepage.
 - /book is the only page with the Calendly calendar, embedded inline
-- Calendly link: https://calendly.com/aliyannshahh/30min
+- Calendly link: `bookingUrl` in `src/site.config.ts` (currently https://calendly.com/aliyannshahh/30min)
 - Sticky nav button "Book a free audit" on every page, desktop and mobile
 - Main CTA wording everywhere else: "Book your free automation audit"
 

@@ -1,0 +1,39 @@
+---
+// Plain, readable shell for /privacy and /terms: no gradient, no cards, just
+// the 720px text column. Ends with a plain booking button rather than the
+// gradient CTA band.
+import { site } from "../site.config";
+import Layout from "./Layout.astro";
+import Nav from "./Nav.astro";
+import Footer from "./Footer.astro";
+import Container from "./Container.astro";
+import Section from "./Section.astro";
+import InlineCTA from "./InlineCTA.astro";
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<Layout title={`${title}, ${site.businessName}`}>
+	<Nav />
+	<main>
+		<Section>
+			<Container>
+				<article class="max-w-[720px]">
+					<h1 class="font-display text-h1 text-core">{title}</h1>
+					<p class="mt-4 text-small text-ink-3">Effective date: {site.legalEffectiveDate}</p>
+					<div
+						class="mt-[var(--space-head)] space-y-5 text-body text-ink-2 [&_a]:text-core [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-[5px] [&_a]:outline-none [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-[3px] [&_a:focus-visible]:outline-solid [&_a:focus-visible]:outline-vector[&_h2]:pt-6 [&_h2]:font-display [&_h2]:text-h3 [&_h2]:text-core [&_li]:pl-1 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+					>
+						<slot />
+					</div>
+					<InlineCTA class="mt-[var(--space-block)] border-t border-rule pt-8" />
+				</article>
+			</Container>
+		</Section>
+	</main>
+	<Footer />
+</Layout>

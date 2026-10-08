@@ -1,0 +1,35 @@
+---
+// /solutions: all five solutions. Heading and intro are the homepage's
+// "What we build" copy (content/copy/home.md section 4).
+import { site } from "../../site.config";
+import { getSolutions } from "../../lib/content";
+import Layout from "../../components/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Container from "../../components/Container.astro";
+import Section from "../../components/Section.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import SolutionCard from "../../components/SolutionCard.astro";
+import PageCTA from "../../components/PageCTA.astro";
+
+const solutions = await getSolutions();
+---
+
+<Layout title={`What we build, ${site.businessName}`}>
+	<Nav />
+	<main>
+		<PageHeader
+			title="What we build"
+			lead="Each of these is backed by a system we have already built and run for a real business."
+		/>
+		<Section>
+			<Container>
+				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+					{solutions.map((solution) => <SolutionCard solution={solution} />)}
+				</div>
+			</Container>
+		</Section>
+		<PageCTA />
+	</main>
+	<Footer />
+</Layout>

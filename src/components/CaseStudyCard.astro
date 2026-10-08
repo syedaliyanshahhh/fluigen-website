@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Card from "./Card.astro";
+import BigNumber from "./BigNumber.astro";
 
 interface Props {
 	caseStudy: CollectionEntry<"case-studies">;
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const { caseStudy, class: className } = Astro.props;
-const { clientLabel, stat, summary } = caseStudy.data;
+const { clientLabel, headlineNumber, summary } = caseStudy.data;
 const href = `/case-studies/${caseStudy.id}`;
 ---
 
@@ -20,7 +21,7 @@ const href = `/case-studies/${caseStudy.id}`;
 	]}
 >
 	<Card class="h-full min-w-0 space-y-4">
-		<p class="font-display text-big-number text-core break-words">{stat}</p>
+		{headlineNumber && <BigNumber value={headlineNumber} />}
 		<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
 		<p class="text-body text-ink-2">{summary}</p>
 	</Card>

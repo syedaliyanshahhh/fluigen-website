@@ -4,6 +4,7 @@
 // plus a hamburger-opened full-screen menu below the lg breakpoint
 // (design/brand.md "Layout" nav spec, 1024px / 390px check).
 import logo from "../../design/logos/fluigen-horizontal-black.svg";
+import { site } from "../site.config";
 import Icon from "./Icon.astro";
 import Container from "./Container.astro";
 import Button from "./Button.astro";
@@ -49,7 +50,7 @@ const mobileLinkClass =
 		</nav>
 
 		<div class="flex items-center gap-2 sm:gap-3">
-			<a href="/book" class={bookButtonSmallClass}>Book a free audit</a>
+			<a href={site.bookingPath} class={bookButtonSmallClass}>Book a free audit</a>
 
 			<button
 				id="nav-toggle"
@@ -82,7 +83,7 @@ const mobileLinkClass =
 		</Container>
 	</nav>
 	<Container class="mt-auto py-8">
-		<Button href="/book" class="w-full justify-center">Book your free automation audit</Button>
+		<Button href={site.bookingPath} class="w-full justify-center">Book your free automation audit</Button>
 	</Container>
 </div>
 

@@ -1,0 +1,32 @@
+---
+// Renders parsed copy blocks (src/lib/copy-format.ts): paragraphs as body
+// text, lists as check-marked items like the homepage's lists.
+import type { Block } from "../lib/copy-format";
+import Icon from "./Icon.astro";
+
+interface Props {
+	blocks: Block[];
+	class?: string;
+}
+
+const { blocks, class: className } = Astro.props;
+---
+
+<div class:list={["space-y-5 text-body text-ink-2", className]}>
+	{
+		blocks.map((block) =>
+			block.type === "p" ? (
+				<p>{block.text}</p>
+			) : (
+				<ul class="space-y-4">
+					{block.items.map((item) => (
+						<li class="flex gap-3">
+							<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
+							<span>{item}</span>
+						</li>
+					))}
+				</ul>
+			),
+		)
+	}
+</div>

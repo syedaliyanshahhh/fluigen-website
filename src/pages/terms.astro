@@ -1,0 +1,61 @@
+---
+// /terms, copy from content/copy/terms.md. Business name, website, location,
+// email and effective date come from src/site.config.ts.
+import { site, siteLocation } from "../site.config";
+import LegalPage from "../components/LegalPage.astro";
+
+const email = site.email;
+---
+
+<LegalPage title="Terms of Use">
+	<h2>About these terms</h2>
+	<p>
+		These terms cover your use of {site.website}, run by {site.businessName}, based in {siteLocation}. By using
+		the website, you agree to them. Any project we deliver for you is covered by a separate written agreement, and
+		that agreement takes priority over these terms.
+	</p>
+
+	<h2>Using the website</h2>
+	<p>
+		You may use this website to learn about our services and book a call. Please do not misuse it, for example by
+		trying to break its security, copying it in bulk, or using it for anything unlawful.
+	</p>
+
+	<h2>Our content</h2>
+	<p>
+		The text, design, logos and other material on this website belong to {site.businessName} unless stated
+		otherwise. You may share links to our pages, but you may not copy or reuse our material for your own business
+		without written permission.
+	</p>
+
+	<h2>Information on this website</h2>
+	<p>
+		We work to keep the information on this website accurate and current, but it is general information about our
+		services, not advice for your specific business. Results described in our case studies are real results for
+		those clients. Your results will depend on your business and how the system is used.
+	</p>
+
+	<h2>Third-party services</h2>
+	<p>
+		Some features use services run by other companies, such as Calendly for booking. Their own terms and privacy
+		policies apply when you use them.
+	</p>
+
+	<h2>Limitation of liability</h2>
+	<p>
+		The website is provided as it is. To the extent the law allows, {site.businessName} is not liable for any loss
+		that comes from using, or not being able to use, this website.
+	</p>
+
+	<h2>Governing law</h2>
+	<p>These terms are governed by the laws of the State of {site.state}, {site.country}.</p>
+
+	<h2>Changes</h2>
+	<p>
+		We may update these terms from time to time. The latest version will always be on this page with its effective
+		date.
+	</p>
+
+	<h2>Contact</h2>
+	<p><a href={`mailto:${email}`}>{email}</a></p>
+</LegalPage>

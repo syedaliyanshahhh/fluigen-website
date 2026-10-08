@@ -1,0 +1,32 @@
+---
+// Big-number type style for a headline stat. A value that is still a
+// [PLACEHOLDER] renders as a small mono tag instead, so it stays visible on
+// preview without blowing out the layout at 72px.
+import { isPlaceholder } from "../lib/copy-format";
+
+interface Props {
+	value: string;
+	// "hero" uses the Hero H1 scale, for a number that leads its page.
+	size?: "default" | "hero";
+	as?: string;
+	class?: string;
+}
+
+const { value, size = "default", as: Tag = "p", class: className } = Astro.props;
+const sizeClass = size === "hero" ? "text-hero-h1" : "text-big-number";
+---
+
+{
+	isPlaceholder(value) ? (
+		<Tag
+			class:list={[
+				"inline-block rounded-card border border-dashed border-ink-3 px-3 py-2 font-mono text-label uppercase text-ink-3 break-words",
+				className,
+			]}
+		>
+			{value}
+		</Tag>
+	) : (
+		<Tag class:list={["font-display text-core break-words", sizeClass, className]}>{value}</Tag>
+	)
+}

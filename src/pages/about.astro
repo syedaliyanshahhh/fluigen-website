@@ -1,0 +1,103 @@
+---
+// /about, copy from content/copy/about.md. Business name and city come
+// from src/site.config.ts.
+import { site } from "../site.config";
+import Layout from "../components/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import Container from "../components/Container.astro";
+import Section from "../components/Section.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Label from "../components/Label.astro";
+import Card from "../components/Card.astro";
+import EmptyState from "../components/EmptyState.astro";
+import PageCTA from "../components/PageCTA.astro";
+
+const story = [
+	"I started out in performance marketing, running ads for businesses. The ads worked. What kept failing was everything after the click: calls that went to voicemail, leads nobody followed up, owners copying details between tools at night.",
+	`So I moved into automation and started building the systems that fix that part. ${site.businessName} is the result: a small team that builds those systems properly, hands them over, and stands behind them.`,
+	"When you book an audit, you talk to me directly, not a sales rep.",
+];
+
+// Set to "" to drop "The team" section entirely.
+const teamPlaceholder = "[PLACEHOLDER: team members with real photos, or remove this section]";
+
+const beliefs = [
+	{ title: "Outcomes over jargon", description: "If we cannot explain it in plain words, we have not understood it." },
+	{ title: "You own what we build", description: "No lock-in, full handover." },
+	{ title: "Real numbers only", description: "We never show results we cannot stand behind." },
+];
+---
+
+<Layout
+	title={`About, ${site.businessName}`}
+	description={`${site.businessName} is an AI automation agency based in ${site.city}. We build systems that answer calls, follow up leads and run back-office work for growing businesses.`}
+>
+	<Nav />
+	<main>
+		<PageHeader
+			title="We build the systems that keep a business running when nobody is free."
+			lead={`${site.businessName} is an AI automation agency for owner-led businesses. We design, build and look after systems that answer calls, follow up leads and handle the back-office work that eats your week.`}
+		/>
+
+		<!-- Why Fluigen exists (founder note: the only place "I" is used) -->
+		<Section>
+			<Container>
+				<div class="grid grid-cols-1 gap-[var(--space-head)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-start lg:gap-16">
+					<EmptyState label="[PLACEHOLDER: founder photo]" class="aspect-[4/5] w-full max-w-[360px]" />
+					<div class="max-w-[720px] space-y-6">
+						<h2 class="font-display text-h2 text-core">Why {site.businessName} exists</h2>
+						<div class="space-y-5 text-body text-ink-2">
+							{story.map((paragraph) => <p>{paragraph}</p>)}
+						</div>
+						<p class="text-small text-ink-3">Aliyan Shah, founder</p>
+					</div>
+				</div>
+			</Container>
+		</Section>
+
+		{
+			teamPlaceholder && (
+				<Section class="border-t border-rule">
+					<Container>
+						<h2 class="font-display text-h2 text-core">The team</h2>
+						<p class="mt-[var(--space-head)] inline-block rounded-card border border-dashed border-ink-3 px-4 py-3 font-mono text-label uppercase text-ink-3">
+							{teamPlaceholder}
+						</p>
+					</Container>
+				</Section>
+			)
+		}
+
+		<!-- Where we work / What we believe -->
+		<Section class="border-t border-rule">
+			<Container>
+				<div class="max-w-[720px] space-y-6">
+					<h2 class="font-display text-h2 text-core">Where we work</h2>
+					<p class="text-body text-ink-2">
+						{site.businessName} is based in {site.city}. Our build team works remotely across time zones, so we
+						work your business hours, whether you are in the US, UK, Europe or Australia.
+					</p>
+				</div>
+
+				<h2 class="mt-[var(--space-block)] border-t border-rule pt-[var(--space-block)] font-display text-h2 text-core">
+					What we believe
+				</h2>
+				<div class="mt-[var(--space-head)] grid grid-cols-1 gap-6 sm:grid-cols-3 lg:gap-8">
+					{
+						beliefs.map((belief, index) => (
+							<Card class="space-y-4">
+								<Label text={String(index + 1).padStart(2, "0")} />
+								<h3 class="font-display text-h3 text-core">{belief.title}</h3>
+								<p class="text-body text-ink-2">{belief.description}</p>
+							</Card>
+						))
+					}
+				</div>
+			</Container>
+		</Section>
+
+		<PageCTA />
+	</main>
+	<Footer />
+</Layout>

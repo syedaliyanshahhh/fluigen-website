@@ -1,0 +1,77 @@
+---
+// /privacy, copy from content/copy/privacy.md. Business name, website,
+// location, email and effective date come from src/site.config.ts.
+import { site, siteLocation } from "../site.config";
+import LegalPage from "../components/LegalPage.astro";
+
+const email = site.email;
+---
+
+<LegalPage title="Privacy Policy">
+	<h2>Who we are</h2>
+	<p>
+		This website, {site.website}, is run by {site.businessName}, based in {siteLocation}. In this policy, "we" and
+		"us" mean {site.businessName}. Questions about this policy can be sent to <a href={`mailto:${email}`}>{email}</a>.
+	</p>
+
+	<h2>What we collect</h2>
+	<ul>
+		<li>
+			Booking details. When you book a call, our booking provider, Calendly, collects the details you enter, such
+			as your name, email address, company website and anything you tell us about your business. Calendly
+			processes this under its own privacy policy and may set cookies on the booking page.
+		</li>
+		<li>Emails. If you email us, we keep your message and contact details so we can reply.</li>
+		<li>
+			Website analytics. We use Cloudflare Web Analytics to count visits and see which pages are used. It does
+			not use cookies and does not track you across other websites.
+		</li>
+		<li>
+			Technical data. Our hosting provider, Cloudflare, processes standard technical information such as IP
+			addresses and browser type to deliver and protect the site.
+		</li>
+	</ul>
+
+	<h2>How we use it</h2>
+	<ul>
+		<li>To arrange and hold the calls you book</li>
+		<li>To reply to your messages and send you the plan or proposal you asked for</li>
+		<li>To understand how the website is used and improve it</li>
+		<li>To keep the website secure</li>
+	</ul>
+	<p>We do not sell your personal information, and we do not use it for advertising.</p>
+
+	<h2>Who we share it with</h2>
+	<p>
+		Only the service providers that help us run the business, such as Calendly, Cloudflare and our email provider,
+		and only as far as they need it to provide their service. We may also share information if the law requires it.
+	</p>
+
+	<h2>How long we keep it</h2>
+	<p>
+		We keep booking and email records for as long as we need them to work with you and meet legal or accounting
+		duties, then delete them.
+	</p>
+
+	<h2>Your rights</h2>
+	<p>
+		Depending on where you live, including the European Union, the United Kingdom and some US states, you may have
+		the right to see the personal information we hold about you, correct it, delete it, or object to how we use
+		it. To make a request, email <a href={`mailto:${email}`}>{email}</a> and we will reply within 30 days.
+	</p>
+
+	<h2>Children</h2>
+	<p>
+		This website is for businesses and is not aimed at children under 16. We do not knowingly collect their
+		information.
+	</p>
+
+	<h2>Changes to this policy</h2>
+	<p>If we change this policy, we will update it on this page and change the effective date above.</p>
+
+	<h2>Contact</h2>
+	<p>
+		{site.businessName}, {siteLocation}<br />
+		<a href={`mailto:${email}`}>{email}</a>
+	</p>
+</LegalPage>

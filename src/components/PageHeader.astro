@@ -1,0 +1,40 @@
+---
+// Inner-page header: optional back link, H1 and lead text aligned to the
+// container's left edge (design/brand.md "Layout"). Lead text keeps the
+// 720px text column; the H1 may run a little wider so long titles don't
+// stack into four lines. The `before-title` slot sits between the back link
+// and the H1 (solution icon, case study client label and headline number).
+import Container from "./Container.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+	title: string;
+	lead?: string;
+	back?: { href: string; label: string };
+	class?: string;
+}
+
+const { title, lead, back, class: className } = Astro.props;
+---
+
+<header class:list={["page-top", className]}>
+	<Container>
+		{
+			back && (
+				<a
+					href={back.href}
+					class="mb-8 inline-flex min-h-11 items-center gap-2 text-small text-ink-2 underline-offset-[5px] decoration-1 hover:underline outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:mb-10"
+				>
+					<Icon name="arrow-left" class="h-4 w-4" />
+					{back.label}
+				</a>
+			)
+		}
+		<div class="space-y-6">
+			<slot name="before-title" />
+			<h1 class="max-w-[22ch] font-display text-h1 text-core">{title}</h1>
+			{lead && <p class="max-w-[720px] text-body text-ink-2">{lead}</p>}
+			<slot />
+		</div>
+	</Container>
+</header>
