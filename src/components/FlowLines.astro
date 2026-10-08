@@ -1,7 +1,10 @@
 ---
-// The homepage hero's signature visual: the Fluigen icon idea (three wavy
-// lines that merge into one straight line, design/logos/fluigen-icon-*.svg)
-// drawn as a full-bleed band of thin lines. Decorative only.
+// The homepage hero's signature visual: the Fluigen icon (three wavy lines
+// that merge into one straight line, design/logos/fluigen-icon-*.svg) drawn
+// as a full-bleed band of hairlines. Like the icon, each line makes only a
+// couple of long, calm waves before it merges; the band fades in from the
+// left edge and the merged line fades out at the right, so it never ends
+// on a hard edge. Decorative only.
 //
 // Motion (src/styles/motion.css "Flow lines"), all transform, opacity or
 // clip-path:
@@ -18,10 +21,10 @@
 
 const W = 1440;
 const CY = 100;
-const WAVE_END = 640; // where the outer waves start to converge
-const MERGE = 860; // where the three lines become one
-const HALF = 44; // half a wavelength
-const AMP = 11;
+const WAVE_END = 600; // where the outer waves start to converge
+const MERGE = 840; // where the three lines become one
+const HALF = 140; // half a wavelength: long, calm waves, as in the icon
+const AMP = 10;
 
 /** A wave like the logo's: horizontal tangents at every crest and trough. */
 function wave(y: number, amp: number, from: number, to: number, startUp: boolean) {
@@ -47,12 +50,16 @@ function converging(y: number, startUp: boolean) {
 }
 
 const middle = (() => {
-	const w = wave(CY, AMP * 0.75, -HALF, WAVE_END - HALF * 3, false);
-	const k = HALF * 1.5;
-	return `${w.d} C ${w.x + k} ${w.level}, ${w.x + k} ${CY}, ${w.x + HALF * 3} ${CY} L ${MERGE} ${CY}`;
+	// Like the icon's middle line: small dips, then it settles onto the axis
+	// just before the outer lines meet it.
+	const w = wave(CY, AMP * 0.6, -HALF, WAVE_END - HALF, false);
+	const k = (MERGE - w.x) * 0.5;
+	return `${w.d} C ${w.x + k} ${w.level}, ${MERGE - k} ${CY}, ${MERGE} ${CY}`;
 })();
 
-const lines = [converging(36, true), middle, converging(164, false)];
+// Kept within y 48..152 so wide screens, which crop the top and bottom of
+// the drawing (`slice`), still show every crest.
+const lines = [converging(58, true), middle, converging(142, false)];
 const straight = `M ${MERGE} ${CY} L ${W + 20} ${CY}`;
 
 interface Props {

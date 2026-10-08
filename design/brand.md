@@ -37,9 +37,10 @@ Light and dark mirror each other exactly: same layout, same components. Token na
 Dark values come from design/reference-draft-homepage.html. The teal palette (flux, vector, substation) never swaps. `deep` is substation mixed toward black, used only as the darkest part of a flow field.
 
 - The page theme follows the visitor's system setting until they choose with the toggle; the choice is remembered (`localStorage` key `fluigen-theme`). An inline script in `Layout.astro` sets it before first paint, so the wrong theme never flashes.
-- Any element with `data-theme="dark"` (or `"light"`) opens its own theme context: everything inside uses that theme's tokens. Flow sections and scenes use this for their content, so white-on-teal needs no special button or text variants.
+- Any element with `data-theme="dark"` (or `"light"`) opens its own theme context: everything inside uses that theme's tokens. The closing band and scenes use this for their content, so white-on-teal needs no special button or text variants. Hero content follows the page theme.
 - Logos swap with `.only-light` / `.only-dark` (black logo on light, white logo on dark).
-- In dark mode: primary button is a near-white pill with black text, flow fields glow brighter, ambient glows are stronger.
+- In dark mode: primary button is a near-white pill with black text, ambient glows are stronger.
+- The hero is where the two themes differ most: light is an airy near-white sky with a faint flux mist and black text; dark is near black with one muted teal glow and white text.
 
 ## Theme toggle
 - A small glass pill with a sliding knob (sun, moon), fixed to the bottom-right corner of every page, after ACCURON's pill toggle. 44px tap target.
@@ -53,12 +54,13 @@ Replaces the static gradient images (design/gradients stays as palette reference
 - Never a hard edge: every field dissolves into the page. Hero and closing fields bleed past their sections; glows are larger than their sections and fade out long before their box ends.
 - Performance: transform-only animation on compositor layers, no JavaScript per frame, paused while off screen, static under reduced motion.
 - Strength by place:
-  - `hero`: the strongest field, behind the floating nav: the full-screen homepage hero, and the short hero that opens every other page (PageHero), Privacy and Terms excepted.
+  - `hero`: behind the floating nav: the full-screen homepage hero, /book, and the short hero that opens every other page (PageHero), Privacy and Terms excepted. Minimal and low in saturation. Light: near-white with a soft flux mist from the top right and a hint of vector. Dark: near black with one muted substation glow. Its content follows the page theme (black text on light, white on dark).
   - `closing`: the final call to action band (PageCTA) on every marketing page.
   - `soft`: light haze behind the legal page headers and the mobile menu.
   - `glow-left` / `glow-right`: one faint drifting light behind an ordinary Section (`<Section glow="left">`). Alternate sides and leave some sections plain.
   - `scene` and `arch`: teal light rising out of black, inside scenes and empty-state panels.
-- Text on a strong field is white and stays in its dark part (upper area; the light part dissolves at the bottom or bottom right). Every text element over a field or in a scene measures at least 4.5:1 at its worst drift position, from 375px to 1920px, in both themes. Recheck if a field's stops or blobs change.
+- Text on the closing field is white and stays in its dark part (upper left; the light part dissolves at the bottom right). Every text element over a field or in a scene measures at least 4.5:1 at its worst drift position, from 375px to 1920px, in both themes. Recheck if a field's stops or blobs change.
+- Homepage hero lines (FlowLines.astro): the icon drawn as a full-bleed band of hairlines in core at low opacity, a couple of long waves per line merging into one, fading in from the left and out at the right. The travelling sheen is the only accent (vector on light, flux on dark).
 
 ## Scenes
 - A deep section for alternating rhythm, like ACCURON's dark scenes: black stage, teal light, white text, inset from the viewport edge (8px to 24px) with a large radius (28px to 40px). Content keeps the page container's left edge.
