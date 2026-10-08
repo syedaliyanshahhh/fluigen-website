@@ -1,6 +1,6 @@
 ---
 // Homepage, sections 1-12 (docs/build-plan.md Phase 5).
-import { site } from "../site.config";
+import { settings, site } from "../site.config";
 import { getFeaturedCaseStudies, getSolutions } from "../lib/content";
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
@@ -135,11 +135,13 @@ const faqs = [
 ];
 ---
 
-<Layout title={site.businessName}>
+<Layout
+	description="We build AI that answers your calls, follows up your leads, and runs your back office. Done for you, live in weeks."
+>
 	<Nav />
-	<main>
+	<main id="main">
 		<!-- 1. Hero -->
-		<GradientSection variant="horizon" class="hero-section-y">
+		<GradientSection variant="horizon" priority class="hero-section-y">
 			<Container>
 				<div class="fade-in space-y-6 sm:space-y-8">
 					<h1 class="font-display text-hero-h1 text-null">
@@ -201,29 +203,34 @@ const faqs = [
 				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-8">
 					{solutions.map((solution) => <SolutionCard solution={solution} />)}
 				</div>
+				{!settings.showSeeItWork && <InlineCTA class="mt-10 lg:mt-12" />}
 			</Container>
 		</Section>
 
-		<!-- 5. See it work -->
-		<Section>
-			<Container>
-				<div class="max-w-[640px] space-y-4">
-					<h2 class="font-display text-h2 text-core">Hear an AI receptionist take a real call</h2>
-					<p class="text-body text-ink-2">
-						Sixty seconds. It answers, asks the right questions, and books the appointment.
-					</p>
-				</div>
-				<EmptyState
-					label="[PLACEHOLDER: 60-second recording]"
-					class="mt-10 aspect-[16/9] w-full lg:mt-12"
-				>
-					<span class="flex h-16 w-16 items-center justify-center rounded-full bg-null sm:h-20 sm:w-20">
-						<Icon name="play" class="h-6 w-6 translate-x-[2px] text-core sm:h-7 sm:w-7" />
-					</span>
-				</EmptyState>
-				<InlineCTA class="mt-10 lg:mt-12" />
-			</Container>
-		</Section>
+		<!-- 5. See it work: hidden until the recording exists (settings.showSeeItWork) -->
+		{
+			settings.showSeeItWork && (
+				<Section>
+					<Container>
+						<div class="max-w-[640px] space-y-4">
+							<h2 class="font-display text-h2 text-core">Hear an AI receptionist take a real call</h2>
+							<p class="text-body text-ink-2">
+								Sixty seconds. It answers, asks the right questions, and books the appointment.
+							</p>
+						</div>
+						<EmptyState
+							label="[PLACEHOLDER: 60-second recording]"
+							class="mt-10 aspect-[16/9] w-full lg:mt-12"
+						>
+							<span class="flex h-16 w-16 items-center justify-center rounded-full bg-null sm:h-20 sm:w-20">
+								<Icon name="play" class="h-6 w-6 translate-x-[2px] text-core sm:h-7 sm:w-7" />
+							</span>
+						</EmptyState>
+						<InlineCTA class="mt-10 lg:mt-12" />
+					</Container>
+				</Section>
+			)
+		}
 
 		<!-- 6. Case studies -->
 		<Section id="case-studies" class="scroll-mt-[var(--nav-h)]">

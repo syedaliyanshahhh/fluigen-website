@@ -15,9 +15,12 @@ import PageCTA from "../../components/PageCTA.astro";
 const caseStudies = await getCaseStudies();
 ---
 
-<Layout title={`Case studies, ${site.businessName}`}>
+<Layout
+	title="Case studies"
+	description="Work that is already running: the AI receptionists, follow-up, portals and hiring systems we have built for real businesses, and what changed for each one."
+>
 	<Nav />
-	<main>
+	<main id="main">
 		<PageHeader title="Work that is already running" />
 		<Section>
 			<Container>

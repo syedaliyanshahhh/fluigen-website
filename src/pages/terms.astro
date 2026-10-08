@@ -7,7 +7,10 @@ import LegalPage from "../components/LegalPage.astro";
 const email = site.email;
 ---
 
-<LegalPage title="Terms of Use">
+<LegalPage
+	title="Terms of Use"
+	description={`The terms for using ${site.website}, the website of ${site.businessName}, based in ${siteLocation}.`}
+>
 	<h2>About these terms</h2>
 	<p>
 		These terms cover your use of {site.website}, run by {site.businessName}, based in {siteLocation}. By using

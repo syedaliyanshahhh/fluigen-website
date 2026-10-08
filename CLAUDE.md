@@ -13,7 +13,18 @@ One goal: visitors book a free automation audit.
 - `dev` branch: all work happens here. Deploys to https://preview.fluigen.com
 - `main` branch: production, https://fluigen.com. Only merge `dev` into `main` when I say so
 - Until launch, `main` shows a simple holding page
-- Every page on preview has `<meta name="robots" content="noindex">` until launch
+- The preview site is always hidden from search engines (noindex meta tag and `X-Robots-Tag` header), before and after launch. See "Launch settings".
+
+## Launch settings
+Both live in `settings` in `src/site.config.ts`.
+- `searchIndexing` (currently `false`): set to `true` at launch to let search engines index fluigen.com. It only takes effect on production builds (Cloudflare Pages branch `main`, read from `CF_PAGES_BRANCH`), so preview.fluigen.com stays noindexed whatever it is set to. It controls the robots meta tag, the `X-Robots-Tag` header in `dist/_headers`, and the sitemap line in robots.txt.
+- `showSeeItWork` (currently `false`): the homepage "See it work" section. Set to `true` once the 60-second recording is in place. While it is off, "What we build" carries the booking CTA instead, so there is still a CTA after every two sections.
+- `/styleguide` and `/404` are always noindexed and left out of the sitemap (`unlistedPaths` in `src/lib/indexing.ts`).
+
+## SEO
+- Every page passes `title` and `description` to `Layout.astro`, which adds " | Fluigen", the canonical URL on fluigen.com, Open Graph and X card tags (image `public/og-image-1200x630.png`) and the business details as structured data from `src/site.config.ts`.
+- Descriptions come from the "SEO description" lines in content/copy where they exist; case studies use their card summary.
+- Pages build as `about.html` (`build.format: "file"`), so URLs have no trailing slash and Cloudflare serves them without a redirect. Internal links never end in `/`.
 
 ## Sources of truth
 - Exact design values: design/brand.md. Never invent colors, fonts or sizes.

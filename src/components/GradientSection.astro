@@ -4,11 +4,17 @@
 // with CSS gradients." `substation` is the fallback background color
 // while the image loads.
 //
+// The image is served as AVIF/WebP at several widths, so a phone downloads
+// a small file instead of the 2400px original. Soft gradients survive the
+// downscaling with no visible loss. `priority` is for the hero only: it
+// loads the image straight away instead of when it scrolls into view.
+//
 // Callers are responsible for the brand rule this component can't enforce
 // on its own: white text only over the dark part of the image, black text
 // only over the light part. Where that boundary falls differs per
 // variant, so check it against the actual image before choosing text
 // color for content placed here.
+import { Picture } from "astro:assets";
 import horizon from "../../design/gradients/horizon-hero-2400x1400.jpg";
 import mist from "../../design/gradients/mist-cta-2400x1200.jpg";
 import edge from "../../design/gradients/edge-1800x1200.jpg";
@@ -18,15 +24,29 @@ const images = { horizon, mist, edge, arch };
 
 interface Props {
 	variant: keyof typeof images;
+	priority?: boolean;
 	class?: string;
 }
 
-const { variant, class: className } = Astro.props;
+const { variant, priority = false, class: className } = Astro.props;
 const image = images[variant];
+const widths = [640, 960, 1280, 1920, 2400].filter((width) => width <= image.width);
 ---
 
 <section class:list={["relative overflow-hidden bg-substation", className]}>
-	<img src={image.src} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
+	<Picture
+		src={image}
+		alt=""
+		aria-hidden="true"
+		formats={["avif", "webp"]}
+		widths={widths}
+		sizes="100vw"
+		quality={70}
+		loading={priority ? "eager" : "lazy"}
+		fetchpriority={priority ? "high" : undefined}
+		decoding="async"
+		class="absolute inset-0 h-full w-full object-cover"
+	/>
 	<div class="relative z-10">
 		<slot />
 	</div>

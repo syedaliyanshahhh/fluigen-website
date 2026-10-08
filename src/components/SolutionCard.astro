@@ -5,10 +5,13 @@ import Icon from "./Icon.astro";
 
 interface Props {
 	solution: CollectionEntry<"solutions">;
+	/** 3 under a section H2 (homepage); 2 directly under the page H1 (/solutions). */
+	headingLevel?: 2 | 3;
 	class?: string;
 }
 
-const { solution, class: className } = Astro.props;
+const { solution, headingLevel = 3, class: className } = Astro.props;
+const Heading = `h${headingLevel}`;
 const { title, cardLine, icon } = solution.data;
 const href = `/solutions/${solution.id}`;
 ---
@@ -22,7 +25,7 @@ const href = `/solutions/${solution.id}`;
 >
 	<Card class="h-full space-y-5">
 		<Icon name={icon} class="h-7 w-7 text-core" />
-		<h3 class="font-display text-h3 text-core">{title}</h3>
+		<Heading class="font-display text-h3 text-core">{title}</Heading>
 		<p class="text-body text-ink-2">{cardLine}</p>
 		<span class="inline-block text-small text-core underline underline-offset-[5px] decoration-1">
 			How it works

@@ -35,11 +35,11 @@ const onCallItems = [
 ---
 
 <Layout
-	title={`Book your free automation audit, ${site.businessName}`}
-	description="A 30-minute call with Aliyan. Pick a time that suits you."
+	title="Book your free automation audit"
+	description="A free 30-minute call with Aliyan. You leave with a written plan, even if you never hire us. Pick a time that suits you."
 >
 	<Nav />
-	<main>
+	<main id="main">
 		<div class="flex flex-col justify-center py-10 lg:min-h-[calc(100svh-var(--nav-h))] lg:py-0">
 			<Container>
 				<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-14">
@@ -126,12 +126,20 @@ const onCallItems = [
 		// content height any time the view changes (date picked, time slots
 		// shown, confirmation form, ...), so the widget always matches its
 		// actual content instead of a guessed fixed height.
+		// While it is still loading, Calendly reports tiny heights (26px, then
+		// 2px) before the real one. Applying those collapsed the box and made
+		// the footer jump up and back down, so sizes are only applied once the
+		// calendar has rendered (`calendly.event_type_viewed`); until then the
+		// box keeps its reserved height.
+		const MIN_CALENDAR_HEIGHT = 300;
+		let calendarShown = false;
 		window.addEventListener("message", (event) => {
 			if (event.origin !== "https://calendly.com") return;
-			if (event.data?.event !== "calendly.page_height") return;
-			const height = event.data.payload?.height;
-			if (!height || !widget) return;
-			widget.style.height = typeof height === "number" ? `${height}px` : height;
+			if (event.data?.event === "calendly.event_type_viewed") calendarShown = true;
+			if (event.data?.event !== "calendly.page_height" || !calendarShown) return;
+			const height = parseFloat(event.data.payload?.height);
+			if (!height || height < MIN_CALENDAR_HEIGHT || !widget) return;
+			widget.style.height = `${height}px`;
 		});
 
 		const script = document.createElement("script");

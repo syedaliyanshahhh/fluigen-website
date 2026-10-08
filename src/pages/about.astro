@@ -19,8 +19,9 @@ const story = [
 	"When you book an audit, you talk to me directly, not a sales rep.",
 ];
 
-// Set to "" to drop "The team" section entirely.
-const teamPlaceholder = "[PLACEHOLDER: team members with real photos, or remove this section]";
+// "The team" section: hidden at launch (content/MISSING.md). Put the team
+// copy here to show it again.
+const teamPlaceholder = "";
 
 const beliefs = [
 	{ title: "Outcomes over jargon", description: "If we cannot explain it in plain words, we have not understood it." },
@@ -30,11 +31,11 @@ const beliefs = [
 ---
 
 <Layout
-	title={`About, ${site.businessName}`}
+	title="About"
 	description={`${site.businessName} is an AI automation agency based in ${site.city}. We build systems that answer calls, follow up leads and run back-office work for growing businesses.`}
 >
 	<Nav />
-	<main>
+	<main id="main">
 		<PageHeader
 			title="We build the systems that keep a business running when nobody is free."
 			lead={`${site.businessName} is an AI automation agency for owner-led businesses. We design, build and look after systems that answer calls, follow up leads and handle the back-office work that eats your week.`}

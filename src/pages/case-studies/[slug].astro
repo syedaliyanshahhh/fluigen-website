@@ -42,9 +42,9 @@ const story = [
 ].filter((step) => step.blocks.length > 0);
 ---
 
-<Layout title={`${clientLabel}, ${site.businessName} case study`} description={summary}>
+<Layout title={title} description={summary}>
 	<Nav />
-	<main>
+	<main id="main">
 		<PageHeader title={title} lead={summary} back={{ href: "/case-studies", label: "All case studies" }}>
 			<div slot="before-title" class="space-y-4 pb-[var(--space-head)]">
 				<Label text={clientLabel} brackets={false} class="block" />

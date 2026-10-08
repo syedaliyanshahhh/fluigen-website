@@ -15,9 +15,12 @@ import PageCTA from "../../components/PageCTA.astro";
 const solutions = await getSolutions();
 ---
 
-<Layout title={`What we build, ${site.businessName}`}>
+<Layout
+	title="What we build"
+	description="AI receptionists, lead follow-up, client portals, hiring automation and knowledge systems, each backed by a system we have already built for a real business."
+>
 	<Nav />
-	<main>
+	<main id="main">
 		<PageHeader
 			title="What we build"
 			lead="Each of these is backed by a system we have already built and run for a real business."
@@ -25,7 +28,7 @@ const solutions = await getSolutions();
 		<Section>
 			<Container>
 				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-					{solutions.map((solution) => <SolutionCard solution={solution} />)}
+					{solutions.map((solution) => <SolutionCard solution={solution} headingLevel={2} />)}
 				</div>
 			</Container>
 		</Section>

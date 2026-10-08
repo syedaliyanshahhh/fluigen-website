@@ -7,7 +7,10 @@ import LegalPage from "../components/LegalPage.astro";
 const email = site.email;
 ---
 
-<LegalPage title="Privacy Policy">
+<LegalPage
+	title="Privacy Policy"
+	description={`How ${site.businessName} collects, uses and protects the information you share when you visit ${site.website} or book a call.`}
+>
 	<h2>Who we are</h2>
 	<p>
 		This website, {site.website}, is run by {site.businessName}, based in {siteLocation}. In this policy, "we" and

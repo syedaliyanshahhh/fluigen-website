@@ -41,9 +41,9 @@ const story = [
 ].filter((step) => step.blocks.length > 0);
 ---
 
-<Layout title={`${title}, ${site.businessName}`} description={seoDescription}>
+<Layout title={title} description={seoDescription ?? cardLine}>
 	<Nav />
-	<main>
+	<main id="main">
 		<PageHeader title={title} lead={cardLine} back={{ href: "/solutions", label: "All solutions" }}>
 			<Icon slot="before-title" name={icon} class="h-8 w-8 text-core" />
 		</PageHeader>
