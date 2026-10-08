@@ -1,6 +1,6 @@
 ---
 // Not-found page. Cloudflare Pages serves dist/404.html (with a 404 status)
-// for any URL that doesn't match a page. Same horizon composition as the
+// for any URL that doesn't match a page. Same flow field as the
 // homepage hero, then the main routes so nobody is left at a dead end.
 import { site } from "../site.config";
 import Layout from "../components/Layout.astro";
@@ -8,7 +8,7 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import Container from "../components/Container.astro";
 import Section from "../components/Section.astro";
-import GradientSection from "../components/GradientSection.astro";
+import FlowSection from "../components/FlowSection.astro";
 import Button from "../components/Button.astro";
 import Label from "../components/Label.astro";
 import Icon from "../components/Icon.astro";
@@ -25,21 +25,21 @@ const links = [
 <Layout title="Page not found" description="This page could not be found." noindex>
 	<Nav />
 	<main id="main">
-		<GradientSection variant="horizon" priority class="hero-section-y">
+		<FlowSection variant="hero" class="hero-section-y">
 			<Container>
-				<div class="max-w-[720px] space-y-6 sm:space-y-8">
-					<Label text="404" color="null" />
-					<h1 class="font-display text-h1 text-null">This page does not exist.</h1>
-					<p class="text-body text-null max-w-[46ch]">
+				<div class="rise-in max-w-[720px] space-y-6 sm:space-y-8">
+					<Label text="404" color="core" />
+					<h1 class="font-display text-h1 text-core">This page does not exist.</h1>
+					<p class="text-body text-core max-w-[46ch]">
 						The link may be old or mistyped. Head back to the homepage, or book your free audit.
 					</p>
 					<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
-						<Button href={site.bookingPath} inverse>Book your free automation audit</Button>
-						<Button href="/" variant="text" inverse>Back to the homepage</Button>
+						<Button href={site.bookingPath}>Book your free automation audit</Button>
+						<Button href="/" variant="text">Back to the homepage</Button>
 					</div>
 				</div>
 			</Container>
-		</GradientSection>
+		</FlowSection>
 
 		<Section>
 			<Container>
@@ -50,10 +50,10 @@ const links = [
 							<li class="border-b border-rule">
 								<a
 									href={link.href}
-									class="flex min-h-11 items-center justify-between gap-4 py-4 text-body text-core underline-offset-[5px] decoration-1 outline-none hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
+									class="group flex min-h-11 items-center justify-between gap-4 py-4 text-body text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
 								>
-									{link.label}
-									<Icon name="arrow-right" class="h-5 w-5 shrink-0" />
+									<span class="link-grow">{link.label}</span>
+									<Icon name="arrow-right" class="h-5 w-5 shrink-0 transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1" />
 								</a>
 							</li>
 						))

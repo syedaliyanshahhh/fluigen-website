@@ -1,13 +1,20 @@
 ---
-// Sticky header: logo left, primary links, "Book a free audit" button
-// (CLAUDE.md: sticky on every page, desktop and mobile, exact wording),
-// plus a hamburger-opened full-screen menu below the lg breakpoint
-// (design/brand.md "Layout" nav spec, 1024px / 390px check).
-import logo from "../../design/logos/fluigen-horizontal-black.svg";
+// Floating glass nav (design/brand.md "Layout" and "Glass"): a sticky
+// --nav-h strip holding a frosted bar. The bar floats inside the gutter so
+// the logo keeps the container's left edge and the button its right edge.
+// Once the page scrolls, the bar turns compact (shorter, smaller logo,
+// firmer glass). "Book a free audit" stays on every page at every width
+// (CLAUDE.md "Booking").
+//
+// Below lg, a menu button opens a full-screen panel that wipes down from the
+// bar, with its links rising in one after another and a second theme switch.
+import logoBlack from "../../design/logos/fluigen-horizontal-black.svg";
+import logoWhite from "../../design/logos/fluigen-horizontal-white.svg";
 import { site } from "../site.config";
-import Icon from "./Icon.astro";
 import Container from "./Container.astro";
 import Button from "./Button.astro";
+import FlowField from "./FlowField.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 
 const navLinks = [
 	{ href: "/solutions", label: "Solutions" },
@@ -16,119 +23,236 @@ const navLinks = [
 	{ href: "/about", label: "About" },
 ];
 
-const linkClass =
-	"text-body text-core underline-offset-[5px] decoration-1 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+const path = Astro.url.pathname.replace(/\.html$/, "");
+const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
 
-const bookButtonSmallClass =
-	"inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-core px-3.5 font-display font-medium text-[15px] leading-none text-null outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector sm:px-[18px]";
-
-const mobileLinkClass =
-	"block border-b border-rule py-5 font-display text-h3 text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+const focus =
+	"outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring";
 ---
 
-<header
-	id="site-header"
-	class="sticky top-0 z-50 h-[var(--nav-h)] border-b border-transparent bg-baseline transition-colors duration-200"
->
-	<Container class="flex h-full items-center justify-between gap-3 sm:gap-4">
-		<a href="/" aria-label={`${site.businessName} home`} class="shrink-0 rounded-sm outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector">
-			<img src={logo.src} width={logo.width} height={logo.height} alt={site.businessName} class="h-[var(--nav-logo-h)] w-auto" />
-		</a>
+<header id="site-header" class="pointer-events-none sticky top-0 z-50 h-[var(--nav-h)]">
+	<Container class="flex h-full items-center">
+		<div
+			id="nav-bar"
+			class="nav-bar glass pointer-events-auto flex w-full items-center justify-between gap-3 rounded-full sm:gap-4"
+		>
+			<a href="/" aria-label={`${site.businessName} home`} class:list={["shrink-0 rounded-sm", focus]}>
+				<img src={logoBlack.src} width={logoBlack.width} height={logoBlack.height} alt="" class="nav-logo only-light w-auto" />
+				<img src={logoWhite.src} width={logoWhite.width} height={logoWhite.height} alt="" class="nav-logo only-dark w-auto" />
+			</a>
 
-		<nav aria-label="Primary" class="hidden lg:block">
-			<ul class="flex items-center gap-8">
-				{
-					navLinks.map((link) => (
-						<li>
-							<a href={link.href} class={linkClass}>
-								{link.label}
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</nav>
+			<nav aria-label="Primary" class="hidden lg:block">
+				<ul class="flex items-center gap-8">
+					{
+						navLinks.map((link) => (
+							<li>
+								<a
+									href={link.href}
+									aria-current={isCurrent(link.href) ? "page" : undefined}
+									class:list={["rounded-sm text-body text-core", focus]}
+								>
+									<span class="link-grow">{link.label}</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
 
-		<div class="flex items-center gap-2 sm:gap-3">
-			<a href={site.bookingPath} class={bookButtonSmallClass}>Book a free audit</a>
+			<div class="flex items-center gap-2 sm:gap-3">
+				<Button href={site.bookingPath} arrow={false} class="nav-cta !min-h-11 !px-3.5 !py-0 !text-[15px] sm:!px-[18px]">
+					Book a free audit
+				</Button>
 
-			<button
-				id="nav-toggle"
-				type="button"
-				class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-rule outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:hidden"
-				aria-expanded="false"
-				aria-controls="nav-mobile-menu"
-				aria-label="Open menu"
-			>
-				<Icon name="menu" id="nav-icon-menu" class="h-6 w-6 text-core" />
-				<Icon name="x" id="nav-icon-close" class="hidden h-6 w-6 text-core" />
-			</button>
+				<button
+					id="nav-toggle"
+					type="button"
+					class:list={[
+						"relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-rule text-core lg:hidden",
+						focus,
+					]}
+					aria-expanded="false"
+					aria-controls="nav-mobile-menu"
+					aria-label="Open menu"
+				>
+					<span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+				</button>
+			</div>
 		</div>
 	</Container>
 </header>
 
-<div
-	id="nav-mobile-menu"
-	class="hidden fixed inset-x-0 top-[var(--nav-h)] bottom-0 z-40 flex-col overflow-y-auto bg-baseline lg:hidden"
->
-	<nav aria-label="Mobile">
+<div id="nav-mobile-menu" class="mobile-menu fixed inset-0 z-40 flex flex-col overflow-y-auto bg-baseline lg:hidden" inert>
+	<FlowField variant="soft" class="!top-0" />
+	<nav aria-label="Mobile" class="relative pt-[var(--nav-h)]">
 		<Container class="flex flex-col py-2">
 			{
-				navLinks.map((link) => (
-					<a href={link.href} class={mobileLinkClass}>
+				navLinks.map((link, index) => (
+					<a
+						href={link.href}
+						aria-current={isCurrent(link.href) ? "page" : undefined}
+						style={`--i: ${index}`}
+						class:list={["mobile-menu__item flex items-center justify-between border-b border-rule py-5 font-display text-h3 text-core", focus]}
+					>
 						{link.label}
+						<span aria-hidden="true" class="font-mono text-label text-ink-3">{String(index + 1).padStart(2, "0")}</span>
 					</a>
 				))
 			}
+			<div class="mobile-menu__item flex items-center justify-between py-4" style={`--i: ${navLinks.length}`}>
+				<span class="font-mono text-label uppercase text-ink-3">Dark mode</span>
+				<ThemeToggle inline />
+			</div>
 		</Container>
 	</nav>
-	<Container class="mt-auto py-8">
-		<Button href={site.bookingPath} class="w-full justify-center">Book your free automation audit</Button>
-	</Container>
+	<div class="mobile-menu__item relative mt-auto" style={`--i: ${navLinks.length + 1}`}>
+		<Container class="py-8">
+			<Button href={site.bookingPath} class="w-full">Book your free automation audit</Button>
+		</Container>
+	</div>
 </div>
 
-<script>
-	const header = document.getElementById("site-header");
-	const toggle = document.getElementById("nav-toggle");
-	const menu = document.getElementById("nav-mobile-menu");
-	const iconMenu = document.getElementById("nav-icon-menu");
-	const iconClose = document.getElementById("nav-icon-close");
-
-	function setOpen(open) {
-		menu?.classList.toggle("hidden", !open);
-		menu?.classList.toggle("flex", open);
-		iconMenu?.classList.toggle("hidden", open);
-		iconClose?.classList.toggle("hidden", !open);
-		toggle?.setAttribute("aria-expanded", String(open));
-		toggle?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-		document.documentElement.classList.toggle("overflow-hidden", open);
+<style>
+	.nav-bar {
+		height: var(--nav-bar-h);
+		margin-inline: calc(-1 * var(--nav-pad));
+		padding-inline: var(--nav-pad);
+		/* The bar's own padding is inside the gutter, so the right edge of
+		   the button lines up with the container edge. Keep the rounded end
+		   from hugging the button: a little more space on the right. */
+		padding-right: calc(var(--nav-pad) * 0.5);
+		transition:
+			height 0.5s var(--ease-out),
+			background-color 0.5s var(--ease-out),
+			box-shadow 0.5s var(--ease-out);
+	}
+	.nav-logo {
+		height: var(--nav-logo-h);
+		transition: height 0.5s var(--ease-out);
+	}
+	:global([data-nav-compact]) .nav-bar {
+		height: var(--nav-bar-h-compact);
+		background-color: var(--glass-bg-strong);
+	}
+	:global([data-nav-compact]) .nav-logo {
+		height: var(--nav-logo-h-compact);
+	}
+	:global([data-nav-compact]) .nav-bar :global(.nav-cta) {
+		min-height: 2.5rem !important;
 	}
 
-	toggle?.addEventListener("click", () => {
-		setOpen(Boolean(menu?.classList.contains("hidden")));
-	});
+	/* Hamburger to X: three lines that fold into a cross. */
+	.menu-icon {
+		position: relative;
+		width: 1.25rem;
+		height: 0.875rem;
+	}
+	.menu-icon span {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 1.5px;
+		border-radius: 1px;
+		background: currentColor;
+		transition:
+			transform 0.45s var(--ease-out),
+			opacity 0.25s var(--ease-out),
+			top 0.45s var(--ease-out);
+	}
+	.menu-icon span:nth-child(1) {
+		top: 0;
+	}
+	.menu-icon span:nth-child(2) {
+		top: calc(50% - 0.75px);
+	}
+	.menu-icon span:nth-child(3) {
+		top: calc(100% - 1.5px);
+	}
+	[aria-expanded="true"] .menu-icon span:nth-child(1) {
+		top: calc(50% - 0.75px);
+		transform: rotate(45deg);
+	}
+	[aria-expanded="true"] .menu-icon span:nth-child(2) {
+		opacity: 0;
+		transform: scaleX(0.2);
+	}
+	[aria-expanded="true"] .menu-icon span:nth-child(3) {
+		top: calc(50% - 0.75px);
+		transform: rotate(-45deg);
+	}
 
-	menu?.querySelectorAll("a").forEach((link) => {
-		link.addEventListener("click", () => setOpen(false));
-	});
+	/* Panel wipes down from the top; items rise in, staggered. */
+	.mobile-menu {
+		visibility: hidden;
+		clip-path: inset(0 0 100% 0 round 0 0 2rem 2rem);
+		transition:
+			clip-path 0.6s var(--ease-in-out),
+			visibility 0s linear 0.6s;
+	}
+	.mobile-menu.is-open {
+		visibility: visible;
+		clip-path: inset(0 0 0 0 round 0);
+		transition:
+			clip-path 0.6s var(--ease-in-out),
+			visibility 0s linear 0s;
+	}
+	.mobile-menu__item {
+		opacity: 0;
+		transform: translate3d(0, 1rem, 0);
+		transition:
+			opacity 0.3s var(--ease-out),
+			transform 0.3s var(--ease-out);
+	}
+	.mobile-menu.is-open .mobile-menu__item {
+		opacity: 1;
+		transform: none;
+		transition:
+			opacity 0.6s var(--ease-out),
+			transform 0.7s var(--ease-out);
+		transition-delay: calc(0.18s + var(--i, 0) * 0.06s);
+	}
+</style>
+
+<script>
+	const root = document.documentElement;
+	const toggle = document.getElementById("nav-toggle");
+	const menu = document.getElementById("nav-mobile-menu");
+
+	function setOpen(open: boolean) {
+		if (!menu || !toggle) return;
+		menu.classList.toggle("is-open", open);
+		menu.inert = !open;
+		toggle.setAttribute("aria-expanded", String(open));
+		toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+		root.classList.toggle("overflow-hidden", open);
+		window.dispatchEvent(new CustomEvent("fluigen:menu", { detail: { open } }));
+	}
+
+	const isOpen = () => Boolean(menu?.classList.contains("is-open"));
+
+	toggle?.addEventListener("click", () => setOpen(!isOpen()));
+
+	menu?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
 
 	document.addEventListener("keydown", (event) => {
-		if (event.key === "Escape" && !menu?.classList.contains("hidden")) {
+		if (event.key === "Escape" && isOpen()) {
 			setOpen(false);
 			toggle?.focus();
 		}
 	});
 
-	const desktopQuery = window.matchMedia("(min-width: 1024px)");
-	desktopQuery.addEventListener("change", (event) => {
+	window.matchMedia("(min-width: 1024px)").addEventListener("change", (event) => {
 		if (event.matches) setOpen(false);
 	});
 
-	function updateScrolled() {
-		const scrolled = window.scrollY > 0;
-		header?.classList.toggle("border-rule", scrolled);
-		header?.classList.toggle("border-transparent", !scrolled);
+	// Compact bar once the page has scrolled a little.
+	let compact = false;
+	function updateCompact() {
+		const next = window.scrollY > 24;
+		if (next === compact) return;
+		compact = next;
+		root.toggleAttribute("data-nav-compact", compact);
 	}
-	updateScrolled();
-	window.addEventListener("scroll", updateScrolled, { passive: true });
+	updateCompact();
+	window.addEventListener("scroll", updateCompact, { passive: true });
 </script>

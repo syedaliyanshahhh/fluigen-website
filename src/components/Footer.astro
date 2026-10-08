@@ -4,7 +4,13 @@
 // design/brand.md "Layout". Business name, location and email come from
 // src/site.config.ts. Uses the shared Container so links line up with the
 // nav button and page content above.
+//
+// `relative` puts the footer above <main>'s stacking context, so a closing
+// flow field that dissolves into it never paints over its text. The extra
+// bottom space is the theme toggle's resting zone at the end of the page,
+// so it never has to sit on the legal links.
 import logo from "../../design/logos/fluigen-horizontal-black.svg";
+import logoWhite from "../../design/logos/fluigen-horizontal-white.svg";
 import { site, siteLocation } from "../site.config";
 import Container from "./Container.astro";
 
@@ -23,15 +29,16 @@ const legalLinks = [
 ];
 
 const linkClass =
-	"flex min-h-11 items-center text-body text-core underline-offset-[5px] decoration-1 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector";
+	"flex min-h-11 items-center text-body text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring";
 ---
 
-<footer class="border-t border-rule">
+<footer class="relative border-t border-rule">
 	<Container class="footer-y">
 		<div class="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
 			<div class="space-y-4">
-				<a href="/" aria-label={`${site.businessName} home`} class="inline-block rounded-sm outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector">
-					<img src={logo.src} width={logo.width} height={logo.height} alt={site.businessName} loading="lazy" class="h-7 w-auto" />
+				<a href="/" aria-label={`${site.businessName} home`} class="inline-block rounded-sm outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring">
+					<img src={logo.src} width={logo.width} height={logo.height} alt="" loading="lazy" class="only-light h-7 w-auto" />
+					<img src={logoWhite.src} width={logoWhite.width} height={logoWhite.height} alt="" loading="lazy" class="only-dark h-7 w-auto" />
 				</a>
 				<p class="text-small text-ink-3 max-w-[32ch]">{site.tagline}.</p>
 				<address class="space-y-1 text-small not-italic text-ink-3">
@@ -39,7 +46,7 @@ const linkClass =
 					<p>
 						<a
 							href={`mailto:${site.email}`}
-							class="text-core underline underline-offset-[5px] decoration-1 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
+							class="link-u text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
 							>{site.email}</a
 						>
 					</p>
@@ -52,7 +59,7 @@ const linkClass =
 						links.map((link) => (
 							<li>
 								<a href={link.href} class={linkClass}>
-									{link.label}
+									<span class="link-grow">{link.label}</span>
 								</a>
 							</li>
 						))
@@ -70,12 +77,13 @@ const linkClass =
 					legalLinks.map((link) => (
 						<li>
 							<a href={link.href} class={linkClass}>
-								{link.label}
+								<span class="link-grow">{link.label}</span>
 							</a>
 						</li>
 					))
 				}
 			</ul>
 		</div>
+		<div aria-hidden="true" class="h-[calc(2.75rem+var(--toggle-offset))]"></div>
 	</Container>
 </footer>

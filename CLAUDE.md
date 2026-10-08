@@ -50,10 +50,19 @@ Both live in `settings` in `src/site.config.ts`.
 - Plain words, no tool names in headlines
 - "We" for Fluigen, "I" only in the founder note
 
+## Visual system
+Full spec: design/brand.md ("Themes", "Flow gradient", "Scenes", "Glass", "Motion"). On every page:
+- Light and dark mode: use the role tokens (`bg-baseline`, `bg-null`, `text-core`, `text-ink-2`, `text-ink-3`, `border-rule`, `outline-ring`) and never hard-code a hex, `bg-white`/`text-black`, or a teal text color. Check every change in both themes.
+- Color: the homepage and 404 hero use `<FlowSection variant="hero">`; every marketing page ends with `<PageCTA />` (closing flow band); inner pages start with `<PageHeader>` (soft field). Give some ordinary Sections `glow="left"`/`"right"`, alternating. Never use the design/gradients image files on the site.
+- Text on a flow field or in a scene is just `text-core` / `text-ink-2`: their content is a dark theme context. Keep it in the field's dark part and re-measure contrast (4.5:1) if a field changes.
+- Rhythm: up to two `<Scene>` sections per page, never adjacent. Cards inside a scene or over a field use `<Card variant="glass">`; glass is used nowhere else except the nav and toggle.
+- Motion comes from the shared pieces, not per-page code: Section/Scene content reveals automatically, link cards use `<Card interactive>` inside an `<a class="group">`, CTAs use `<Button>`, nav and footer links wrap their text in `.link-grow`, body links use `.link-u`, numbers go through StatTile/BigNumber. New animations animate only transform, opacity, clip-path or color, and must be off under reduced motion.
+- The theme toggle and nav are global (Layout.astro, Nav.astro); don't add page-level fixed elements in the bottom-right corner.
+
 ## Build rules
 - Mobile first. Check every section across a full range of widths, not just 390px and 1440px — include common phones, tablets, and laptops (1280, 1366, 1440, 1512, 1728, 1920).
 - Responsive system: container width/padding, section spacing, nav/footer sizing and the type scale are all fluid `clamp()` values defined once in `src/styles/global.css` (see design/brand.md "Layout"), scaling continuously between a 375px and a 1440px anchor. Reuse those utilities (`container-content`, `section-y`, `text-*`, `footer-y`, `--nav-h`) for any new section. Don't add a fixed pixel value or a new `@media`-stepped override for spacing or type — if a value genuinely needs its own range, add another anchored `clamp()` the same way instead.
 - Semantic HTML, alt text on images, visible keyboard focus, readable contrast
-- Respect prefers-reduced-motion
+- Respect prefers-reduced-motion (see "Visual system")
 - One section per task. Stop and show me before moving on.
 - Commit after each section that works, then push `dev` so it appears on preview.fluigen.com

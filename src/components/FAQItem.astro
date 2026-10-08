@@ -1,5 +1,7 @@
 ---
-// Native <details>/<summary>, no custom JS.
+// Native <details>/<summary>, so it works and stays accessible without
+// JavaScript. The script below only adds a smooth height animation on open
+// and close (skipped with reduced motion).
 import Icon from "./Icon.astro";
 
 interface Props {
@@ -10,14 +12,61 @@ interface Props {
 const { question, class: className } = Astro.props;
 ---
 
-<details class:list={["group border-b border-rule py-6", className]}>
+<details class:list={["faq group border-b border-rule", className]} data-faq>
 	<summary
-		class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-h3 text-core marker:content-none outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector [&::-webkit-details-marker]:hidden"
+		class="flex cursor-pointer list-none items-center justify-between gap-4 py-6 font-display text-h3 text-core marker:content-none outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring [&::-webkit-details-marker]:hidden"
 	>
-		{question}
-		<Icon name="chevron-down" class="h-5 w-5 shrink-0 text-ink-3 transition-transform duration-150 group-open:rotate-180" />
+		<span class="link-grow">{question}</span>
+		<span class="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-rule transition-colors duration-300 group-hover:border-core">
+			<Icon name="chevron-down" class="faq__icon h-5 w-5 text-core" />
+		</span>
 	</summary>
-	<div class="max-w-[70ch] pt-4 text-body text-ink-2">
-		<slot />
+	<div class="faq__body">
+		<div class="max-w-[70ch] pb-6 text-body text-ink-2">
+			<slot />
+		</div>
 	</div>
 </details>
+
+<script>
+	const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+	const easing = "cubic-bezier(0.22, 1, 0.36, 1)";
+
+	document.querySelectorAll<HTMLDetailsElement>("[data-faq]").forEach((details) => {
+		const summary = details.querySelector("summary");
+		const body = details.querySelector<HTMLElement>(".faq__body");
+		if (!summary || !body) return;
+		let animation: Animation | null = null;
+
+		summary.addEventListener("click", (event) => {
+			if (reduced.matches || !body.animate) return;
+			event.preventDefault();
+			animation?.cancel();
+
+			if (!details.open) {
+				details.open = true;
+				const height = body.scrollHeight;
+				animation = body.animate(
+					[
+						{ height: "0px", opacity: 0 },
+						{ height: `${height}px`, opacity: 1 },
+					],
+					{ duration: 520, easing },
+				);
+			} else {
+				const height = body.offsetHeight;
+				animation = body.animate(
+					[
+						{ height: `${height}px`, opacity: 1 },
+						{ height: "0px", opacity: 0 },
+					],
+					{ duration: 420, easing },
+				);
+				animation.onfinish = () => {
+					details.open = false;
+				};
+			}
+			animation.addEventListener("finish", () => (animation = null));
+		});
+	});
+</script>

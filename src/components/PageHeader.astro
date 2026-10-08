@@ -4,7 +4,11 @@
 // 720px text column; the H1 may run a little wider so long titles don't
 // stack into four lines. The `before-title` slot sits between the back link
 // and the H1 (solution icon, case study client label and headline number).
+//
+// A soft flow field drifts behind it (top right, under the glass nav), and
+// its content rises in on load: the page's one load moment.
 import Container from "./Container.astro";
+import FlowField from "./FlowField.astro";
 import Icon from "./Icon.astro";
 
 interface Props {
@@ -17,16 +21,17 @@ interface Props {
 const { title, lead, back, class: className } = Astro.props;
 ---
 
-<header class:list={["page-top", className]}>
-	<Container>
+<header class:list={["page-top relative", className]}>
+	<FlowField variant="soft" />
+	<Container class="rise-in">
 		{
 			back && (
 				<a
 					href={back.href}
-					class="mb-8 inline-flex min-h-11 items-center gap-2 text-small text-ink-2 underline-offset-[5px] decoration-1 hover:underline outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector lg:mb-10"
+					class="group mb-8 inline-flex min-h-11 items-center gap-2 text-small text-ink-2 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring lg:mb-10"
 				>
-					<Icon name="arrow-left" class="h-4 w-4" />
-					{back.label}
+					<Icon name="arrow-left" class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out)] group-hover:-translate-x-1" />
+					<span class="link-grow">{back.label}</span>
 				</a>
 			)
 		}

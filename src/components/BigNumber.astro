@@ -1,7 +1,8 @@
 ---
 // Big-number type style for a headline stat. A value that is still a
 // [PLACEHOLDER] renders as a small mono tag instead, so it stays visible on
-// preview without blowing out the layout at 72px.
+// preview without blowing out the layout at 72px. Real numbers count up
+// when they scroll into view (src/scripts/motion.ts).
 import { isPlaceholder } from "../lib/copy-format";
 
 interface Props {
@@ -27,6 +28,6 @@ const sizeClass = size === "hero" ? "text-hero-h1" : "text-big-number";
 			{value}
 		</Tag>
 	) : (
-		<Tag class:list={["font-display text-core break-words", sizeClass, className]}>{value}</Tag>
+		<Tag class:list={["font-display text-core break-words", sizeClass, className]} data-count>{value}</Tag>
 	)
 }

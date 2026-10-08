@@ -24,8 +24,13 @@ import Icon from "../components/Icon.astro";
 
 const CALENDLY_URL = site.bookingUrl;
 // Calendly embed customization params (hex without '#') to match the brand
-// as far as Calendly allows — see design/brand.md colors.
-const calendlyEmbedUrl = `${CALENDLY_URL}?background_color=f7f7f7&text_color=000000&primary_color=267b85`;
+// as far as Calendly allows — see design/brand.md colors. One set per theme;
+// the script picks the current one and reloads the calendar if the visitor
+// switches theme.
+const calendlyColors = {
+	light: "background_color=f7f7f7&text_color=000000&primary_color=267b85",
+	dark: "background_color=0a0f10&text_color=f7f7f7&primary_color=97c1c5",
+};
 
 const onCallItems = [
 	"Look at where your team loses the most hours",
@@ -64,7 +69,7 @@ const onCallItems = [
 						<p class="text-small text-ink-3 pt-2">
 							Can’t find a time that works? Email <a
 								href={`mailto:${site.email}`}
-								class="text-core underline decoration-1 underline-offset-[5px] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
+								class="link-u text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
 								>{site.email}</a
 							>
 						</p>
@@ -81,8 +86,10 @@ const onCallItems = [
 
 						<div
 							id="calendly-widget"
-							class="calendly-inline-widget h-[660px] w-full min-w-[320px] lg:max-h-[calc(100svh-var(--nav-h)-3rem)]"
-							data-url={calendlyEmbedUrl}
+							class="calendly-inline-widget h-[660px] w-full min-w-0 lg:max-h-[calc(100svh-var(--nav-h)-3rem)]"
+							data-calendly-base={CALENDLY_URL}
+							data-calendly-light={calendlyColors.light}
+							data-calendly-dark={calendlyColors.dark}
 						>
 						</div>
 
@@ -140,6 +147,23 @@ const onCallItems = [
 			const height = parseFloat(event.data.payload?.height);
 			if (!height || height < MIN_CALENDAR_HEIGHT || !widget) return;
 			widget.style.height = `${height}px`;
+		});
+
+		// Calendly colors follow the page theme. widget.js reads data-url when
+		// it loads, so set it first; on a theme switch, rebuild the calendar.
+		function calendlyUrl() {
+			if (!widget) return "";
+			const theme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+			return `${widget.dataset.calendlyBase}?${widget.dataset[theme === "dark" ? "calendlyDark" : "calendlyLight"]}`;
+		}
+		if (widget) widget.dataset.url = calendlyUrl();
+
+		window.addEventListener("fluigen:themechange", () => {
+			if (!widget || typeof window.Calendly === "undefined") return;
+			calendarShown = false;
+			widget.style.height = "";
+			widget.innerHTML = "";
+			window.Calendly.initInlineWidget({ url: calendlyUrl(), parentElement: widget });
 		});
 
 		const script = document.createElement("script");

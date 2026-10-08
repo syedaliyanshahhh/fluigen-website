@@ -7,7 +7,9 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import Container from "../components/Container.astro";
 import Section from "../components/Section.astro";
-import GradientSection from "../components/GradientSection.astro";
+import FlowSection from "../components/FlowSection.astro";
+import Scene from "../components/Scene.astro";
+import PageCTA from "../components/PageCTA.astro";
 import Button from "../components/Button.astro";
 import InlineCTA from "../components/InlineCTA.astro";
 import Label from "../components/Label.astro";
@@ -141,28 +143,28 @@ const faqs = [
 	<Nav />
 	<main id="main">
 		<!-- 1. Hero -->
-		<GradientSection variant="horizon" priority class="hero-section-y">
+		<FlowSection variant="hero" class="hero-section-y">
 			<Container>
-				<div class="fade-in space-y-6 sm:space-y-8">
-					<h1 class="font-display text-hero-h1 text-null">
+				<div class="rise-in space-y-6 sm:space-y-8">
+					<h1 class="font-display text-hero-h1 text-core">
 						We build AI that answers your calls, follows up your leads, and runs your back office.
 					</h1>
-					<p class="text-body text-null max-w-[46ch]">
+					<p class="text-body text-core max-w-[46ch]">
 						Done for you, live in weeks, and you pay the second half only once it is running.
 					</p>
 					<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
-						<Button href={site.bookingPath} inverse>Book your free automation audit</Button>
-						<Button href="#case-studies" variant="text" inverse>See what we have built</Button>
+						<Button href={site.bookingPath}>Book your free automation audit</Button>
+						<Button href="#case-studies" variant="text">See what we have built</Button>
 					</div>
-					<p class="text-small text-null pt-2">
+					<p class="text-small text-core pt-2">
 						30 minutes. You leave with a written plan, even if you never hire us.
 					</p>
 				</div>
 			</Container>
-		</GradientSection>
+		</FlowSection>
 
 		<!-- 2. Proof strip -->
-		<Section>
+		<Section glow="right">
 			<Container>
 				<div class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-12">
 					{proofStats.map((stat) => <StatTile value={stat.value} label={stat.label} />)}
@@ -170,9 +172,8 @@ const faqs = [
 			</Container>
 		</Section>
 
-		<!-- 3. The problem -->
-		<Section>
-			<Container>
+		<!-- 3. The problem (dark scene) -->
+		<Scene>
 				<h2 class="font-display text-h2 text-core max-w-[18ch]">
 					What stops when one person is unavailable?
 				</h2>
@@ -188,11 +189,10 @@ const faqs = [
 					}
 				</div>
 				<InlineCTA class="mt-12 lg:mt-16" note="We will find the first thing worth fixing." />
-			</Container>
-		</Section>
+		</Scene>
 
 		<!-- 4. What we build -->
-		<Section>
+		<Section glow="left">
 			<Container>
 				<div class="max-w-[640px] space-y-4">
 					<h2 class="font-display text-h2 text-core">What we build</h2>
@@ -233,7 +233,7 @@ const faqs = [
 		}
 
 		<!-- 6. Case studies -->
-		<Section id="case-studies" class="scroll-mt-[var(--nav-h)]">
+		<Section id="case-studies" glow="right">
 			<Container>
 				<h2 class="font-display text-h2 text-core">Work that is already running</h2>
 				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:mt-16 lg:gap-8">
@@ -246,7 +246,7 @@ const faqs = [
 		</Section>
 
 		<!-- 7. How it works -->
-		<Section>
+		<Section glow="left">
 			<Container>
 				<h2 class="font-display text-h2 text-core">How it works</h2>
 				<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
@@ -264,14 +264,13 @@ const faqs = [
 			</Container>
 		</Section>
 
-		<!-- 8. Guarantees -->
-		<Section>
-			<Container>
+		<!-- 8. Guarantees (dark scene, glass cards) -->
+		<Scene>
 				<h2 class="font-display text-h2 text-core max-w-[16ch]">The risk sits with us</h2>
 				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:mt-16 lg:gap-8">
 					{
 						guarantees.map((guarantee) => (
-							<Card class="space-y-4">
+							<Card variant="glass" class="space-y-4">
 								<Icon name="check" class="h-6 w-6 text-core" />
 								<h3 class="font-display text-h3 text-core">{guarantee.title}</h3>
 								<p class="text-body text-ink-2">{guarantee.description}</p>
@@ -279,8 +278,7 @@ const faqs = [
 						))
 					}
 				</div>
-			</Container>
-		</Section>
+		</Scene>
 
 		<!-- 9. Who it is for -->
 		<Section>
@@ -318,7 +316,7 @@ const faqs = [
 		</Section>
 
 		<!-- 10. Founder note -->
-		<Section>
+		<Section glow="right">
 			<Container>
 				<div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
 					<FounderPhoto class="w-full max-w-[360px]" />
@@ -349,17 +347,7 @@ const faqs = [
 		</Section>
 
 		<!-- 12. Final call to action (no calendar here) -->
-		<GradientSection variant="mist" class="section-y">
-			<Container>
-				<div class="max-w-[520px] space-y-6">
-					<h2 class="font-display text-h2 text-null">Find the first thing worth automating</h2>
-					<p class="text-body text-null max-w-[46ch]">
-						30 minutes, and you leave with a written plan, even if you never hire us.
-					</p>
-					<Button href={site.bookingPath} inverse>Book your free automation audit</Button>
-				</div>
-			</Container>
-		</GradientSection>
+		<PageCTA />
 	</main>
 	<Footer />
 </Layout>

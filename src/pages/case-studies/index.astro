@@ -22,7 +22,7 @@ const caseStudies = await getCaseStudies();
 	<Nav />
 	<main id="main">
 		<PageHeader title="Work that is already running" />
-		<Section>
+		<Section glow="left">
 			<Container>
 				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
 					{caseStudies.map((caseStudy) => <CaseStudyCard caseStudy={caseStudy} />)}

@@ -1,11 +1,11 @@
 ---
-// Closing booking band for every marketing page: the mist gradient (the
-// page's one gradient moment on inner pages), one button to the booking
+// Closing booking band for every marketing page: the closing flow field
+// (the page's second strong gradient moment), one button to the booking
 // page. Default heading and text are the homepage's final CTA copy
 // (content/copy/home.md section 12); pages with their own CTA copy pass it in.
 import { site } from "../site.config";
 import Container from "./Container.astro";
-import GradientSection from "./GradientSection.astro";
+import FlowSection from "./FlowSection.astro";
 import Button from "./Button.astro";
 
 interface Props {
@@ -19,12 +19,14 @@ const {
 } = Astro.props;
 ---
 
-<GradientSection variant="mist" class="section-y">
+<FlowSection variant="closing" class="section-y">
 	<Container>
-		<div class="max-w-[520px] space-y-6">
-			<h2 class="font-display text-h2 text-null">{heading}</h2>
-			{text && <p class="text-body text-null max-w-[46ch]">{text}</p>}
-			<Button href={site.bookingPath} inverse>Book your free automation audit</Button>
+		<div class="max-w-[520px] space-y-6" data-reveal-scope data-reveal-children>
+			<h2 class="font-display text-h2 text-core">{heading}</h2>
+			{text && <p class="text-body text-core max-w-[46ch]">{text}</p>}
+			<div>
+				<Button href={site.bookingPath}>Book your free automation audit</Button>
+			</div>
 		</div>
 	</Container>
-</GradientSection>
+</FlowSection>

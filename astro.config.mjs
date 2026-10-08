@@ -37,6 +37,9 @@ export default defineConfig({
   // trailing slash and Cloudflare never has to redirect /about to /about/.
   build: { format: 'file' },
   trailingSlash: 'never',
+  // Fetch a page when its link is hovered or focused, so page transitions
+  // (design/brand.md "Motion") start from a page that is already loaded.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   integrations: [
     sitemap({
       filter: (page) => !unlistedPaths.includes(new URL(page).pathname),

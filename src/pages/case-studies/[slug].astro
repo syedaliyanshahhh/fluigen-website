@@ -65,7 +65,7 @@ const story = [
 			</div>
 		</PageHeader>
 
-		<Section>
+		<Section glow="left">
 			<Container>
 				<div class="max-w-[720px] space-y-[var(--space-block)]">
 					{
@@ -104,15 +104,15 @@ const story = [
 								<h2 class="font-display text-h3 text-core">Solution</h2>
 								<a
 									href={`/solutions/${solution.id}`}
-									class="group block rounded-card outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector"
+									class="group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
 								>
-									<Card class="flex items-start gap-5">
+									<Card interactive class="flex items-start gap-5">
 										<Icon name={solution.data.icon} class="mt-1 h-7 w-7 shrink-0 text-core" />
 										<div class="min-w-0 flex-1 space-y-2">
 											<p class="font-display text-h3 text-core">{solution.data.title}</p>
 											<p class="text-body text-ink-2">{solution.data.cardLine}</p>
 										</div>
-										<Icon name="arrow-right" class="mt-2 hidden h-5 w-5 shrink-0 text-core sm:block" />
+										<Icon name="arrow-right" class="mt-2 hidden h-5 w-5 shrink-0 text-core transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1 sm:block" />
 									</Card>
 								</a>
 							</section>

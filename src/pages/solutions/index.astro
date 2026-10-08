@@ -25,7 +25,7 @@ const solutions = await getSolutions();
 			title="What we build"
 			lead="Each of these is backed by a system we have already built and run for a real business."
 		/>
-		<Section>
+		<Section glow="left">
 			<Container>
 				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
 					{solutions.map((solution) => <SolutionCard solution={solution} headingLevel={2} />)}

@@ -1,0 +1,307 @@
+---
+// Light/dark switch, fixed to the bottom-right corner of every page
+// (design/brand.md "Themes"). A glass pill with a sliding knob, after
+// ACCURON's pill toggle.
+//
+// - The page theme is set before first paint by the inline script in
+//   Layout.astro (stored choice, else the OS setting), so nothing flashes.
+// - Clicking stores the choice and switches with a circular reveal from
+//   the toggle (view transition), or a short color crossfade without one.
+// - With no stored choice, the page follows OS changes live.
+// - It never covers content: whenever it comes to rest over a link, a
+//   button, a form field, media or a line of text, it fades out of the way,
+//   and on touch screens it also steps aside while the page is scrolling.
+//   The mobile menu carries a second switch, so the theme can always be
+//   changed.
+//
+// Fires `fluigen:themechange` on window with `{ detail: { theme } }`.
+interface Props {
+	/** Inline variant for the mobile menu: no fixed position, no auto-hide. */
+	inline?: boolean;
+	class?: string;
+}
+
+const { inline = false, class: className } = Astro.props;
+---
+
+<button
+	id={inline ? undefined : "theme-toggle"}
+	type="button"
+	role="switch"
+	aria-checked="false"
+	aria-label="Dark mode"
+	data-theme-toggle
+	class:list={[
+		"theme-toggle group/toggle outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring",
+		inline ? "theme-toggle--inline" : "theme-toggle--fixed",
+		className,
+	]}
+>
+	<span class="theme-toggle__track glass">
+		<span class="theme-toggle__knob">
+			<svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+				<circle cx="12" cy="12" r="4"></circle>
+				<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+			</svg>
+			<svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+			</svg>
+		</span>
+	</span>
+</button>
+
+<style>
+	/* 44px tap target around a 56 x 30 track (brand.md: tap targets 44px). */
+	.theme-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+		padding: 0.4375rem 0.25rem;
+		border-radius: 9999px;
+		-webkit-tap-highlight-color: transparent;
+	}
+	.theme-toggle--fixed {
+		position: fixed;
+		right: max(var(--toggle-offset), env(safe-area-inset-right));
+		bottom: max(var(--toggle-offset), env(safe-area-inset-bottom));
+		z-index: 45;
+		transition:
+			opacity 0.35s var(--ease-out),
+			transform 0.45s var(--ease-out),
+			visibility 0s linear 0s;
+	}
+	.theme-toggle--fixed[data-hidden] {
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transform: translate3d(0, 10px, 0) scale(0.92);
+		transition:
+			opacity 0.25s var(--ease-out),
+			transform 0.35s var(--ease-out),
+			visibility 0s linear 0.35s;
+	}
+
+	.theme-toggle__track {
+		position: relative;
+		display: block;
+		width: 3.5rem;
+		height: 1.875rem;
+		border-radius: 9999px;
+		transition: background-color 0.45s var(--ease-out);
+	}
+	.theme-toggle__knob {
+		position: absolute;
+		top: 0.1875rem;
+		left: 0.1875rem;
+		display: grid;
+		place-items: center;
+		width: 1.375rem;
+		height: 1.375rem;
+		border-radius: 9999px;
+		background: var(--btn-bg);
+		color: var(--btn-ink);
+		transition:
+			transform 0.6s var(--ease-spring),
+			background-color 0.45s var(--ease-out),
+			color 0.45s var(--ease-out);
+	}
+	[aria-checked="true"] .theme-toggle__knob {
+		transform: translateX(1.625rem);
+	}
+	.theme-toggle__sun,
+	.theme-toggle__moon {
+		grid-area: 1 / 1;
+		width: 0.875rem;
+		height: 0.875rem;
+		transition:
+			transform 0.6s var(--ease-out),
+			opacity 0.3s var(--ease-out);
+	}
+	.theme-toggle__moon,
+	[aria-checked="true"] .theme-toggle__sun {
+		opacity: 0;
+		transform: rotate(-90deg) scale(0.5);
+	}
+	[aria-checked="true"] .theme-toggle__moon {
+		opacity: 1;
+		transform: none;
+	}
+	@media (hover: hover) {
+		.theme-toggle:hover .theme-toggle__knob {
+			box-shadow: 0 0 0 4px color-mix(in oklab, var(--vector) 22%, transparent);
+		}
+	}
+	.theme-toggle:active .theme-toggle__knob {
+		width: 1.625rem;
+		transition-duration: 0.2s;
+	}
+	[aria-checked="true"].theme-toggle:active .theme-toggle__knob {
+		transform: translateX(1.375rem);
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = "fluigen-theme";
+	type Theme = "light" | "dark";
+
+	const root = document.documentElement;
+	const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+	const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+	const toggles = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+	const fixed = document.getElementById("theme-toggle");
+
+	const current = (): Theme => (root.dataset.theme === "dark" ? "dark" : "light");
+
+	function stored(): Theme | null {
+		try {
+			const value = localStorage.getItem(STORAGE_KEY);
+			return value === "light" || value === "dark" ? value : null;
+		} catch {
+			return null;
+		}
+	}
+
+	function sync() {
+		const dark = current() === "dark";
+		toggles.forEach((toggle) => toggle.setAttribute("aria-checked", String(dark)));
+		const meta = document.querySelector('meta[name="theme-color"]');
+		meta?.setAttribute("content", getComputedStyle(root).getPropertyValue("--baseline").trim() || (dark ? "#0a0f10" : "#f7f7f7"));
+	}
+
+	function apply(theme: Theme) {
+		root.dataset.theme = theme;
+		sync();
+		window.dispatchEvent(new CustomEvent("fluigen:themechange", { detail: { theme } }));
+	}
+
+	function switchTo(theme: Theme, origin: HTMLElement) {
+		if (reducedMotion.matches) return apply(theme);
+
+		if (!document.startViewTransition) {
+			root.classList.add("theme-fade");
+			apply(theme);
+			window.setTimeout(() => root.classList.remove("theme-fade"), 500);
+			return;
+		}
+
+		// New theme spreads out in a circle from the toggle.
+		const rect = origin.getBoundingClientRect();
+		const x = rect.left + rect.width / 2;
+		const y = rect.top + rect.height / 2;
+		const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+		root.classList.add("vt-theme");
+		const transition = document.startViewTransition(() => apply(theme));
+		transition.ready
+			.then(() => {
+				root.animate(
+					{ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+					{ duration: 650, easing: "cubic-bezier(0.65, 0, 0.35, 1)", pseudoElement: "::view-transition-new(root)" },
+				);
+			})
+			.catch(() => {});
+		transition.finished.finally(() => root.classList.remove("vt-theme"));
+	}
+
+	toggles.forEach((toggle) =>
+		toggle.addEventListener("click", () => {
+			const next: Theme = current() === "dark" ? "light" : "dark";
+			try {
+				localStorage.setItem(STORAGE_KEY, next);
+			} catch {}
+			switchTo(next, toggle);
+		}),
+	);
+
+	systemDark.addEventListener("change", (event) => {
+		if (!stored()) apply(event.matches ? "dark" : "light");
+	});
+
+	// Another tab changed the theme.
+	window.addEventListener("storage", (event) => {
+		if (event.key === STORAGE_KEY && (event.newValue === "light" || event.newValue === "dark")) apply(event.newValue);
+	});
+
+	sync();
+
+	// ---- Keep the fixed toggle off content ----
+	if (fixed) {
+		const coarse = window.matchMedia("(pointer: coarse)");
+		const interactive = "a, button, input, select, textarea, summary, label, iframe, video, img, picture, svg, [role='button'], [tabindex]";
+		let idle: number | undefined;
+		let frame = 0;
+
+		const hide = (hidden: boolean) => {
+			fixed.toggleAttribute("data-hidden", hidden);
+			if (hidden && fixed.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
+		};
+
+		const intersects = (a: DOMRect, b: DOMRect) =>
+			a.right > b.left && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
+
+		// Is any text glyph, control or picture under the toggle's box?
+		function overlapsContent(): boolean {
+			const box = fixed!.getBoundingClientRect();
+			const pad = 6;
+			const zone = new DOMRect(box.left - pad, box.top - pad, box.width + pad * 2, box.height + pad * 2);
+			const xs = [zone.left + 2, zone.left + zone.width / 2, zone.right - 2];
+			const ys = [zone.top + 2, zone.top + zone.height / 2, zone.bottom - 2];
+			const checked = new Set<Element>();
+
+			for (const x of xs) {
+				for (const y of ys) {
+					for (const el of document.elementsFromPoint(x, y)) {
+						if (fixed!.contains(el) || checked.has(el)) continue;
+						checked.add(el);
+						if (el.closest("[data-flow]")) continue;
+						if (el === document.body || el === root) break;
+						if (el.closest(interactive)) return true;
+
+						// Text: compare the actual line boxes, not the block's box,
+						// so a paragraph whose lines stop short of the corner is fine.
+						const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+						for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+							if (!node.textContent?.trim()) continue;
+							const parent = node.parentElement;
+							if (!parent || !intersects(parent.getBoundingClientRect(), zone)) continue;
+							const range = document.createRange();
+							range.selectNodeContents(node);
+							for (const rect of range.getClientRects()) if (intersects(rect, zone)) return true;
+						}
+						// Only the topmost real element at each point matters.
+						break;
+					}
+				}
+			}
+			return false;
+		}
+
+		let late: number | undefined;
+		const check = () => {
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(() => hide(overlapsContent()));
+		};
+		// Check when scrolling stops, and again once scroll reveals that just
+		// started have slid content into its final place.
+		const settle = () => {
+			check();
+			window.clearTimeout(late);
+			late = window.setTimeout(check, 1100);
+		};
+
+		window.addEventListener(
+			"scroll",
+			() => {
+				if (coarse.matches) hide(true);
+				window.clearTimeout(idle);
+				idle = window.setTimeout(settle, 140);
+			},
+			{ passive: true },
+		);
+		window.addEventListener("resize", settle, { passive: true });
+		window.addEventListener("fluigen:menu", settle);
+		document.fonts?.ready.then(settle);
+		settle();
+	}
+</script>

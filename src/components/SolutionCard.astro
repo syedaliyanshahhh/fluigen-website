@@ -19,16 +19,17 @@ const href = `/solutions/${solution.id}`;
 <a
 	href={href}
 	class:list={[
-		"group block rounded-card outline-none transition-transform duration-150 ease-out hover:-translate-y-px focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-vector",
+		"group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring",
 		className,
 	]}
 >
-	<Card class="h-full space-y-5">
+	<Card interactive class="h-full space-y-5">
 		<Icon name={icon} class="h-7 w-7 text-core" />
 		<Heading class="font-display text-h3 text-core">{title}</Heading>
 		<p class="text-body text-ink-2">{cardLine}</p>
-		<span class="inline-block text-small text-core underline underline-offset-[5px] decoration-1">
-			How it works
+		<span class="inline-flex items-center gap-2 text-small text-core">
+			<span class="link-u">How it works</span>
+			<Icon name="arrow-right" class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1" />
 		</span>
 	</Card>
 </a>

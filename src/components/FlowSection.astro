@@ -1,0 +1,27 @@
+---
+// A section on a strong flow field: the homepage hero, the 404 hero and the
+// closing call to action band (design/brand.md "Flow gradient"). Its content
+// is a dark theme context, so headings, body text and buttons inside use
+// the ordinary `text-core` / Button classes and come out white-on-teal in
+// both page themes.
+//
+// Keep content in the upper, darker part of the field: in light mode the
+// field dissolves to baseline at the bottom (hero) or bottom right
+// (closing), where white text would fail contrast.
+import FlowField from "./FlowField.astro";
+
+interface Props {
+	variant: "hero" | "closing";
+	id?: string;
+	class?: string;
+}
+
+const { variant, id, class: className } = Astro.props;
+---
+
+<section id={id} class:list={["relative", className]} data-flow-section={variant}>
+	<FlowField variant={variant} />
+	<div data-theme="dark" class="relative">
+		<slot />
+	</div>
+</section>

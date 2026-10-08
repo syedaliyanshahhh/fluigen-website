@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import "./theme.css";
+@import "./flow.css";
+@import "./motion.css";
+
+/* `dark:` utilities follow the nearest theme context (theme.css), not the
+   OS setting, so they also work inside a scene or a forced-theme panel. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* Prevents any stray wide element from creating sitewide horizontal scroll
    (design/brand.md "Layout": no horizontal scrolling at any width). */
@@ -6,10 +13,21 @@ body {
   overflow-x: hidden;
 }
 
+/* Every page's <main> is a stacking context, so flow fields (z-index -1)
+   paint under all section content, including a later section's where a
+   field bleeds past its own section (src/styles/flow.css). */
+main {
+  position: relative;
+  isolation: isolate;
+}
+
 /* Smooth in-page scroll (e.g. hero's "See what we have built" link) — killed
-   below for prefers-reduced-motion along with every other animation. */
+   below for prefers-reduced-motion along with every other animation.
+   Anchored targets stop clear of the floating nav. */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+  -webkit-font-smoothing: antialiased;
 }
 
 /*
@@ -59,19 +77,23 @@ html {
   src: url("/fonts/cascadia-code-400.woff2") format("woff2");
 }
 
+/* Colors — design/brand.md. Themed roles read the variables in theme.css,
+   so every utility below follows the nearest light/dark context.
+   `flux` (#97C1C5) is deliberately not a utility: it only ever appears
+   inside flow fields, the dark-mode focus ring and the dark button fill.
+   `null` is the brand guidelines' literal name for the surface color. */
+@theme inline {
+  --color-baseline: var(--baseline);
+  --color-null: var(--null);
+  --color-core: var(--core);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  /* Focus ring: vector on light, flux on dark (vector is too dim on teal). */
+  --color-ring: var(--ring);
+}
+
 @theme {
-  /* Colors — design/brand.md. `flux` (#97C1C5) is deliberately not a token
-     here: brand.md says it is gradient-image-only and must never be a flat
-     color or text color, so it gets no bg-/text- utility to misuse.
-     `null` is the brand guidelines' literal name for white (#FFFFFF, cards
-     and surfaces) — confirmed in design/fluigen-brand-guidelines.pdf's own
-     --null: #FFFFFF; web theme token, not a placeholder. */
-  --color-baseline: #f7f7f7;
-  --color-null: #ffffff;
-  --color-core: #000000;
-  --color-ink-2: #3a3a3a;
-  --color-ink-3: #6b6b6b;
-  --color-rule: #dcdcdc;
   --color-vector: #267b85;
   --color-substation: #02525e;
 
@@ -191,7 +213,13 @@ html {
 @utility container-content {
   max-width: 90rem; /* 1440px */
   margin-inline: auto;
-  padding-inline: clamp(1.25rem, 0.2817rem + 4.1315vw, 4rem); /* 20px -> 64px */
+  padding-inline: var(--container-pad);
+}
+
+/* A variable so scenes (flow.css) can subtract their inset and keep the
+   same content edge. */
+:root {
+  --container-pad: clamp(1.25rem, 0.2817rem + 4.1315vw, 4rem); /* 20px -> 64px */
 }
 
 @utility section-y {
@@ -224,6 +252,16 @@ html {
 :root {
   --nav-h: clamp(4rem, 3.7359rem + 1.1268vw, 4.75rem); /* 64px -> 76px */
   --nav-logo-h: clamp(1.625rem, 1.537rem + 0.3756vw, 1.875rem); /* 26px -> 30px */
+  /* The floating glass bar inside the --nav-h strip. It shrinks to the
+     compact height once the page scrolls (Nav.astro). */
+  --nav-bar-h: clamp(3.25rem, 3.0739rem + 0.7512vw, 3.75rem); /* 52px -> 60px */
+  --nav-bar-h-compact: clamp(2.875rem, 2.743rem + 0.5634vw, 3.25rem); /* 46px -> 52px */
+  --nav-logo-h-compact: clamp(1.375rem, 1.287rem + 0.3756vw, 1.625rem); /* 22px -> 26px */
+  /* Bar inner padding. Always smaller than --container-pad, so the bar
+     floats inside the gutter and the logo keeps the container's edge. */
+  --nav-pad: clamp(0.75rem, 0.5739rem + 0.7512vw, 1.25rem); /* 12px -> 20px */
+  /* Theme toggle distance from the viewport corner. */
+  --toggle-offset: clamp(0.75rem, 0.4859rem + 1.1268vw, 1.5rem); /* 12px -> 24px */
 }
 
 /*
@@ -249,27 +287,11 @@ html {
 }
 
 /*
- * Motion — design/brand.md: "subtle fades only, one page-load moment in
- * the hero at most, respect prefers-reduced-motion." One fade-in utility
- * for that hero moment, plus a single sitewide kill-switch so every
- * current and future animation/transition is neutralized together rather
- * than gated per component.
+ * Motion lives in motion.css (and the flow drift in flow.css). Below is the
+ * single sitewide kill switch: with reduced motion, every current and
+ * future animation and transition is neutralized together rather than
+ * gated per component.
  */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@utility fade-in {
-  animation: fade-in 0.6s ease-out both;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

@@ -6,19 +6,13 @@ import Button from "./Button.astro";
 interface Props {
 	label?: string;
 	note?: string;
-	inverse?: boolean;
 	class?: string;
 }
 
-const {
-	label = "Book your free automation audit",
-	note,
-	inverse = false,
-	class: className,
-} = Astro.props;
+const { label = "Book your free automation audit", note, class: className } = Astro.props;
 ---
 
 <div class:list={["flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-5", className]}>
-	<Button href={site.bookingPath} inverse={inverse}>{label}</Button>
-	{note && <p class:list={["text-small", inverse ? "text-null/80" : "text-ink-3"]}>{note}</p>}
+	<Button href={site.bookingPath}>{label}</Button>
+	{note && <p class="text-small text-ink-3">{note}</p>}
 </div>

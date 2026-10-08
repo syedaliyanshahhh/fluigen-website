@@ -4,7 +4,7 @@
 // section.
 interface Props {
 	text: string;
-	color?: "ink-3" | "core" | "null";
+	color?: "ink-3" | "core";
 	brackets?: boolean;
 	class?: string;
 }
@@ -14,7 +14,6 @@ const { text, color = "ink-3", brackets = true, class: className } = Astro.props
 const colorClass = {
 	"ink-3": "text-ink-3",
 	core: "text-core",
-	null: "text-null",
 }[color];
 ---
 
