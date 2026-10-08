@@ -196,6 +196,14 @@
 	--delay: -12s;
 }
 
+/* The homepage hero fills the screen and keeps its buttons near the
+   bottom, so its field runs further past the section before it dissolves:
+   the text stays on the dark part at every height, and the light part
+   fades out behind the scene that follows. */
+.hero-full > .flow--hero {
+	bottom: calc(-1 * var(--flow-bleed) - 30svh);
+}
+
 :root[data-theme="dark"] .flow--hero {
 	background: linear-gradient(
 		180deg,

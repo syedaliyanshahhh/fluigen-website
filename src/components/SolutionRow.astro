@@ -1,0 +1,45 @@
+---
+// One solution as a full-width link row: the homepage's compact "What we
+// build" list. Same card surface and hover glow as SolutionCard; the
+// layout is a single line on wide screens (icon, title, line, arrow) and
+// stacks under the title on phones, so five solutions stay short.
+import type { CollectionEntry } from "astro:content";
+import Card from "./Card.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+	solution: CollectionEntry<"solutions">;
+	/** A shorter card line for this placement (content/copy/home.md). */
+	line?: string;
+	class?: string;
+}
+
+const { solution, line, class: className } = Astro.props;
+const { title, cardLine, icon } = solution.data;
+const href = `/solutions/${solution.id}`;
+---
+
+<a
+	href={href}
+	class:list={[
+		"group block rounded-card outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring",
+		className,
+	]}
+>
+	<Card
+		interactive
+		class="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-2 sm:gap-x-6 lg:grid-cols-[auto_minmax(0,5fr)_minmax(0,6fr)_auto] lg:gap-x-10 lg:px-8 lg:py-7"
+	>
+		<span class="grid h-11 w-11 place-items-center rounded-full border border-rule transition-colors duration-500 group-hover:border-core">
+			<Icon name={icon} class="h-5 w-5 text-core" />
+		</span>
+		<h3 class="font-display text-h3 text-core">{title}</h3>
+		<p class="col-span-3 col-start-1 text-body text-ink-2 sm:col-span-2 sm:col-start-2 lg:col-span-1 lg:col-start-3 lg:row-start-1">
+			{line ?? cardLine}
+		</p>
+		<span class="col-start-3 row-start-1 grid h-11 w-11 place-items-center rounded-full border border-rule text-core transition-[transform,background-color,color,border-color] duration-500 ease-[var(--ease-out)] group-hover:translate-x-1 group-hover:border-core group-hover:bg-core group-hover:text-baseline lg:col-start-4">
+			<Icon name="arrow-right" class="h-5 w-5" />
+			<span class="sr-only">How it works</span>
+		</span>
+	</Card>
+</a>

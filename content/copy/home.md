@@ -1,94 +1,97 @@
 # Homepage copy
 
+SEO description: AI that answers your calls, follows up your leads and runs your back office. Live in weeks.
+
 ## 1. Hero
-Headline: We build AI that answers your calls, follows up your leads, and runs your back office.
-Subline: Done for you, live in weeks, and you pay the second half only once it is running.
+Headline: Your business, running on its own.
+Subline: AI that answers your calls, follows up your leads and runs your back office.
 Primary button: Book your free automation audit (links to /book)
-Secondary link: See what we have built (scrolls to case studies)
-Microcopy: 30 minutes. You leave with a written plan, even if you never hire us.
+Secondary button: See our work (scrolls to case studies)
+Microcopy under the buttons: Live in weeks. Pay the second half only when it works.
 
 ## 2. Proof strip
-- 16 | systems managed from one client portal
-- 24/7 | calls answered for a restoration company, including 2am emergencies
-- 45 days | of follow-up on every lead, with no outreach hire
-- 2 to 3 | weeks from kickoff to a live system, for most builds
+- 16 | systems run from one client portal
+- 24/7 | calls answered, 2am emergencies included
+- 45 days | of follow-up on every lead
+- 2 to 3 | weeks from kickoff to live, for most builds
 
 ## 3. The problem
 Heading: What stops when one person is unavailable?
-- Calls go to voicemail | Someone rings after hours or while the team is busy. Nobody picks up, and they book with whoever answers first.
-- Leads go cold | Follow-ups slip because everyone has a full day. By the time someone replies, the lead has moved on.
-- You chase the team for updates | The same details get copied between email, spreadsheets and chat, and you spend your evenings checking what got done.
+- Calls go to voicemail | Nobody picks up after hours, so callers book with whoever answers first.
+- Leads go cold | Follow-ups slip on busy days, and the lead moves on.
+- You chase the team for updates | Details get copied between tools, and your evenings go on checking what got done.
 Button: Book your free automation audit
 Note next to button: We will find the first thing worth fixing.
 
 ## 4. What we build
 Heading: What we build
-Intro: Each of these is backed by a system we have already built and run for a real business.
-- AI receptionist and voice agents | Every call answered, day or night, with questions handled and bookings made straight into your calendar.
-- Sales follow-up and call analysis | Every lead gets a reply while they are still interested, and every sales call gets reviewed for you.
-- Client and operations portals | One place for updates, files and status, instead of five inboxes and a spreadsheet.
-- Hiring automation | Applicants screened and shortlisted before you open your inbox, so you only meet the ones who fit.
-- Content and knowledge systems | Your know-how turned into posts and answers, without you writing every one yourself.
+Intro: Each one already runs for a real business.
+Homepage card lines (the solution pages keep their full card line):
+- AI receptionist and voice agents | Every call answered, day or night, and booked straight into your calendar.
+- Sales follow-up and call analysis | Every lead gets a reply while still interested, and every sales call gets reviewed.
+- Client and operations portals | One place for updates, files and status, not five inboxes.
+- Hiring automation | Applicants screened and shortlisted before you open your inbox.
+- Content and knowledge systems | Your know-how turned into posts and answers, without writing each one.
 Card link text: How it works
 
 ## 5. See it work
 Heading: Hear an AI receptionist take a real call
-Text: Sixty seconds. It answers, asks the right questions, and books the appointment.
+Text: Sixty seconds: it answers, asks the right questions and books the appointment.
 Audio: [PLACEHOLDER: 60-second recording]
 Button: Book your free automation audit
 
 ## 6. Case studies
 Heading: Work that is already running
-Show the three case studies marked "Featured on homepage" in content/copy/case-studies, using each one's headline number, client label and card summary:
-- 16 | IT support provider | Adding or removing a person used to mean logging into sixteen systems one by one. Now one action gives or removes access everywhere.
-- 24/7 | Disaster restoration company | In restoration, the job goes to whoever answers first. An AI receptionist now picks up every call, day or night, and the team gets the details in seconds.
-- 45 days | US marketing agency | Instead of hiring someone to chase leads, an AI agent now calls, texts and emails every prospect for 45 days and books meetings in their time zone.
+Show the three case studies marked "Featured on homepage" in content/copy/case-studies, with each one's headline number and client label, and these shortened summaries (the case study pages keep their full card summary):
+- 16 | IT support provider | Adding or removing a person meant sixteen logins. Now one action does it everywhere.
+- 24/7 | Disaster restoration company | An AI receptionist picks up every call, day or night, and the team gets the details in seconds.
+- 45 days | US marketing agency | Instead of an outreach hire, an AI agent follows up every prospect for 45 days and books meetings.
 Link: See all case studies
 
 ## 7. How it works
 Heading: How it works
-- Step 1, Audit | A 30-minute call. Within 48 hours you get a written plan with what to automate, the hours it saves, and a fixed price.
-- Step 2, Build | We build one process end to end in your own accounts. You give us about two hours of your time in total.
-- Step 3, Go live | We test it with real work, hand it over with written docs and a short video, and you pay the second half.
-- Step 4, Care | Optional monthly plan: we watch it, fix it when your tools change, and keep improving it.
+- Step 1, Audit | A 30-minute call, then a written plan and fixed price within 48 hours.
+- Step 2, Build | One process, built in your own accounts, with about two hours of your time.
+- Step 3, Go live | We test it with real work, hand it over, and you pay the second half.
+- Step 4, Care | Optional monthly plan: we watch it, fix it and keep improving it.
 Button: Book your free automation audit
 Note: Step 1 is free.
 
 ## 8. Guarantees
 Heading: The risk sits with us
-- Pay the second half when it is live | 50% to start. The rest only once the system is running in your business. Not before.
-- You own everything | Your accounts, your data, your workflows. Full handover with written documentation and a video walkthrough.
-- 30 days of free fixes | If something needs adjusting after launch, we fix it at no cost.
+- Pay the second half when it is live | 50% to start, the rest once it is running. Not before.
+- You own everything | Your accounts, data and workflows, with a full documented handover.
+- 30 days of free fixes | If something needs adjusting after launch, we fix it free.
 
 ## 9. Who it is for
 Heading: Who we are a good fit for
 Good fit:
-- Owner-led businesses with roughly 10 to 200 people
-- The same tasks happen every day or every week
+- Owner-led, roughly 10 to 200 people
+- The same tasks every day or week
 - You know where the hours go, but nobody has time to fix it
-- You want it done for you, not another tool to learn
+- You want it done for you, not another tool
 Not a fit:
 - One-off experiments with no process behind them
 - Businesses still working out how they run
-- Anyone looking for the cheapest option or hourly billing
+- Cheapest option or hourly billing
 
 ## 10. Founder note
 Photo: [PLACEHOLDER: founder photo]
-Quote: I started in performance marketing, watching good businesses lose leads to slow replies. Now I build the systems that stop it.
-Line: When you book an audit, you talk to me directly, not a sales rep.
+Quote: I watched good businesses lose leads to slow replies. Now I build the systems that stop it.
+Line: Book an audit and you talk to me, not a sales rep.
 Signature: Aliyan Shah, founder of Fluigen
 Button: Book your free automation audit
 
 ## 11. FAQ
 Heading: Questions owners ask us
-- Who owns what you build? | You do. We build inside your accounts wherever possible, and at handover you get every login, the workflows, written documentation and a video walkthrough.
-- Is my data safe? | Your data stays in the tools you already use. We only ask for the access a build needs, and you can remove it the day we hand over.
-- What if it breaks? | You get 30 days of free fixes after launch. After that, the Care Plan covers monitoring and fixes, or you can call us when you need us.
-- How long does it take? | Most builds are live in 2 to 3 weeks. Your audit plan gives you a fixed price and a finish date before anything starts.
-- Do I need to learn anything? | No. It runs in the background of tools your team already uses. We show your team the few things they need to know.
-- What time zone do you work in? | We are based in Chicago and our team works remotely across time zones, so we work your business hours, whether you are in the US, UK, Europe or Australia.
+- Who owns what you build? | You do. At handover you get every login, the workflows, written docs and a video walkthrough.
+- Is my data safe? | It stays in the tools you already use. We only take the access a build needs, and you can remove it at handover.
+- What if it breaks? | You get 30 days of free fixes after launch. After that, the Care Plan covers it, or call us when you need us.
+- How long does it take? | Most builds are live in 2 to 3 weeks. Your audit plan sets a fixed price and finish date first.
+- Do I need to learn anything? | No. It runs inside the tools your team already uses.
+- What time zone do you work in? | We are based in Chicago and work your business hours, in the US, UK, Europe or Australia.
 
 ## 12. Final call to action (no calendar here)
 Heading: Find the first thing worth automating
-Text: 30 minutes, and you leave with a written plan, even if you never hire us.
+Text: 30 minutes, and a written plan even if you never hire us.
 Button: Book your free automation audit (links to /book)

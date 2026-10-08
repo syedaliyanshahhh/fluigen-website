@@ -1,5 +1,9 @@
 ---
-// Homepage, sections 1-12 (docs/build-plan.md Phase 5).
+// Homepage, sections 1-12 (content/copy/home.md, content/brief.md).
+//
+// Rhythm: the full-screen hero on the flow field, then light sections with
+// two dark scenes (proof strip, case studies) for depth, ending on the
+// closing flow band. A booking CTA follows every two sections.
 import { settings, site } from "../site.config";
 import { getFeaturedCaseStudies, getSolutions } from "../lib/content";
 import Layout from "../components/Layout.astro";
@@ -8,6 +12,8 @@ import Footer from "../components/Footer.astro";
 import Container from "../components/Container.astro";
 import Section from "../components/Section.astro";
 import FlowSection from "../components/FlowSection.astro";
+import FlowLines from "../components/FlowLines.astro";
+import LineReveal from "../components/LineReveal.astro";
 import Scene from "../components/Scene.astro";
 import PageCTA from "../components/PageCTA.astro";
 import Button from "../components/Button.astro";
@@ -15,7 +21,7 @@ import InlineCTA from "../components/InlineCTA.astro";
 import Label from "../components/Label.astro";
 import Card from "../components/Card.astro";
 import StatTile from "../components/StatTile.astro";
-import SolutionCard from "../components/SolutionCard.astro";
+import SolutionRow from "../components/SolutionRow.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
 import EmptyState from "../components/EmptyState.astro";
 import FounderPhoto from "../components/FounderPhoto.astro";
@@ -27,183 +33,197 @@ const solutions = await getSolutions();
 // The case studies marked "Featured on homepage" in content/copy/case-studies.
 const caseStudies = await getFeaturedCaseStudies();
 
+// Shorter homepage lines (content/copy/home.md sections 4 and 6). The
+// solution and case study pages keep their full card copy.
+const solutionLines: Record<string, string> = {
+	"ai-receptionist-and-voice-agents": "Every call answered, day or night, and booked straight into your calendar.",
+	"sales-follow-up-and-call-analysis":
+		"Every lead gets a reply while still interested, and every sales call gets reviewed.",
+	"client-and-operations-portals": "One place for updates, files and status, not five inboxes.",
+	"hiring-automation": "Applicants screened and shortlisted before you open your inbox.",
+	"content-and-knowledge-systems": "Your know-how turned into posts and answers, without writing each one.",
+};
+
+const caseStudySummaries: Record<string, string> = {
+	"it-services-company": "Adding or removing a person meant sixteen logins. Now one action does it everywhere.",
+	"restoration-company":
+		"An AI receptionist picks up every call, day or night, and the team gets the details in seconds.",
+	"marketing-agency-outbound":
+		"Instead of an outreach hire, an AI agent follows up every prospect for 45 days and books meetings.",
+};
+
 const painPoints = [
 	{
 		title: "Calls go to voicemail",
-		description:
-			"Someone rings after hours or while the team is busy. Nobody picks up, and they book with whoever answers first.",
+		description: "Nobody picks up after hours, so callers book with whoever answers first.",
 	},
 	{
 		title: "Leads go cold",
-		description:
-			"Follow-ups slip because everyone has a full day. By the time someone replies, the lead has moved on.",
+		description: "Follow-ups slip on busy days, and the lead moves on.",
 	},
 	{
 		title: "You chase the team for updates",
-		description:
-			"The same details get copied between email, spreadsheets and chat, and you spend your evenings checking what got done.",
+		description: "Details get copied between tools, and your evenings go on checking what got done.",
 	},
 ];
 
 const proofStats = [
-	{ value: "16", label: "systems managed from one client portal" },
-	{ value: "24/7", label: "calls answered for a restoration company, including 2am emergencies" },
-	{ value: "45 days", label: "of follow-up on every lead, with no outreach hire" },
-	{ value: "2 to 3", label: "weeks from kickoff to a live system, for most builds" },
+	{ value: "16", label: "systems run from one client portal" },
+	{ value: "24/7", label: "calls answered, 2am emergencies included" },
+	{ value: "45 days", label: "of follow-up on every lead" },
+	{ value: "2 to 3", label: "weeks from kickoff to live, for most builds" },
 ];
 
 const steps = [
-	{
-		title: "Audit",
-		description:
-			"A 30-minute call. Within 48 hours you get a written plan with what to automate, the hours it saves, and a fixed price.",
-	},
-	{
-		title: "Build",
-		description:
-			"We build one process end to end in your own accounts. You give us about two hours of your time in total.",
-	},
-	{
-		title: "Go live",
-		description:
-			"We test it with real work, hand it over with written docs and a short video, and you pay the second half.",
-	},
-	{
-		title: "Care",
-		description:
-			"Optional monthly plan: we watch it, fix it when your tools change, and keep improving it.",
-	},
+	{ title: "Audit", description: "A 30-minute call, then a written plan and fixed price within 48 hours." },
+	{ title: "Build", description: "One process, built in your own accounts, with about two hours of your time." },
+	{ title: "Go live", description: "We test it with real work, hand it over, and you pay the second half." },
+	{ title: "Care", description: "Optional monthly plan: we watch it, fix it and keep improving it." },
 ];
 
 const guarantees = [
 	{
 		title: "Pay the second half when it is live",
-		description: "50% to start. The rest only once the system is running in your business. Not before.",
+		description: "50% to start, the rest once it is running. Not before.",
 	},
 	{
 		title: "You own everything",
-		description:
-			"Your accounts, your data, your workflows. Full handover with written documentation and a video walkthrough.",
+		description: "Your accounts, data and workflows, with a full documented handover.",
 	},
 	{
 		title: "30 days of free fixes",
-		description: "If something needs adjusting after launch, we fix it at no cost.",
+		description: "If something needs adjusting after launch, we fix it free.",
 	},
 ];
 
 const goodFit = [
-	"Owner-led businesses with roughly 10 to 200 people",
-	"The same tasks happen every day or every week",
+	"Owner-led, roughly 10 to 200 people",
+	"The same tasks every day or week",
 	"You know where the hours go, but nobody has time to fix it",
-	"You want it done for you, not another tool to learn",
+	"You want it done for you, not another tool",
 ];
 
 const notFit = [
 	"One-off experiments with no process behind them",
 	"Businesses still working out how they run",
-	"Anyone looking for the cheapest option or hourly billing",
+	"Cheapest option or hourly billing",
 ];
 
 const faqs = [
 	{
 		question: "Who owns what you build?",
-		answer:
-			"You do. We build inside your accounts wherever possible, and at handover you get every login, the workflows, written documentation and a video walkthrough.",
+		answer: "You do. At handover you get every login, the workflows, written docs and a video walkthrough.",
 	},
 	{
 		question: "Is my data safe?",
 		answer:
-			"Your data stays in the tools you already use. We only ask for the access a build needs, and you can remove it the day we hand over.",
+			"It stays in the tools you already use. We only take the access a build needs, and you can remove it at handover.",
 	},
 	{
 		question: "What if it breaks?",
 		answer:
-			"You get 30 days of free fixes after launch. After that, the Care Plan covers monitoring and fixes, or you can call us when you need us.",
+			"You get 30 days of free fixes after launch. After that, the Care Plan covers it, or call us when you need us.",
 	},
 	{
 		question: "How long does it take?",
-		answer:
-			"Most builds are live in 2 to 3 weeks. Your audit plan gives you a fixed price and a finish date before anything starts.",
+		answer: "Most builds are live in 2 to 3 weeks. Your audit plan sets a fixed price and finish date first.",
 	},
 	{
 		question: "Do I need to learn anything?",
-		answer:
-			"No. It runs in the background of tools your team already uses. We show your team the few things they need to know.",
+		answer: "No. It runs inside the tools your team already uses.",
 	},
 	{
 		question: "What time zone do you work in?",
-		answer: `We are based in ${site.city} and our team works remotely across time zones, so we work your business hours, whether you are in the US, UK, Europe or Australia.`,
+		answer: `We are based in ${site.city} and work your business hours, in the US, UK, Europe or Australia.`,
 	},
 ];
+
+/** Two-digit step and item numbers, as mono texture. */
+const nn = (index: number) => String(index + 1).padStart(2, "0");
 ---
 
 <Layout
-	description="We build AI that answers your calls, follows up your leads, and runs your back office. Done for you, live in weeks."
+	description="AI that answers your calls, follows up your leads and runs your back office. Live in weeks."
 >
 	<Nav />
 	<main id="main">
-		<!-- 1. Hero -->
-		<FlowSection variant="hero" class="hero-section-y">
-			<Container>
-				<div class="rise-in space-y-6 sm:space-y-8">
-					<h1 class="font-display text-hero-h1 text-core">
-						We build AI that answers your calls, follows up your leads, and runs your back office.
-					</h1>
-					<p class="text-body text-core max-w-[46ch]">
-						Done for you, live in weeks, and you pay the second half only once it is running.
-					</p>
-					<div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:gap-8">
-						<Button href={site.bookingPath}>Book your free automation audit</Button>
-						<Button href="#case-studies" variant="text">See what we have built</Button>
+		<!-- 1. Hero: one full screen on the flow field -->
+		<FlowSection variant="hero" class="hero-full">
+			<div class="hero-full-y flex min-h-[calc(100svh-var(--nav-h))] flex-col justify-between gap-[var(--space-head)]">
+				<Container class="w-full">
+					<LineReveal
+						text={"Your business,\nrunning on its own."}
+						delay={80}
+						class="font-display text-hero-h1 text-core [text-wrap:balance]"
+					/>
+				</Container>
+
+				<FlowLines />
+
+				<Container class="w-full">
+					<div class="rise-in grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-10" style="--rise-delay: 0.5s">
+						<p class="text-body text-core max-w-[38ch] lg:col-span-5">
+							AI that answers your calls, follows up your leads and runs your back office.
+						</p>
+						<div class="flex flex-col gap-4 lg:col-span-7 lg:items-end">
+							<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+								<Button href={site.bookingPath} class="w-full sm:w-auto">Book your free automation audit</Button>
+								<Button href="#case-studies" variant="secondary" class="w-full sm:w-auto">See our work</Button>
+							</div>
+							<p class="text-small text-core [text-wrap:balance]">Live in weeks. Pay the second half only when it works.</p>
+						</div>
 					</div>
-					<p class="text-small text-core pt-2">
-						30 minutes. You leave with a written plan, even if you never hire us.
-					</p>
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</FlowSection>
 
-		<!-- 2. Proof strip -->
-		<Section glow="right">
-			<Container>
-				<div class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-12">
-					{proofStats.map((stat) => <StatTile value={stat.value} label={stat.label} />)}
-				</div>
+		<!-- 2. Proof strip (dark scene) -->
+		<Scene>
+			<div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-4">
+				{proofStats.map((stat) => <StatTile row value={stat.value} label={stat.label} />)}
+			</div>
+		</Scene>
+
+		<!-- 3. The problem -->
+		<Section glow="left">
+			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch] lg:col-span-5">
+					What stops when one person is unavailable?
+				</h2>
+				<ol class="lg:col-span-7">
+					{
+						painPoints.map((pain, index) => (
+							<li class="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 border-t border-rule py-7 last:border-b sm:gap-x-8">
+								<Label text={nn(index)} class="pt-[0.45em]" />
+								<div class="space-y-2">
+									<h3 class="font-display text-h3 text-core">{pain.title}</h3>
+									<p class="text-body text-ink-2 max-w-[46ch]">{pain.description}</p>
+								</div>
+							</li>
+						))
+					}
+				</ol>
+				<InlineCTA class="lg:col-span-7 lg:col-start-6" note="We will find the first thing worth fixing." />
 			</Container>
 		</Section>
 
-		<!-- 3. The problem (dark scene) -->
-		<Scene>
-				<h2 class="font-display text-h2 text-core max-w-[18ch]">
-					What stops when one person is unavailable?
-				</h2>
-				<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-3 lg:mt-16">
+		<!-- 4. What we build -->
+		<Section>
+			<Container>
+				<div class="grid gap-4 lg:grid-cols-12 lg:items-end lg:gap-10">
+					<h2 class="font-display text-h2 text-core lg:col-span-5">What we build</h2>
+					<p class="text-body text-ink-2 max-w-[46ch] lg:col-span-7">Each one already runs for a real business.</p>
+				</div>
+				<ul class="mt-[var(--space-head)] space-y-3 sm:space-y-4">
 					{
-						painPoints.map((pain, index) => (
-							<div class="space-y-4">
-								<Label text={String(index + 1).padStart(2, "0")} />
-								<h3 class="font-display text-h3 text-core">{pain.title}</h3>
-								<p class="text-body text-ink-2 max-w-[42ch]">{pain.description}</p>
-							</div>
+						solutions.map((solution) => (
+							<li>
+								<SolutionRow solution={solution} line={solutionLines[solution.id]} />
+							</li>
 						))
 					}
-				</div>
-				<InlineCTA class="mt-12 lg:mt-16" note="We will find the first thing worth fixing." />
-		</Scene>
-
-		<!-- 4. What we build -->
-		<Section glow="left">
-			<Container>
-				<div class="max-w-[640px] space-y-4">
-					<h2 class="font-display text-h2 text-core">What we build</h2>
-					<p class="text-body text-ink-2">
-						Each of these is backed by a system we have already built and run for a real business.
-					</p>
-				</div>
-				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-8">
-					{solutions.map((solution) => <SolutionCard solution={solution} />)}
-				</div>
-				{!settings.showSeeItWork && <InlineCTA class="mt-10 lg:mt-12" />}
+				</ul>
+				{!settings.showSeeItWork && <InlineCTA class="mt-[var(--space-block)]" />}
 			</Container>
 		</Section>
 
@@ -215,7 +235,7 @@ const faqs = [
 						<div class="max-w-[640px] space-y-4">
 							<h2 class="font-display text-h2 text-core">Hear an AI receptionist take a real call</h2>
 							<p class="text-body text-ink-2">
-								Sixty seconds. It answers, asks the right questions, and books the appointment.
+								Sixty seconds: it answers, asks the right questions and books the appointment.
 							</p>
 						</div>
 						<EmptyState
@@ -232,66 +252,84 @@ const faqs = [
 			)
 		}
 
-		<!-- 6. Case studies -->
-		<Section id="case-studies" glow="right">
-			<Container>
-				<h2 class="font-display text-h2 text-core">Work that is already running</h2>
-				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:mt-16 lg:gap-8">
-					{caseStudies.map((caseStudy) => <CaseStudyCard caseStudy={caseStudy} />)}
-				</div>
-				<Button href="/case-studies" variant="text" class="mt-10 inline-block lg:mt-12">
+		<!-- 6. Case studies (dark scene, glass cards; a swipeable row on phones) -->
+		<Scene id="case-studies">
+			<div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch]">Work that is already running</h2>
+				<Button href="/case-studies" variant="text" class="shrink-0 self-start sm:self-auto">
 					See all case studies
 				</Button>
-			</Container>
-		</Section>
-
-		<!-- 7. How it works -->
-		<Section glow="left">
-			<Container>
-				<h2 class="font-display text-h2 text-core">How it works</h2>
-				<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
-					{
-						steps.map((step, index) => (
-							<div class="space-y-4">
-								<Label text={String(index + 1).padStart(2, "0")} />
-								<h3 class="font-display text-h3 text-core">{step.title}</h3>
-								<p class="text-body text-ink-2">{step.description}</p>
-							</div>
-						))
-					}
-				</div>
-				<InlineCTA class="mt-12 lg:mt-16" note="Step 1 is free." />
-			</Container>
-		</Section>
-
-		<!-- 8. Guarantees (dark scene, glass cards) -->
-		<Scene>
-				<h2 class="font-display text-h2 text-core max-w-[16ch]">The risk sits with us</h2>
-				<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:mt-16 lg:gap-8">
-					{
-						guarantees.map((guarantee) => (
-							<Card variant="glass" class="space-y-4">
-								<Icon name="check" class="h-6 w-6 text-core" />
-								<h3 class="font-display text-h3 text-core">{guarantee.title}</h3>
-								<p class="text-body text-ink-2">{guarantee.description}</p>
-							</Card>
-						))
-					}
-				</div>
+			</div>
+			<div
+				class="mt-[var(--space-head)] -mx-[calc(var(--container-pad)-var(--scene-inset))] flex snap-x snap-mandatory scroll-px-[calc(var(--container-pad)-var(--scene-inset))] gap-4 overflow-x-auto px-[calc(var(--container-pad)-var(--scene-inset))] py-3 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-0 sm:py-0 lg:gap-8 [&::-webkit-scrollbar]:hidden"
+				data-stagger
+			>
+				{
+					caseStudies.map((caseStudy) => (
+						<CaseStudyCard
+							caseStudy={caseStudy}
+							variant="glass"
+							summary={caseStudySummaries[caseStudy.id]}
+							class="w-[84%] shrink-0 snap-start sm:w-auto"
+						/>
+					))
+				}
+			</div>
 		</Scene>
 
-		<!-- 9. Who it is for -->
+		<!-- 7. How it works -->
+		<Section glow="right">
+			<Container>
+				<h2 class="font-display text-h2 text-core">How it works</h2>
+				<ol class="mt-[var(--space-head)] grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+					{
+						steps.map((step, index) => (
+							<li class="step-line space-y-3 border-t border-rule pt-6">
+								<Label text={nn(index)} />
+								<h3 class="font-display text-h3 text-core">{step.title}</h3>
+								<p class="text-body text-ink-2 max-w-[34ch]">{step.description}</p>
+							</li>
+						))
+					}
+				</ol>
+				<InlineCTA class="mt-[var(--space-block)]" note="Step 1 is free." />
+			</Container>
+		</Section>
+
+		<!-- 8. Guarantees -->
 		<Section>
 			<Container>
-				<h2 class="font-display text-h2 text-core max-w-[18ch]">Who we are a good fit for</h2>
-				<div class="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:mt-16 lg:gap-16">
+				<h2 class="font-display text-h2 text-core max-w-[16ch]">The risk sits with us</h2>
+				<ul class="mt-[var(--space-head)] grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-8">
+					{
+						guarantees.map((guarantee) => (
+							<li>
+								<Card class="h-full space-y-4 lg:p-8">
+									<span class="grid h-11 w-11 place-items-center rounded-full bg-core text-baseline">
+										<Icon name="check" class="h-5 w-5" />
+									</span>
+									<h3 class="font-display text-h3 text-core">{guarantee.title}</h3>
+									<p class="text-body text-ink-2">{guarantee.description}</p>
+								</Card>
+							</li>
+						))
+					}
+				</ul>
+			</Container>
+		</Section>
+
+		<!-- 9. Who it is for -->
+		<Section glow="left">
+			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
+				<h2 class="font-display text-h2 text-core max-w-[14ch] lg:col-span-5">Who we are a good fit for</h2>
+				<div class="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 lg:col-span-7">
 					<div class="space-y-5">
 						<Label text="good fit" />
-						<ul class="space-y-4">
+						<ul class="border-t border-rule">
 							{
 								goodFit.map((item) => (
-									<li class="flex gap-3 text-body text-ink-2">
-										<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
+									<li class="flex gap-3 border-b border-rule py-4 text-body text-core">
+										<Icon name="check" class="mt-[0.3em] h-5 w-5 shrink-0 text-core" />
 										<span>{item}</span>
 									</li>
 								))
@@ -300,11 +338,11 @@ const faqs = [
 					</div>
 					<div class="space-y-5">
 						<Label text="not a fit" />
-						<ul class="space-y-4">
+						<ul class="border-t border-rule">
 							{
 								notFit.map((item) => (
-									<li class="flex gap-3 text-body text-ink-2">
-										<Icon name="x" class="mt-[3px] h-5 w-5 shrink-0 text-ink-3" />
+									<li class="flex gap-3 border-b border-rule py-4 text-body text-ink-2">
+										<Icon name="x" class="mt-[0.3em] h-5 w-5 shrink-0 text-ink-3" />
 										<span>{item}</span>
 									</li>
 								))
@@ -316,38 +354,33 @@ const faqs = [
 		</Section>
 
 		<!-- 10. Founder note -->
-		<Section glow="right">
-			<Container>
-				<div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-					<FounderPhoto class="w-full max-w-[360px]" />
-					<div class="max-w-[560px] space-y-6">
-						<Label text="from the founder" />
-						<blockquote class="font-display text-h3 text-core">
-							"I started in performance marketing, watching good businesses lose leads to slow
-							replies. Now I build the systems that stop it."
-						</blockquote>
-						<p class="text-body text-ink-2">
-							When you book an audit, you talk to me directly, not a sales rep.
-						</p>
-						<p class="text-small text-ink-3">Aliyan Shah, founder of Fluigen</p>
-						<InlineCTA class="pt-2" />
-					</div>
+		<Section>
+			<Container class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:grid-cols-12 lg:gap-10">
+				<FounderPhoto class="w-full max-w-[min(360px,72vw)] lg:col-span-4" />
+				<div class="max-w-[560px] space-y-6 lg:col-span-7 lg:col-start-6">
+					<Label text="from the founder" />
+					<blockquote class="font-display text-h3 text-core">
+						"I watched good businesses lose leads to slow replies. Now I build the systems that stop it."
+					</blockquote>
+					<p class="text-body text-ink-2">Book an audit and you talk to me, not a sales rep.</p>
+					<p class="text-small text-ink-3">Aliyan Shah, founder of {site.businessName}</p>
+					<InlineCTA class="pt-2" />
 				</div>
 			</Container>
 		</Section>
 
 		<!-- 11. FAQ -->
-		<Section>
-			<Container>
-				<h2 class="font-display text-h2 text-core max-w-[16ch]">Questions owners ask us</h2>
-				<div class="mt-12 max-w-[760px] border-t border-rule lg:mt-16">
+		<Section glow="right">
+			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
+				<h2 class="font-display text-h2 text-core max-w-[12ch] lg:col-span-5">Questions owners ask us</h2>
+				<div class="border-t border-rule lg:col-span-7" data-stagger>
 					{faqs.map((faq) => <FAQItem question={faq.question}>{faq.answer}</FAQItem>)}
 				</div>
 			</Container>
 		</Section>
 
 		<!-- 12. Final call to action (no calendar here) -->
-		<PageCTA />
+		<PageCTA text="30 minutes, and a written plan even if you never hire us." />
 	</main>
 	<Footer />
 </Layout>

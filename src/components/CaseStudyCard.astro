@@ -5,11 +5,16 @@ import BigNumber from "./BigNumber.astro";
 
 interface Props {
 	caseStudy: CollectionEntry<"case-studies">;
+	/** Glass over a scene or flow field (homepage); solid elsewhere. */
+	variant?: "card" | "glass";
+	/** A shorter summary for this placement (content/copy/home.md). */
+	summary?: string;
 	class?: string;
 }
 
-const { caseStudy, class: className } = Astro.props;
-const { clientLabel, headlineNumber, summary } = caseStudy.data;
+const { caseStudy, variant = "card", summary: summaryOverride, class: className } = Astro.props;
+const { clientLabel, headlineNumber } = caseStudy.data;
+const summary = summaryOverride ?? caseStudy.data.summary;
 const href = `/case-studies/${caseStudy.id}`;
 ---
 
@@ -20,7 +25,7 @@ const href = `/case-studies/${caseStudy.id}`;
 		className,
 	]}
 >
-	<Card interactive class="h-full min-w-0 space-y-4">
+	<Card variant={variant} interactive class="h-full min-w-0 space-y-4">
 		{headlineNumber && <BigNumber value={headlineNumber} />}
 		<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
 		<p class="text-body text-ink-2">{summary}</p>

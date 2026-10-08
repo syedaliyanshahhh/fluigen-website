@@ -1,16 +1,29 @@
 ---
 // Big-number + Label pair, for the proof strip and similar stat rows. The
 // number counts up when it scrolls into view (src/scripts/motion.ts).
+//
+// `row`: on phones the number and its label sit side by side on a rule,
+// so a stat strip reads as a short list instead of four tall blocks; from
+// `sm` up it stacks again beside a vertical rule.
 interface Props {
 	value: string;
 	label: string;
+	row?: boolean;
 	class?: string;
 }
 
-const { value, label, class: className } = Astro.props;
+const { value, label, row = false, class: className } = Astro.props;
 ---
 
-<div class:list={["min-w-0 space-y-2", className]}>
+<div
+	class:list={[
+		"min-w-0",
+		row
+			? "grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] items-center gap-5 border-t border-rule py-6 sm:block sm:space-y-4 sm:border-t-0 sm:border-l sm:py-1 sm:pl-6"
+			: "space-y-2",
+		className,
+	]}
+>
 	<p class="font-display text-big-number text-core break-words" data-count>{value}</p>
 	<p class="font-mono text-label uppercase text-ink-3">{label}</p>
 </div>

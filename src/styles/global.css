@@ -243,6 +243,17 @@ html {
 }
 
 /*
+ * Full-screen homepage hero (one screen under the nav). The top pad keeps
+ * the headline clear of the floating nav; the bottom pad keeps the buttons
+ * and microcopy in the field's dark part, above where it dissolves into
+ * the page (design/brand.md "Flow gradient").
+ */
+@utility hero-full-y {
+  padding-top: clamp(2.5rem, 1.6197rem + 3.7559vw, 5rem); /* 40px -> 80px */
+  padding-bottom: clamp(6rem, 4.5915rem + 6.0094vw, 10rem); /* 96px -> 160px */
+}
+
+/*
  * Nav and footer fluid sizing. --nav-h is a plain custom property (not a
  * Tailwind-namespaced token) so Nav.astro's sticky header and its mobile
  * menu panel can both read the exact same value via `h-[var(--nav-h)]` /

@@ -1,0 +1,104 @@
+---
+// The homepage hero's signature visual: the Fluigen icon idea (three wavy
+// lines that merge into one straight line, design/logos/fluigen-icon-*.svg)
+// drawn as a full-bleed band of thin lines. Decorative only.
+//
+// Motion (src/styles/motion.css "Flow lines"), all transform, opacity or
+// clip-path:
+// - draw-in: each line wipes in from the left, staggered, then the merged
+//   straight line runs out to the right edge
+// - sheen: a soft light travels along all three lines and out along the
+//   straight one, every few seconds (a masked bright copy of the lines)
+// - breath: the waves ease toward and away from the centre line
+// It runs only while on screen. Without JavaScript or with reduced motion
+// the lines are simply drawn, still.
+//
+// The SVG keeps its proportions (`slice`), so phones show the middle of the
+// drawing with fewer, larger waves instead of a squeezed copy of desktop.
+
+const W = 1440;
+const CY = 100;
+const WAVE_END = 640; // where the outer waves start to converge
+const MERGE = 860; // where the three lines become one
+const HALF = 44; // half a wavelength
+const AMP = 11;
+
+/** A wave like the logo's: horizontal tangents at every crest and trough. */
+function wave(y: number, amp: number, from: number, to: number, startUp: boolean) {
+	let d = `M ${from} ${y}`;
+	let x = from;
+	let up = startUp;
+	let level = y;
+	while (x + HALF <= to) {
+		const next = up ? y - amp : y + amp;
+		const mid = x + HALF / 2;
+		d += ` C ${mid} ${level}, ${mid} ${next}, ${x + HALF} ${next}`;
+		x += HALF;
+		level = next;
+		up = !up;
+	}
+	return { d, x, level };
+}
+
+function converging(y: number, startUp: boolean) {
+	const w = wave(y, AMP, -HALF, WAVE_END, startUp);
+	const k = (MERGE - w.x) * 0.5;
+	return `${w.d} C ${w.x + k} ${w.level}, ${MERGE - k} ${CY}, ${MERGE} ${CY}`;
+}
+
+const middle = (() => {
+	const w = wave(CY, AMP * 0.75, -HALF, WAVE_END - HALF * 3, false);
+	const k = HALF * 1.5;
+	return `${w.d} C ${w.x + k} ${w.level}, ${w.x + k} ${CY}, ${w.x + HALF * 3} ${CY} L ${MERGE} ${CY}`;
+})();
+
+const lines = [converging(36, true), middle, converging(164, false)];
+const straight = `M ${MERGE} ${CY} L ${W + 20} ${CY}`;
+
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const svgAttrs = {
+	viewBox: `0 0 ${W} 200`,
+	preserveAspectRatio: "xMidYMid slice",
+	fill: "none",
+	stroke: "currentColor",
+	"stroke-linecap": "round",
+	"stroke-linejoin": "round",
+	focusable: "false",
+};
+---
+
+<div class:list={["flow-lines", className]} aria-hidden="true" data-flow-lines>
+	<div class="flow-lines__breath">
+		{
+			lines.map((d, i) => (
+				<svg class="flow-lines__layer" style={`--n:${i}`} {...svgAttrs}>
+					<path d={d} vector-effect="non-scaling-stroke" />
+				</svg>
+			))
+		}
+		<svg class="flow-lines__layer flow-lines__layer--out" {...svgAttrs}>
+			<path d={straight} vector-effect="non-scaling-stroke" />
+		</svg>
+		<div class="flow-lines__sheen">
+			<div class="flow-lines__window">
+				<svg class="flow-lines__bright" {...svgAttrs}>
+					{lines.map((d) => <path d={d} vector-effect="non-scaling-stroke" />)}
+					<path d={straight} vector-effect="non-scaling-stroke" />
+				</svg>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Idle motion runs only while the band is on screen.
+	document.querySelectorAll<HTMLElement>("[data-flow-lines]").forEach((el) => {
+		if (!("IntersectionObserver" in window)) return el.classList.add("is-live");
+		new IntersectionObserver(([entry]) => el.classList.toggle("is-live", entry.isIntersecting)).observe(el);
+	});
+</script>

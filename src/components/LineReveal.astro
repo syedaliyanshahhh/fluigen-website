@@ -1,0 +1,70 @@
+---
+// A headline that rises in line by line on page load (design/brand.md
+// "Motion": the page's one load moment). Each word sits in its own mask;
+// the inline script groups words by the line they land on at the current
+// width, so a phone's three lines and a laptop's two each rise in turn.
+//
+// The text stays a plain heading for search engines and screen readers.
+// Without JavaScript or with reduced motion (no `html.motion`), nothing is
+// hidden. Styles: src/styles/motion.css "Line reveal".
+interface Props {
+	text: string;
+	as?: "h1" | "h2" | "p";
+	/** Delay before the first line, in ms. */
+	delay?: number;
+	class?: string;
+}
+
+const { text, as: Tag = "h1", delay = 0, class: className } = Astro.props;
+// A newline in `text` forces a line break (where it fits, the line stays whole).
+const lines = text.split("\n").map((line) => line.split(/\s+/).filter(Boolean));
+---
+
+<Tag class:list={["line-reveal", className]} style={`--lr-delay:${delay}ms`} data-line-reveal>
+	{
+		lines.map((words, l) => (
+			<>
+				{l > 0 && " "}
+				{l > 0 && <br />}
+				{words.map((word, i) => (
+					<>
+						<span class="line-reveal__mask">
+							<span class="line-reveal__word">{word}</span>
+						</span>
+						{i < words.length - 1 && " "}
+					</>
+				))}
+			</>
+		))
+	}
+</Tag>
+
+<script is:inline>
+	(function () {
+		var el = document.currentScript && document.currentScript.previousElementSibling;
+		if (!el || !document.documentElement.classList.contains("motion")) return;
+		var started = false;
+		function start() {
+			if (started) return;
+			started = true;
+			var masks = el.querySelectorAll(".line-reveal__mask");
+			var line = -1;
+			var top = null;
+			for (var i = 0; i < masks.length; i++) {
+				var y = masks[i].offsetTop;
+				if (top === null || Math.abs(y - top) > 4) {
+					line++;
+					top = y;
+				}
+				masks[i].style.setProperty("--line", line);
+			}
+			el.setAttribute("data-ready", "");
+		}
+		// Wrap with the real font, so lines are counted where they will fall.
+		// Never wait long: the headline is the page's largest text.
+		if (document.fonts && document.fonts.load) {
+			document.fonts.load('300 1em "Inter Tight"').then(start, start);
+		}
+		setTimeout(start, 450);
+	})();
+</script>
