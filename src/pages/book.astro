@@ -1,184 +1,305 @@
 ---
-// /book — the only page with the calendar (CLAUDE.md "Booking"). Calendly
-// inline embed via their official widget.js pattern, with a fallback link
-// shown if the widget script fails to load or never initializes.
+// /book: the only page with the calendar (CLAUDE.md "Booking").
 //
-// Layout: details and calendar sit side by side from lg up, and the whole
-// block is centered within the viewport height below the nav, so the
-// calendar is visible without scrolling the page on laptop/desktop widths.
-// Below lg there isn't room for both side by side, so it stacks and
-// scrolls normally, same as every other two-column section on the site.
+// Layout: on a phone, one short line and then the calendar, so it is on the
+// first screen; the "on the call" points follow below it. From lg up, short
+// text on the left and the calendar in a glass frame on the right, both on
+// the hero flow field (design/brand.md "Flow gradient", "Glass").
 //
-// The widget's height is NOT a guessed fixed value — Calendly posts its
-// real content height via `calendly.page_height` messages (their
-// documented inline-embed resize API), and the listener below applies
-// that directly, so the box always hugs the actual calendar instead of
-// leaving empty space around a shorter view.
+// Calendar: a plain Calendly inline iframe, built by the inline script right
+// after its frame so the request starts while the page is still parsing (no
+// widget.js round trip). Calendly's own URL options hide the event header
+// (photo, name, title, duration) and the cookie banner, and set its colors.
+// A skeleton shows at once; the calendar fades in when Calendly reports it
+// has rendered (`calendly.event_type_viewed`), then the frame follows the
+// real content height (`calendly.page_height`). If nothing arrives in time,
+// a direct booking link replaces the skeleton.
+//
+// The frame stays under 650px wide: from 650px Calendly switches to a boxed
+// layout with its own border and margins, which would sit inside our frame.
+// Below that it fills the frame edge to edge at 602px tall, on every device.
 import { site } from "../site.config";
 import Layout from "../components/Layout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import Container from "../components/Container.astro";
+import FlowField from "../components/FlowField.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 
-const CALENDLY_URL = site.bookingUrl;
-// Calendly embed customization params (hex without '#') to match the brand
-// as far as Calendly allows — see design/brand.md colors. One set per theme;
-// the script picks the current one and reloads the calendar if the visitor
-// switches theme.
+// Calendly embed options. Colors are hex without '#', from design/brand.md
+// "Themes": the card surface (`null`), `core` text, and `core` as the accent
+// so available days and buttons follow the brand's black / near-white
+// primary instead of teal text. Calendly picks a readable text color on the
+// accent itself.
+const calendlyOptions = "embed_type=Inline&hide_event_type_details=1&hide_landing_page_details=1&hide_gdpr_banner=1";
 const calendlyColors = {
-	light: "background_color=f7f7f7&text_color=000000&primary_color=267b85",
-	dark: "background_color=0a0f10&text_color=f7f7f7&primary_color=97c1c5",
+	light: "background_color=ffffff&text_color=000000&primary_color=000000",
+	dark: "background_color=121a1b&text_color=f7f7f7&primary_color=f7f7f7",
 };
 
 const onCallItems = [
-	"Look at where your team loses the most hours",
-	"Pick the one or two processes worth automating first",
-	"Send you a written plan with a fixed price within 48 hours",
+	"Find where your team loses the most hours",
+	"Pick the first one or two processes to automate",
+	"Send a written plan and fixed price within 48 hours",
 ];
+
+// Skeleton month: 2 blank cells, then 30 days.
+const skeletonDays = Array.from({ length: 33 }, (_, i) => i >= 2);
 ---
 
 <Layout
 	title="Book your free automation audit"
 	description="A free 30-minute call with Aliyan. You leave with a written plan, even if you never hire us. Pick a time that suits you."
 >
+	<Fragment slot="head">
+		<link rel="preconnect" href="https://calendly.com" />
+		<link rel="preconnect" href="https://assets.calendly.com" />
+	</Fragment>
 	<Nav />
-	<main id="main">
-		<div class="flex flex-col justify-center py-10 lg:min-h-[calc(100svh-var(--nav-h))] lg:py-0">
-			<Container>
-				<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-14">
-					<div class="max-w-[520px] space-y-6">
-						<h1 class="font-display text-h1 text-core">Book your free automation audit</h1>
-						<p class="text-body text-ink-2">
-							A 30-minute call with Aliyan. Pick a time that suits you below.
-						</p>
-						<div class="space-y-3 pt-2">
-							<p class="font-mono text-label uppercase text-ink-3">On the call we will</p>
-							<ul class="space-y-3">
-								{
-									onCallItems.map((item) => (
-										<li class="flex gap-3 text-body text-ink-2">
-											<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
-											<span>{item}</span>
-										</li>
-									))
-								}
-							</ul>
+	<main id="main" data-flow-end>
+		<section
+			class="book-y relative lg:flex lg:min-h-[calc(100svh-var(--nav-h))] lg:items-center"
+			data-flow-section="hero"
+		>
+			<FlowField variant="hero" />
+			<Container class="w-full">
+				<div
+					class="rise-in grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-[var(--space-head)]"
+				>
+					<div data-theme="dark" class="lg:max-w-[34rem]">
+						<h1 class="sr-only font-display text-h1 text-core lg:not-sr-only">Book your free automation audit</h1>
+						<p class="text-body text-core lg:mt-6">A free 30-minute call with Aliyan.</p>
+						<div class="mt-10 hidden lg:block">
+							<div class="space-y-3">
+								<p class="font-mono text-label uppercase text-ink-2">On the call we will</p>
+								<ul class="space-y-3">
+									{
+										onCallItems.map((item) => (
+											<li class="flex gap-3 text-body text-core">
+												<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
+												<span>{item}</span>
+											</li>
+										))
+									}
+								</ul>
+							</div>
+							<p class="mt-8 text-small text-core">
+								Can't find a time? Email <a
+									href={`mailto:${site.email}`}
+									class="link-u text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
+									>{site.email}</a
+								>
+							</p>
 						</div>
-						<p class="text-small text-ink-3 pt-2">
-							Can’t find a time that works? Email <a
-								href={`mailto:${site.email}`}
-								class="link-u text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
-								>{site.email}</a
-							>
-						</p>
 					</div>
 
-					<div>
-						<noscript>
-							<style>
-								#calendly-widget {
-									display: none;
-								}
-							</style>
-						</noscript>
-
+					<div class="glass w-full max-w-[40rem] rounded-panel p-2 lg:justify-self-end">
 						<div
-							id="calendly-widget"
-							class="calendly-inline-widget h-[660px] w-full min-w-0 lg:max-h-[calc(100svh-var(--nav-h)-3rem)]"
-							data-calendly-base={CALENDLY_URL}
-							data-calendly-light={calendlyColors.light}
-							data-calendly-dark={calendlyColors.dark}
+							id="cal"
+							class="cal relative overflow-hidden rounded-card bg-null"
+							style="height: 602px"
+							aria-busy="true"
+							data-base={site.bookingUrl}
+							data-options={calendlyOptions}
+							data-light={calendlyColors.light}
+							data-dark={calendlyColors.dark}
 						>
-						</div>
-
-						<div
-							id="calendly-fallback"
-							class="hidden flex-col items-start gap-5 rounded-card border border-rule bg-null p-8 sm:p-10"
-						>
-							<p class="text-body text-ink-2">
-								The calendar did not load. Open the booking page directly instead.
-							</p>
-							<Button href={CALENDLY_URL}>Open the booking page</Button>
-						</div>
-
-						<noscript>
-							<div class="flex flex-col items-start gap-5 rounded-card border border-rule bg-null p-8 sm:p-10">
-								<p class="text-body text-ink-2">Enable JavaScript to see the calendar, or book directly:</p>
-								<Button href={CALENDLY_URL}>Open the booking page</Button>
+							<div class="cal-skeleton absolute inset-0 flex flex-col items-center px-4 pt-7" aria-hidden="true">
+								<span class="cal-bone h-6 w-40 rounded-full"></span>
+								<div class="mt-12 flex w-full max-w-[20rem] items-center justify-between px-12">
+									<span class="cal-bone h-4 w-4 rounded-full"></span>
+									<span class="cal-bone h-4 w-28 rounded-full"></span>
+									<span class="cal-bone h-4 w-4 rounded-full"></span>
+								</div>
+								<div class="mt-7 grid w-full max-w-[20rem] grid-cols-7 justify-items-center gap-y-1">
+									{Array.from({ length: 7 }, () => <span class="cal-bone mb-4 h-2.5 w-6 rounded-full" />)}
+									{
+										skeletonDays.map((day) =>
+											day ? (
+												<span class="cal-bone cal-bone--soft aspect-square w-[88%] max-w-11 rounded-full" />
+											) : (
+												<span />
+											),
+										)
+									}
+								</div>
+								<div class="mt-8 w-full max-w-[20rem] space-y-3 px-1">
+									<span class="cal-bone block h-3 w-20 rounded-full"></span>
+									<span class="cal-bone block h-3 w-52 rounded-full"></span>
+								</div>
 							</div>
-						</noscript>
+
+							<div class="cal-fallback absolute inset-0 flex-col items-start justify-center gap-6 p-8 sm:p-10">
+								<p class="text-body text-ink-2">The calendar did not load. Open the booking page directly instead.</p>
+								<Button href={site.bookingUrl}>Open the booking page</Button>
+							</div>
+
+							<p class="sr-only" role="status" id="cal-status">Loading the calendar</p>
+							<noscript>
+								<style>
+									.cal-skeleton {
+										display: none !important;
+									}
+									.cal-fallback {
+										display: flex !important;
+									}
+								</style>
+							</noscript>
+						</div>
+						<!-- Inline (not bundled) so the iframe request starts during parsing. -->
+						<script is:inline>
+							(function () {
+								var cal = document.getElementById("cal");
+								var status = document.getElementById("cal-status");
+								if (!cal) return;
+								// No calendar after this long: offer the direct link. A late calendar
+								// still replaces it when it arrives.
+								var FALLBACK_MS = 10000;
+								// Calendly reports tiny heights (26px, 2px) while it boots; only real
+								// content heights after the calendar has rendered are applied.
+								var MIN_HEIGHT = 300;
+								var frame, timer, ready;
+
+								function src() {
+									var dark = document.documentElement.dataset.theme === "dark";
+									return (
+										cal.dataset.base +
+										"?embed_domain=" + encodeURIComponent(location.host) +
+										"&" + cal.dataset.options +
+										"&" + (dark ? cal.dataset.dark : cal.dataset.light)
+									);
+								}
+
+								function load() {
+									if (frame) frame.remove();
+									ready = false;
+									cal.classList.remove("is-ready", "is-failed");
+									cal.setAttribute("aria-busy", "true");
+									status.textContent = "Loading the calendar";
+									frame = document.createElement("iframe");
+									frame.className = "cal-frame";
+									frame.title = "Booking calendar";
+									frame.src = src();
+									cal.appendChild(frame);
+									clearTimeout(timer);
+									timer = setTimeout(function () {
+										if (ready) return;
+										cal.classList.add("is-failed");
+										cal.setAttribute("aria-busy", "false");
+										status.textContent = "The calendar did not load. Use the booking page link instead.";
+									}, FALLBACK_MS);
+								}
+
+								window.addEventListener("message", function (event) {
+									if (event.origin !== "https://calendly.com" || !frame || event.source !== frame.contentWindow) return;
+									var name = event.data && event.data.event;
+									if (name === "calendly.event_type_viewed" && !ready) {
+										ready = true;
+										clearTimeout(timer);
+										cal.classList.remove("is-failed");
+										cal.classList.add("is-ready");
+										cal.setAttribute("aria-busy", "false");
+										status.textContent = "Calendar loaded";
+									} else if (name === "calendly.page_height" && ready) {
+										var height = parseFloat(event.data.payload && event.data.payload.height);
+										if (height >= MIN_HEIGHT) cal.style.height = height + "px";
+									}
+								});
+
+								// Calendly's colors follow the page theme: rebuild on a theme switch.
+								window.addEventListener("fluigen:themechange", load);
+
+								load();
+							})();
+						</script>
 					</div>
 				</div>
 			</Container>
-		</div>
+		</section>
+
+		<section class="pb-[var(--space-block)] lg:hidden" data-reveal-scope>
+			<Container>
+				<div class="space-y-3">
+					<p class="font-mono text-label uppercase text-ink-3">On the call we will</p>
+					<ul class="space-y-3">
+						{
+							onCallItems.map((item) => (
+								<li class="flex gap-3 text-body text-ink-2">
+									<Icon name="check" class="mt-[3px] h-5 w-5 shrink-0 text-core" />
+									<span>{item}</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+				<p class="mt-8 text-small text-ink-3">
+					Can't find a time? Email <a
+						href={`mailto:${site.email}`}
+						class="link-u text-core outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-ring"
+						>{site.email}</a
+					>
+				</p>
+			</Container>
+		</section>
 	</main>
 	<Footer />
-
-	<script>
-		const CALENDLY_SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
-		const CALENDLY_LOAD_TIMEOUT_MS = 8000;
-
-		const widget = document.getElementById("calendly-widget");
-		const fallback = document.getElementById("calendly-fallback");
-
-		function showFallback() {
-			widget?.classList.add("hidden");
-			fallback?.classList.remove("hidden");
-			fallback?.classList.add("flex");
-		}
-
-		// Calendly's documented inline-embed resize API: it posts the real
-		// content height any time the view changes (date picked, time slots
-		// shown, confirmation form, ...), so the widget always matches its
-		// actual content instead of a guessed fixed height.
-		// While it is still loading, Calendly reports tiny heights (26px, then
-		// 2px) before the real one. Applying those collapsed the box and made
-		// the footer jump up and back down, so sizes are only applied once the
-		// calendar has rendered (`calendly.event_type_viewed`); until then the
-		// box keeps its reserved height.
-		const MIN_CALENDAR_HEIGHT = 300;
-		let calendarShown = false;
-		window.addEventListener("message", (event) => {
-			if (event.origin !== "https://calendly.com") return;
-			if (event.data?.event === "calendly.event_type_viewed") calendarShown = true;
-			if (event.data?.event !== "calendly.page_height" || !calendarShown) return;
-			const height = parseFloat(event.data.payload?.height);
-			if (!height || height < MIN_CALENDAR_HEIGHT || !widget) return;
-			widget.style.height = `${height}px`;
-		});
-
-		// Calendly colors follow the page theme. widget.js reads data-url when
-		// it loads, so set it first; on a theme switch, rebuild the calendar.
-		function calendlyUrl() {
-			if (!widget) return "";
-			const theme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-			return `${widget.dataset.calendlyBase}?${widget.dataset[theme === "dark" ? "calendlyDark" : "calendlyLight"]}`;
-		}
-		if (widget) widget.dataset.url = calendlyUrl();
-
-		window.addEventListener("fluigen:themechange", () => {
-			if (!widget || typeof window.Calendly === "undefined") return;
-			calendarShown = false;
-			widget.style.height = "";
-			widget.innerHTML = "";
-			window.Calendly.initInlineWidget({ url: calendlyUrl(), parentElement: widget });
-		});
-
-		const script = document.createElement("script");
-		script.src = CALENDLY_SCRIPT_SRC;
-		script.async = true;
-		script.addEventListener("error", showFallback);
-		document.body.appendChild(script);
-
-		const timeout = setTimeout(() => {
-			if (typeof window.Calendly === "undefined") showFallback();
-		}, CALENDLY_LOAD_TIMEOUT_MS);
-
-		script.addEventListener("load", () => {
-			clearTimeout(timeout);
-			if (typeof window.Calendly === "undefined") showFallback();
-		});
-	</script>
 </Layout>
+
+
+<style is:global>
+	.cal-frame {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+		/* Match Calendly's own scheme. A mismatch with the page's dark
+		   scheme makes the browser paint an opaque white backdrop behind
+		   the iframe, which showed as a line under the calendar. */
+		color-scheme: light;
+		opacity: 0;
+		transition: opacity 0.6s var(--ease-out);
+	}
+	.cal.is-ready .cal-frame {
+		opacity: 1;
+	}
+
+	.cal-skeleton {
+		transition:
+			opacity 0.45s var(--ease-out),
+			visibility 0s;
+	}
+	.cal.is-ready .cal-skeleton,
+	.cal.is-failed .cal-skeleton {
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.45s var(--ease-out),
+			visibility 0s 0.45s;
+	}
+	.cal-bone {
+		background-color: var(--rule);
+		animation: cal-pulse 1.4s var(--ease-in-out) infinite alternate;
+	}
+	.cal-bone--soft {
+		background-color: color-mix(in oklab, var(--rule) 55%, transparent);
+	}
+	@keyframes cal-pulse {
+		to {
+			opacity: 0.45;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.cal-bone {
+			animation: none;
+		}
+	}
+
+	.cal-fallback {
+		display: none;
+	}
+	.cal.is-failed .cal-fallback {
+		display: flex;
+	}
+</style>

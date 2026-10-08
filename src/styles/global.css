@@ -281,6 +281,13 @@ html {
   padding-top: clamp(4rem, 2.7676rem + 5.2582vw, 7.5rem); /* 64px -> 120px */
 }
 
+/* /book: the calendar block sits close under the nav so the calendar is on
+   the first screen of a phone. */
+@utility book-y {
+  padding-top: clamp(1.25rem, 0.6338rem + 2.6291vw, 3rem); /* 20px -> 48px */
+  padding-bottom: clamp(2.5rem, 1.6197rem + 3.7559vw, 5rem); /* 40px -> 80px */
+}
+
 @utility footer-y {
   padding-top: clamp(4rem, 3.2958rem + 3.0047vw, 6rem); /* 64px -> 96px */
   padding-bottom: clamp(2rem, 1.8239rem + 0.7512vw, 2.5rem); /* 32px -> 40px */

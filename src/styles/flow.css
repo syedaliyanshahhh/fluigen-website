@@ -492,6 +492,7 @@
 
 /* A page that ends on the closing band dissolves straight into the footer:
    no rule line cutting across the field. */
-main:has(> [data-flow-section="closing"]:last-child) + footer {
+main:has(> [data-flow-section="closing"]:last-child) + footer,
+main[data-flow-end] + footer {
 	border-top-color: transparent;
 }

@@ -152,6 +152,8 @@ const structuredData = {
 		<meta name="twitter:image:alt" content={`${site.businessName}, ${site.tagline}`} />
 
 		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+		<!-- Page-specific hints, e.g. /book preconnects to Calendly. -->
+		<slot name="head" />
 	</head>
 	<body class="bg-baseline font-sans text-core">
 		<a
