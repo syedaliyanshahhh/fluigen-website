@@ -30,7 +30,7 @@ export const settings = {
 	// false: every page is hidden from search engines. true: the production
 	// site (the `main` branch on fluigen.com) can be indexed. The preview
 	// site stays hidden either way.
-	searchIndexing: false,
+	searchIndexing: true,
 	// The homepage "See it work" section. Turn on once the 60-second
 	// recording is in place.
 	showSeeItWork: false,
