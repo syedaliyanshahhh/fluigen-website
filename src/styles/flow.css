@@ -156,7 +156,7 @@
 /* A soft flux mist from the top right, the main light. */
 .flow--hero .flow__blob:nth-child(1) {
 	--c: var(--flux);
-	--o: 0.36;
+	--o: 0.62;
 	--x: 44;
 	--y: -26;
 	width: 74%;
@@ -166,7 +166,7 @@
 /* A fainter echo low on the left. */
 .flow--hero .flow__blob:nth-child(2) {
 	--c: var(--flux);
-	--o: 0.2;
+	--o: 0.4;
 	--x: -24;
 	--y: 22;
 	width: 62%;
@@ -177,7 +177,7 @@
 /* A hint of vector under the mist, so it reads as teal light, not grey. */
 .flow--hero .flow__blob:nth-child(3) {
 	--c: var(--vector);
-	--o: 0.07;
+	--o: 0.16;
 	--x: 56;
 	--y: 4;
 	width: 44%;
@@ -188,7 +188,7 @@
 /* White bloom behind the headline keeps its corner clean. */
 .flow--hero .flow__blob:nth-child(4) {
 	--c: var(--null);
-	--o: 0.9;
+	--o: 0.75;
 	--x: -18;
 	--y: -20;
 	width: 64%;

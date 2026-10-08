@@ -40,7 +40,7 @@ Dark values come from design/reference-draft-homepage.html. The teal palette (fl
 - Any element with `data-theme="dark"` (or `"light"`) opens its own theme context: everything inside uses that theme's tokens. The closing band and scenes use this for their content, so white-on-teal needs no special button or text variants. Hero content follows the page theme.
 - Logos swap with `.only-light` / `.only-dark` (black logo on light, white logo on dark).
 - In dark mode: primary button is a near-white pill with black text, ambient glows are stronger.
-- The hero is where the two themes differ most: light is an airy near-white sky with a faint flux mist and black text; dark is near black with one muted teal glow and white text.
+- The hero is where the two themes differ most: light is an airy near-white sky with a soft flux mist and black text; dark is near black with one muted teal glow and white text.
 
 ## Theme toggle
 - A small glass pill with a sliding knob (sun, moon), fixed to the bottom-right corner of every page, after ACCURON's pill toggle. 44px tap target.
