@@ -13,7 +13,7 @@ Microcopy under the buttons: Live in weeks. Pay the second half only when it wor
 - 16 | systems run from one client portal
 - 24/7 | calls answered, 2am emergencies included
 - 45 days | of follow-up on every lead
-- 2 to 3 | weeks from kickoff to live, for most builds
+- 3 to 4 | weeks from kickoff to live, for most builds
 
 ## 3. The problem
 Heading: What stops when one person is unavailable?
@@ -87,7 +87,7 @@ Heading: Questions owners ask us
 - Who owns what you build? | You do. At handover you get every login, the workflows, written docs and a video walkthrough.
 - Is my data safe? | It stays in the tools you already use. We only take the access a build needs, and you can remove it at handover.
 - What if it breaks? | You get 30 days of free fixes after launch. After that, the Care Plan covers it, or call us when you need us.
-- How long does it take? | Most builds are live in 2 to 3 weeks. Your audit plan sets a fixed price and finish date first.
+- How long does it take? | Most builds are live in 3 to 4 weeks. Your audit plan sets a fixed price and finish date first.
 - Do I need to learn anything? | No. It runs inside the tools your team already uses.
 - What time zone do you work in? | We are based in Chicago and work your business hours, in the US, UK, Europe or Australia.
 

@@ -55,7 +55,7 @@ Three steps: a free audit that earns trust, a fixed-price build where the client
 | Step | What the client gets | What it does for Fluigen |
 | --- | --- | --- |
 | 1. Free Automation Audit | 30-minute call with Aliyan. Within 48 hours, a one-page plan: 3 processes to automate, hours saved per week for each, and a fixed price per build | The audit plan is the proposal. No separate pitch needed |
-| 2. Fixed-price build | One process fully automated, tested, and handed over. Most builds live in 2 to 3 weeks | Clean scope, no hourly disputes, a clear case study at the end |
+| 2. Fixed-price build | One process fully automated, tested, and handed over. Most builds live in 3 to 4 weeks | Clean scope, no hourly disputes, a clear case study at the end |
 | 3. Care Plan | Monthly monitoring, fixes when tools change, small improvements, a short monthly report | Recurring revenue and the natural path to the next build |
 
 ### The guarantees

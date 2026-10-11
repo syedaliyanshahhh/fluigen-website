@@ -19,7 +19,7 @@ Text: You pay the second half only when it works.
 ## Step 3: Go live
 - Runs alongside your current process until it handles real work without mistakes
 - Handover with docs and a video, then you pay the second half
-- Most builds live in 2 to 3 weeks
+- Most builds live in 3 to 4 weeks
 
 ## Step 4: Care Plan (optional)
 - Monitored, with issues fixed before they reach you

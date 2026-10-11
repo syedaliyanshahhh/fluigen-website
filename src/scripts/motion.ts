@@ -73,7 +73,7 @@ if (motionOK && "IntersectionObserver" in window) {
 // ---------- Count-ups ----------
 
 // Only a leading whole number of 10 or more counts, followed by nothing,
-// a space, % , + or x ("16", "45 days", "300%"). "24/7" and "2 to 3" stay
+// a space, % , + or x ("16", "45 days", "300%"). "24/7" and "3 to 4" stay
 // as written: counting them would read oddly.
 const COUNTABLE = /^(\d{2,}(?:,\d{3})*)(?=$|[\s%+x])(.*)$/s;
 

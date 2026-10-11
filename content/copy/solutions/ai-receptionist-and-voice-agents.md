@@ -20,7 +20,7 @@ Calls come at 2am or mid-job. Nobody picks up, so callers ring the next business
 - Summaries, not voicemails
 
 ## Typical timeline
-Most builds are live in 2 to 3 weeks.
+Most builds are live in 3 to 4 weeks.
 
 ## Call to action
 Book your free automation audit

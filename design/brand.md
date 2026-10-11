@@ -126,7 +126,7 @@ Implementation: `src/styles/motion.css`, `src/scripts/motion.ts` and per-compone
 
 - Page load: one moment per page. The hero (or inner page header) content rises in, children staggered 80ms; the largest text starts at once.
 - Scroll reveals: inside every Section, Scene and closing band, the container's direct children fade and rise in as they reach the viewport; grids and lists reveal their children one after another (90ms stagger, at most 6 steps). Content already on screen when the page loads is never hidden.
-- Count-ups: big numbers count from zero the first time they scroll into view (only a leading number of 10 or more; "24/7" and "2 to 3" stay as written). Screen readers get the final value.
+- Count-ups: big numbers count from zero the first time they scroll into view (only a leading number of 10 or more; "24/7" and "3 to 4" stay as written). Screen readers get the final value.
 - Cards: link cards lift 4px with a soft teal halo, and a faint light follows the cursor across them.
 - FAQ: smooth height open and close; the chevron turns.
 - Mobile menu: the panel wipes down from the bar, its links rise in one after another, the menu icon folds into a cross.

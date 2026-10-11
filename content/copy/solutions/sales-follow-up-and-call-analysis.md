@@ -20,7 +20,7 @@ Follow-up depends on someone remembering, so leads go elsewhere. And nobody has 
 - Patterns across every call, not just the ones you heard
 
 ## Typical timeline
-Most builds are live in 2 to 3 weeks.
+Most builds are live in 3 to 4 weeks.
 
 ## Call to action
 Book your free automation audit

@@ -20,7 +20,7 @@ Hundreds of applications per role. Good candidates wait days, and the best take 
 - A clear record behind every decision
 
 ## Typical timeline
-Most builds are live in 2 to 3 weeks.
+Most builds are live in 3 to 4 weeks.
 
 ## Call to action
 Book your free automation audit
