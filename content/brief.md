@@ -108,7 +108,7 @@ The booking button is visible on every screen. Every CTA takes the visitor to /b
 ## Sitemap
 
 - Home
-- Solutions (5 pages): AI Receptionist and Voice Agents, Sales Follow-Up and Call Analysis, Client and Operations Portals, Hiring Automation, Content and Knowledge Systems
+- Solutions (7 pages): AI Receptionist and Voice Agents, Sales Follow-Up and Call Analysis, Client and Operations Portals, Hiring Automation, AI Twins and Knowledge Systems, Content on Autopilot, AI Chief of Staff
 - Case studies (one page per project)
 - How We Work
 - About
@@ -126,8 +126,8 @@ The homepage tells the full story in one scroll: what we do in 5 seconds, proof 
    - Alternative: "Stop losing leads to missed calls and slow follow-up."
    - Subline: "Done for you, live in weeks, and you pay the second half only once it's running."
 2. **Proof strip.** Three or four real numbers from case studies. Client logos if permitted.
-3. **The problem.** "What stops when one person is unavailable?" followed by three pains in owner language. CTA.
-4. **What we build.** Five cards, one per solution, each with one outcome line and a link to its page.
+3. **The problem.** "What happens when nobody's free?" followed by three moments shown as phone notifications that turn into the fix as you scroll. CTA.
+4. **What we build.** One card per solution (seven), each with one outcome line and a link to its page.
 5. **See it work.** A 60-second recording of an AI voice agent handling a real call. The strongest attention grabber on the page. CTA.
 6. **Case studies.** Three featured, each a headline number plus two lines. Link to all case studies.
 7. **How it works.** Audit, build, go live, care. Four steps, one line each. CTA.

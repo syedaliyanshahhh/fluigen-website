@@ -1,0 +1,145 @@
+---
+// The homepage problem section's moments (content/copy/home.md section 3):
+// phone notifications an owner dreads, stacked on a lock-screen stage (its
+// own flow field, so the cards are glass), each turning into the fix as it
+// scrolls up the screen.
+//
+// Every card holds both states. Under each, a band of tangled hairlines:
+// in the problem state they fray and fidget; when the card turns, they
+// merge into one line that runs out to the edge in the accent color, the
+// logo's "messy lines into one flow" (FlowLines.astro on the hero).
+//
+// Motion (src/styles/motion.css "Moments"), transform, opacity, clip-path
+// and color only: a card turns once its top passes 55% of the viewport,
+// and turns back if it scrolls down below that line again. Without
+// JavaScript or with reduced motion (no `html.motion`), each card simply
+// shows the problem, the merged lines and the fix, one under the other.
+// Screen readers always get both states, in that order.
+import FlowField from "./FlowField.astro";
+import Icon, { type IconName } from "./Icon.astro";
+
+export interface Moment {
+	time: string;
+	title: string;
+	detail: string;
+	fix: string;
+	icon: IconName;
+}
+
+interface Props {
+	moments: Moment[];
+	class?: string;
+}
+
+const { moments, class: className } = Astro.props;
+
+// The band: three tangled lines (different wavelengths, so they cross) that
+// fray out at x 330 in the problem state; the merge carries each one into
+// the centre line by x 420, and the straight line runs to the edge.
+const W = 600;
+const CY = 24;
+const FRAY = 330;
+const JOIN = 420;
+
+function tangled(y: number, half: number, amp: number, startUp: boolean) {
+	let d = `M ${-half} ${y}`;
+	let x = -half;
+	let up = startUp;
+	let level = y;
+	while (x + half <= FRAY) {
+		const next = up ? y - amp : y + amp;
+		const mid = x + half / 2;
+		d += ` C ${mid} ${level}, ${mid} ${next}, ${x + half} ${next}`;
+		x += half;
+		level = next;
+		up = !up;
+	}
+	return { d, level };
+}
+
+// Half-wavelengths divide FRAY, so each strand ends exactly there, on a
+// crest or trough of its own: three loose ends at three heights.
+const strands = [tangled(15, 55, 8, false), tangled(24, 66, 11, true), tangled(33, 110, 9, true)];
+const merges = strands.map(({ level }) => {
+	const k = (JOIN - FRAY) * 0.5;
+	return `M ${FRAY} ${level} C ${FRAY + k} ${level}, ${JOIN - k} ${CY}, ${JOIN} ${CY}`;
+});
+const straight = `M ${JOIN} ${CY} L ${W + 10} ${CY}`;
+
+const svgAttrs = {
+	viewBox: `0 0 ${W} 48`,
+	preserveAspectRatio: "none",
+	fill: "none",
+	stroke: "currentColor",
+	"stroke-linecap": "round",
+	"stroke-linejoin": "round",
+	focusable: "false",
+};
+---
+
+<div class:list={["moments relative isolate overflow-hidden", className]}>
+	<FlowField variant="stage" class="!z-0" />
+	<ol class="moments__list relative z-10" data-moments>
+		{
+			moments.map((moment) => (
+				<li class="moment glass glass-card" data-moment>
+					<div class="moment__head">
+						<span class="moment__chip" aria-hidden="true">
+							<Icon name={moment.icon} class="moment__chip-problem" />
+							<Icon name="check" class="moment__chip-fix" />
+						</span>
+						<p class="font-mono text-label uppercase text-ink-3">{moment.time}</p>
+						<span class="moment__dot" aria-hidden="true" />
+					</div>
+					<div class="moment__body">
+						<div class="moment__problem">
+							<h3 class="font-display text-h3 text-core">{moment.title}</h3>
+							<p class="text-body text-ink-2">{moment.detail}</p>
+						</div>
+						<div class="moment__band" aria-hidden="true">
+							<div class="moment__breath">
+								<svg class="moment__strands" {...svgAttrs}>
+									{strands.map(({ d }) => (
+										<path d={d} vector-effect="non-scaling-stroke" />
+									))}
+								</svg>
+								<svg class="moment__merge" {...svgAttrs}>
+									{merges.map((d) => (
+										<path d={d} vector-effect="non-scaling-stroke" />
+									))}
+									<path class="moment__line" d={straight} vector-effect="non-scaling-stroke" />
+								</svg>
+							</div>
+						</div>
+						<p class="moment__fix font-display text-h3 text-core">
+							<span class="moment__fix-mark" aria-hidden="true">
+								<Icon name="check" class="h-4 w-4" />
+							</span>
+							<span>{moment.fix}</span>
+						</p>
+					</div>
+				</li>
+			))
+		}
+	</ol>
+</div>
+
+<script>
+	// Turn each card once its top passes 55% of the viewport (the root's
+	// bottom edge, pulled up 45%). A card scrolled up past the top stays
+	// turned; one scrolled back down below the line turns back.
+	const root = document.documentElement;
+	const cards = document.querySelectorAll<HTMLElement>("[data-moment]");
+	if (root.classList.contains("motion") && "IntersectionObserver" in window) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					const above = entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0);
+					entry.target.classList.toggle("is-fixed", entry.isIntersecting || above);
+				}
+			},
+			{ rootMargin: "0px 0px -45% 0px" },
+		);
+		cards.forEach((card) => observer.observe(card));
+	}
+</script>

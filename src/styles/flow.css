@@ -416,6 +416,59 @@
 	height: 120%;
 }
 
+/*
+ * Stage: the lock screen behind the homepage's moment cards (MomentStack),
+ * contained in its own panel, no bleed. Light: near-white with a flux mist
+ * from the top right and an echo low on the left, so the white glass cards
+ * stand off it. Dark: near black with a muted teal glow, like the hero.
+ */
+.flow--stage {
+	background: linear-gradient(170deg, var(--null) 0%, var(--baseline) 100%);
+}
+.flow--stage .flow__blob:nth-child(1) {
+	--c: var(--flux);
+	--o: 0.9;
+	--x: 36;
+	--y: -24;
+	width: 92%;
+	height: 64%;
+	--dur: 40s;
+}
+.flow--stage .flow__blob:nth-child(2) {
+	--c: var(--flux);
+	--o: 0.7;
+	--x: -36;
+	--y: 50;
+	width: 86%;
+	height: 62%;
+	--anim: flow-drift-b;
+	--dur: 46s;
+}
+.flow--stage .flow__blob:nth-child(3) {
+	--c: var(--vector);
+	--o: 0.22;
+	--x: 54;
+	--y: 30;
+	width: 56%;
+	height: 50%;
+	--anim: flow-drift-c;
+	--dur: 36s;
+}
+:root[data-theme="dark"] .flow--stage {
+	background: linear-gradient(170deg, var(--black) 0%, var(--baseline) 100%);
+}
+:root[data-theme="dark"] .flow--stage .flow__blob:nth-child(1) {
+	--c: var(--substation);
+	--o: 0.6;
+}
+:root[data-theme="dark"] .flow--stage .flow__blob:nth-child(2) {
+	--c: var(--deep);
+	--o: 0.9;
+}
+:root[data-theme="dark"] .flow--stage .flow__blob:nth-child(3) {
+	--o: 0.2;
+}
+
 /* ---------- Flow section (hero, closing) ---------- */
 
 /* `--flow-bleed`: how far a field dissolves past its section, 96px -> 192px

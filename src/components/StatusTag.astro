@@ -1,0 +1,22 @@
+---
+// A project's status ("In development, Version 1") as a small outlined
+// pill, on its case study card and page, so a build that isn't live yet
+// never reads as a result. The open ring says "not finished" without a
+// color of its own.
+interface Props {
+	text: string;
+	class?: string;
+}
+
+const { text, class: className } = Astro.props;
+---
+
+<p
+	class:list={[
+		"inline-flex items-center gap-2 rounded-full border border-rule px-3 py-1.5 font-mono text-label uppercase text-core",
+		className,
+	]}
+>
+	<span class="h-2 w-2 shrink-0 rounded-full border border-current" aria-hidden="true"></span>
+	<span><span class="sr-only">Status: </span>{text}</span>
+</p>

@@ -21,6 +21,7 @@ import Icon from "../../components/Icon.astro";
 import BigNumber from "../../components/BigNumber.astro";
 import CopyBlocks from "../../components/CopyBlocks.astro";
 import PageCTA from "../../components/PageCTA.astro";
+import StatusTag from "../../components/StatusTag.astro";
 import { isPlaceholder } from "../../lib/copy-format";
 
 export const getStaticPaths = (async () => {
@@ -33,7 +34,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, clientLabel, headlineNumber, numberCaption, summary, problem, built, result, testimonial, worksWith } =
+const { title, clientLabel, status, headlineNumber, numberCaption, summary, problem, built, result, testimonial, worksWith } =
 	entry.data;
 const solution = await getRelatedSolution(entry);
 
@@ -55,6 +56,7 @@ const hasNumber = Boolean(headlineNumber);
 		>
 			<div slot="before-title" class="space-y-4">
 				<Label text={clientLabel} brackets={false} color="core" class="block" />
+				{status && <StatusTag text={status} />}
 				{
 					headlineNumber && (
 						<div class="space-y-3">
@@ -113,7 +115,8 @@ const hasNumber = Boolean(headlineNumber);
 			(result.length > 0 || testimonial.length > 0) && (
 				<Scene>
 					<div class="max-w-[960px] space-y-6">
-						<Label text="The result" />
+						{/* A project still in development has no result yet: its last section is where it stands. */}
+						<Label text={status ? "Status" : "The result"} />
 						{result.length > 0 && (
 							<div class="space-y-4 font-display text-h2 text-core [text-wrap:balance]">
 								{result.map((block) => block.type === "p" && <p>{block.text}</p>)}

@@ -1,7 +1,7 @@
-# Content and knowledge systems
+# AI twins and knowledge systems
 
 Order: 5
-Card line: Your know-how turned into posts and answers, without writing each one.
+Card line: Your expertise as an AI that answers clients and your team, any hour.
 SEO description: An AI twin trained on your own material that answers clients and your team in your voice, at any hour.
 Related case studies: rebl-ai-twin, annie-on-demand, charles-on-demand
 

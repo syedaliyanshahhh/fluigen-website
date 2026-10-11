@@ -27,6 +27,7 @@ import EmptyState from "../components/EmptyState.astro";
 import FounderPhoto from "../components/FounderPhoto.astro";
 import FAQItem from "../components/FAQItem.astro";
 import Icon from "../components/Icon.astro";
+import MomentStack, { type Moment } from "../components/MomentStack.astro";
 
 const solutions = await getSolutions();
 
@@ -40,18 +41,28 @@ const caseStudySummaries: Record<string, string> = {
 		"An AI receptionist picks up every call, day or night, and the team gets the details in seconds.",
 };
 
-const painPoints = [
+// Section 3: three moments an owner dreads, each with the fix it turns into.
+const moments: Moment[] = [
 	{
-		title: "Calls go to voicemail",
-		description: "Nobody picks up after hours, so callers book with whoever answers first.",
+		time: "2:14 AM",
+		title: "A call goes to voicemail.",
+		detail: "They book with whoever answers.",
+		fix: "Answered and booked, any hour.",
+		icon: "phone-missed",
 	},
 	{
-		title: "Leads go cold",
-		description: "Follow-ups slip on busy days, and the lead moves on.",
+		time: "Day 3",
+		title: "A lead goes cold.",
+		detail: "Nobody followed up in time.",
+		fix: "Followed up in minutes, until they reply.",
+		icon: "mail",
 	},
 	{
-		title: "You chase the team for updates",
-		description: "Details get copied between tools, and your evenings go on checking what got done.",
+		time: "9:40 PM",
+		title: "You're still checking.",
+		detail: "Copying details between tools after hours.",
+		fix: "It updates itself. You just read the summary.",
+		icon: "copy",
 	},
 ];
 
@@ -172,26 +183,19 @@ const nn = (index: number) => String(index + 1).padStart(2, "0");
 			</div>
 		</Scene>
 
-		<!-- 3. The problem -->
+		<!-- 3. The problem: moments that turn into the fix as they scroll up.
+		     From lg the heading and CTA hold still beside the cards; on phones
+		     the CTA follows the cards. -->
 		<Section glow="left">
 			<Container class="grid gap-y-[var(--space-head)] lg:grid-cols-12 lg:gap-x-10">
-				<h2 class="font-display text-h2 text-core max-w-[14ch] lg:col-span-5">
-					What stops when one person is unavailable?
-				</h2>
-				<ol class="lg:col-span-7">
-					{
-						painPoints.map((pain, index) => (
-							<li class="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 border-t border-rule py-7 last:border-b sm:gap-x-8">
-								<Label text={nn(index)} class="pt-[0.45em]" />
-								<div class="space-y-2">
-									<h3 class="font-display text-h3 text-core">{pain.title}</h3>
-									<p class="text-body text-ink-2 max-w-[46ch]">{pain.description}</p>
-								</div>
-							</li>
-						))
-					}
-				</ol>
-				<InlineCTA class="lg:col-span-7 lg:col-start-6" note="We will find the first thing worth fixing." />
+				<div
+					class="contents lg:sticky lg:top-[calc(var(--nav-h)+var(--space-head))] lg:col-span-6 lg:block lg:space-y-[var(--space-head)] lg:self-start"
+					data-stagger
+				>
+					<h2 class="font-display text-h2 text-core max-w-[13ch]">What happens when nobody's free?</h2>
+					<InlineCTA class="order-1 sm:flex-wrap" note="We'll find the first fix." />
+				</div>
+				<MomentStack moments={moments} class="lg:col-span-6 lg:col-start-7" />
 			</Container>
 		</Section>
 
@@ -200,7 +204,7 @@ const nn = (index: number) => String(index + 1).padStart(2, "0");
 			<Container>
 				<div class="grid gap-4 lg:grid-cols-12 lg:items-end lg:gap-10">
 					<h2 class="font-display text-h2 text-core lg:col-span-5">What we build</h2>
-					<p class="text-body text-ink-2 max-w-[46ch] lg:col-span-7">Each one already runs for a real business.</p>
+					<p class="text-body text-ink-2 max-w-[46ch] lg:col-span-7">Each one is built from real client work.</p>
 				</div>
 				<ul class="mt-[var(--space-head)] space-y-3 sm:space-y-4">
 					{

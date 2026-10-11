@@ -16,22 +16,25 @@ Microcopy under the buttons: Live in weeks. Pay the second half only when it wor
 - 3 to 4 | weeks from kickoff to live, for most builds
 
 ## 3. The problem
-Heading: What stops when one person is unavailable?
-- Calls go to voicemail | Nobody picks up after hours, so callers book with whoever answers first.
-- Leads go cold | Follow-ups slip on busy days, and the lead moves on.
-- You chase the team for updates | Details get copied between tools, and your evenings go on checking what got done.
+Heading: What happens when nobody's free?
+Three moments, each shown as a phone notification with its time stamp, that turns into the fix as you scroll (time stamp | problem | detail | fix):
+- 2:14 AM | A call goes to voicemail. | They book with whoever answers. | Answered and booked, any hour.
+- Day 3 | A lead goes cold. | Nobody followed up in time. | Followed up in minutes, until they reply.
+- 9:40 PM | You're still checking. | Copying details between tools after hours. | It updates itself. You just read the summary.
 Button: Book your free automation audit
-Note next to button: We will find the first thing worth fixing.
+Note next to button: We'll find the first fix.
 
 ## 4. What we build
 Heading: What we build
-Intro: Each one already runs for a real business.
+Intro: Each one is built from real client work.
 Card lines (the same as each solution's card line in content/copy/solutions):
 - AI receptionist and voice agents | Every call answered, day or night, and booked straight into your calendar.
 - Sales follow-up and call analysis | Every lead gets a reply while still interested, and every sales call gets reviewed.
 - Client and operations portals | One place for updates, files and status, not five inboxes.
 - Hiring automation | Applicants screened and shortlisted before you open your inbox.
-- Content and knowledge systems | Your know-how turned into posts and answers, without writing each one.
+- AI twins and knowledge systems | Your expertise as an AI that answers clients and your team, any hour.
+- Content on autopilot | One product in, finished posts out, reviewed and published everywhere.
+- AI chief of staff | One calm view of your whole business, with the next step drafted for you.
 Card link text: How it works
 
 ## 5. See it work

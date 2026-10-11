@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import Card from "./Card.astro";
 import BigNumber from "./BigNumber.astro";
 import Icon from "./Icon.astro";
+import StatusTag from "./StatusTag.astro";
 
 interface Props {
 	caseStudy: CollectionEntry<"case-studies">;
@@ -20,7 +21,7 @@ interface Props {
 }
 
 const { caseStudy, variant = "card", summary: summaryOverride, layout = "card", class: className } = Astro.props;
-const { clientLabel, headlineNumber } = caseStudy.data;
+const { clientLabel, headlineNumber, status } = caseStudy.data;
 const summary = summaryOverride ?? caseStudy.data.summary;
 const href = `/case-studies/${caseStudy.id}`;
 ---
@@ -41,6 +42,7 @@ const href = `/case-studies/${caseStudy.id}`;
 			>
 				{headlineNumber && <BigNumber value={headlineNumber} />}
 				<div class="min-w-0 space-y-3 sm:col-start-2">
+					{status && <StatusTag text={status} />}
 					<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
 					<p class="text-body text-ink-2">{summary}</p>
 				</div>
@@ -50,6 +52,7 @@ const href = `/case-studies/${caseStudy.id}`;
 			</Card>
 		) : (
 			<Card variant={variant} interactive class="h-full min-w-0 space-y-4">
+				{status && <StatusTag text={status} />}
 				{headlineNumber && <BigNumber value={headlineNumber} />}
 				<p class="font-mono text-label uppercase text-ink-3">{clientLabel}</p>
 				<p class="text-body text-ink-2">{summary}</p>

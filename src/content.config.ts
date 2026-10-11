@@ -46,6 +46,8 @@ const solutionIcons: Record<string, string> = {
 	"client-and-operations-portals": "layout-dashboard",
 	"hiring-automation": "users",
 	"content-and-knowledge-systems": "book-open",
+	"content-automation": "megaphone",
+	"ai-chief-of-staff": "briefcase",
 };
 
 const solutions = defineCollection({
@@ -69,7 +71,7 @@ const solutions = defineCollection({
 		order: z.number(),
 		cardLine: z.string(),
 		seoDescription: z.string().optional(),
-		icon: z.enum(["phone-call", "headset", "layout-dashboard", "users", "book-open"]),
+		icon: z.enum(["phone-call", "headset", "layout-dashboard", "users", "book-open", "megaphone", "briefcase"]),
 		relatedCaseStudies: z.array(z.string()),
 		problem: blocks,
 		build: blocks,
@@ -100,6 +102,9 @@ const caseStudies = defineCollection({
 			data: {
 				title: doc.title,
 				clientLabel: doc.meta["client label"],
+				// A project that isn't live yet ("In development, Version 1"),
+				// shown on its card and page so no result is ever implied.
+				status: doc.meta.status,
 				featured: /^yes/i.test(featured),
 				featuredOrder: Number(featured.match(/order\s+(\d+)/i)?.[1] ?? 99),
 				headlineNumber: doc.meta["headline number"],
@@ -118,6 +123,7 @@ const caseStudies = defineCollection({
 	schema: z.object({
 		title: z.string().min(1),
 		clientLabel: z.string(),
+		status: z.string().optional(),
 		featured: z.boolean(),
 		featuredOrder: z.number(),
 		headlineNumber: z.string().optional(),

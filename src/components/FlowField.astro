@@ -9,10 +9,12 @@
 // - glow-left / glow-right: one faint drifting light behind an ordinary section
 // - scene:   teal light rising out of black, inside a Scene
 // - arch:    the same column of light, inside a framed panel (EmptyState)
+// - stage:   a lock-screen field inside a framed panel (MomentStack); like
+//            the hero, airy in light mode and near black in dark
 //
 // Parents must be positioned (`relative`), and need no background of their
 // own except scenes and panels, so the field shows through.
-export type FlowVariant = "hero" | "closing" | "soft" | "glow-left" | "glow-right" | "scene" | "arch";
+export type FlowVariant = "hero" | "closing" | "soft" | "glow-left" | "glow-right" | "scene" | "arch" | "stage";
 
 interface Props {
 	variant: FlowVariant;
@@ -29,6 +31,7 @@ const blobs = {
 	"glow-right": 1,
 	scene: 3,
 	arch: 2,
+	stage: 3,
 }[variant];
 
 const isGlow = variant.startsWith("glow");
